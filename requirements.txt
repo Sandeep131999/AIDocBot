@@ -1,5 +1,32 @@
-fastapi
-uvicorn
-openai
-python-dotenv
-pydantic
+# Core LangChain ecosystem
+langchain==0.2.16              # Main LangChain library
+langchain-core==0.2.38         # Core abstractions (required for compatibility)
+langchain-community ==0.2.16    # Community modules (document loaders, etc.)
+
+# LLM integrations
+langchain-google-genai==1.0.10 # Google Gemini integration
+langchain-groq==0.1.4          # Groq LLM integration
+
+# Document loading / parsing
+pypdf==4.2.0                  # PDF parsing backend for PyPDFLoader
+
+# Vector database
+chromadb==0.4.24              # Local vector store
+
+# Embeddings
+sentence-transformers==2.7.0  # Embedding models (HuggingFace)
+
+# Retrieval
+rank-bm25==0.2.2              # BM25 keyword-based retrieval
+
+# Evaluation
+ragas==0.1.7                  # RAG evaluation framework
+
+# API (FastAPI server)
+fastapi==0.110.0              # Web framework
+uvicorn==0.27.0               # ASGI server
+
+# Supporting libraries
+python-multipart==0.0.9       # File uploads in FastAPI
+pydantic==2.7.0               # Data validation (compatible with FastAPI & LangChain)
+python-dotenv==1.0.1          # Environment variable management

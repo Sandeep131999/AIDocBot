@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from openai import AsyncOpenAI
 import os
 from dotenv import load_dotenv
+import chromadb
 
 # Load environment variables
 load_dotenv()
