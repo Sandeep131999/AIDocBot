@@ -30,3 +30,6 @@ uvicorn==0.27.0               # ASGI server
 python-multipart==0.0.9       # File uploads in FastAPI
 pydantic==2.7.0               # Data validation (compatible with FastAPI & LangChain)
 python-dotenv==1.0.1          # Environment variable management
+ 
+# Embeddings Converter
+sentence-transformers==2.7.0  # Converts text chunks into embeddings for better semantic search
