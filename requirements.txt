@@ -1,7 +1,7 @@
 # Core LangChain ecosystem
 langchain==0.2.16              # Main LangChain library
 langchain-core==0.2.38         # Core abstractions (required for compatibility)
-langchain-community ==0.2.16    # Community modules (document loaders, etc.)
+langchain-community==0.2.16    # Community modules (document loaders, etc.)
 
 # LLM integrations
 langchain-google-genai==1.0.10 # Google Gemini integration
@@ -30,6 +30,9 @@ uvicorn==0.27.0               # ASGI server
 python-multipart==0.0.9       # File uploads in FastAPI
 pydantic==2.7.0               # Data validation (compatible with FastAPI & LangChain)
 python-dotenv==1.0.1          # Environment variable management
+
+# NLP (Natural Language Processing)
+nltk==3.8.1                  # Natural Language Toolkit
  
-# Embeddings Converter
-sentence-transformers==2.7.0  # Converts text chunks into embeddings for better semantic search
+#Fast API Web Server
+uvicorn==0.27.0               # ASGI server

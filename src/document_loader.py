@@ -3,7 +3,7 @@ DOCUMENT LOADER
 Loads documents from files and splits them into chunks.
 
 What it does:
-1. Opens a file (PDF or TXT)
+1. Opens a file (PDF or TXT or CSV)
 2. Reads the content
 3. Splits into small chunks (500 characters each)
 4. Adds metadata (source file, page number, etc.)
