@@ -1,20 +1,24 @@
-# Core LangChain ecosystem
-langchain==0.2.16              # Main LangChain library
-langchain-core==0.2.38         # Core abstractions (required for compatibility)
-langchain-community==0.2.16    # Community modules (document loaders, etc.)
+﻿# ALTERNATIVE: Latest Stable Versions (Recommended for new projects)
+# Use this if you want a more modern stack with fewer deprecations
+
+# Core LangChain ecosystem - LATEST STABLE
+langchain==0.2.16             # Latest LangChain (with fixes for 0.2.x)
+langchain-core==0.2.38        # Latest compatible with 0.2.16
+langchain-community==0.2.16   # Latest community integrations
 
 # LLM integrations
-langchain-google-genai==1.0.10 # Google Gemini integration
-langchain-groq==0.1.4          # Groq LLM integration
+langchain-google-genai==1.0.10  # Latest Google Gemini integration
+langchain-groq==0.1.4           # Latest Groq integration
+langchain-openai==0.1.7         # Latest OpenAI integration
 
 # Document loading / parsing
-pypdf==4.2.0                  # PDF parsing backend for PyPDFLoader
+pypdf==4.2.0                  # PDF parsing backend
 
-# Vector database
-chromadb==0.4.24              # Local vector store
+# Vector database - UPGRADE TO 0.5.x (with ChromaDB reset!)
+chromadb==0.5.3               # Latest stable (requires fresh database)
 
 # Embeddings
-sentence-transformers==2.7.0  # Embedding models (HuggingFace)
+sentence-transformers==2.7.0  # Embedding models
 
 # Retrieval
 rank-bm25==0.2.2              # BM25 keyword-based retrieval
@@ -24,15 +28,36 @@ ragas==0.1.7                  # RAG evaluation framework
 
 # API (FastAPI server)
 fastapi==0.110.0              # Web framework
-uvicorn==0.27.0               # ASGI server
+uvicorn==0.29.0               # ASGI server
 
 # Supporting libraries
 python-multipart==0.0.9       # File uploads in FastAPI
-pydantic==2.7.0               # Data validation (compatible with FastAPI & LangChain)
+pydantic==2.7.0               # Data validation
 python-dotenv==1.0.1          # Environment variable management
 
-# NLP (Natural Language Processing)
-nltk==3.8.1                  # Natural Language Toolkit
- 
-#Fast API Web Server
-uvicorn==0.27.0               # ASGI server
+# NLP
+nltk==3.8.1                   # Natural Language Toolkit
+
+# Database & Authentication
+sqlalchemy==2.0.30            # ORM
+google-auth==2.29.0           # Google OAuth
+PyJWT==2.8.0                  # JWT handling
+
+# OpenAI / OpenRouter
+openai==1.30.1                # OpenAI SDK
+
+# File handling
+PyPDF2==3.0.1                 # PDF text extraction
+
+# Utilities
+requests==2.31.0              # HTTP client
+tiktoken==0.7.0               # Token counting
+
+# Excel and Word document support
+unstructured==0.15.0          # Core parsing engine
+openpyxl==3.1.5               # Excel .xlsx
+docx2txt==0.8                 # Word .docx
+
+# Fixed versions for requests compatibility
+urllib3==2.2.0                # Latest compatible HTTP client
+charset_normalizer==3.3.0     # Encoding detection

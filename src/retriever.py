@@ -10,6 +10,7 @@ Located in src/ folder as per project structure.
 # IMPORTS
 # ============================================================================
 
+import os
 from typing import List, Dict
 from src.document_loader import DocumentLoader
 from src.embeddings import EmbeddingGenerator
@@ -23,7 +24,7 @@ from src.keyword_search import KeywordSearcher
 
 class Retriever:
     """
-    Unified RAG retriever.
+    Unified RAG retriever with relevance thresholding.
     
     Combines:
     - DocumentLoader (load files)
@@ -34,17 +35,20 @@ class Retriever:
     Into one interface with hybrid search.
     """
     
-    def __init__(self, vector_weight: float = 0.7, keyword_weight: float = 0.3):
+    def __init__(self, vector_weight: float = 0.7, keyword_weight: float = 0.3,
+                 min_relevance_score: float = 0.35):
         """
         Initialize retriever.
         
         Args:
             vector_weight: Weight for vector search (0.7 = 70%)
             keyword_weight: Weight for keyword search (0.3 = 30%)
+            min_relevance_score: Minimum combined score to return results
         """
         
         self.vector_weight = vector_weight
         self.keyword_weight = keyword_weight
+        self.min_relevance_score = min_relevance_score
         
         print("\n" + "="*70)
         print("RETRIEVER - INITIALIZATION")
@@ -62,6 +66,7 @@ class Retriever:
             print(f"\n✅ All components initialized")
             print(f"   Vector weight: {vector_weight*100:.0f}%")
             print(f"   Keyword weight: {keyword_weight*100:.0f}%")
+            print(f"   Min relevance score: {min_relevance_score}")
             
         except Exception as e:
             print(f"\n❌ Error initializing retriever: {e}")
@@ -104,6 +109,11 @@ class Retriever:
         try:
             docs = self.document_loader.load_from_file(file_path)
             print(f"✅ Loaded {len(docs)} chunks")
+            
+            # Debug: show sample chunks
+            for i, doc in enumerate(docs[:3]):
+                print(f"   Chunk {i+1}: {len(doc.page_content)} chars | "
+                      f"metadata: {doc.metadata}")
         except FileNotFoundError:
             print(f"❌ File not found: {file_path}")
             raise
@@ -158,7 +168,7 @@ class Retriever:
     
     def retrieve(self, query: str, top_k: int = 5) -> List[Dict]:
         """
-        Retrieve documents using hybrid search.
+        Retrieve documents using hybrid search with relevance threshold.
         
         PROCESS:
         1. Embed query
@@ -166,14 +176,15 @@ class Retriever:
         3. Keyword search (exact)
         4. Normalize scores
         5. Blend: 0.7*vector + 0.3*keyword
-        6. Rank and return top K
+        6. Filter by minimum relevance score
+        7. Rank and return top K
         
         Args:
             query: Search query
             top_k: Number of results
         
         Returns:
-            List of results with scores
+            List of results with scores (empty if none above threshold)
         
         EXAMPLE:
             >>> results = retriever.retrieve("How to reset password?", top_k=5)
@@ -184,14 +195,16 @@ class Retriever:
         if not self.indexed:
             raise ValueError("Must call load_and_index_documents() first!")
         
+        print(f"\n[RETRIEVE] Query: '{query}'")
+        
         # Step 1: Embed query
         query_embedding = self.embeddings_generator.embed_text(query)
         
         # Step 2: Vector search
-        vector_results = self.vector_store.search(query_embedding, top_k=top_k*2)
+        vector_results = self.vector_store.search(query_embedding, top_k=top_k*3)
         
         # Step 3: Keyword search
-        keyword_results = self.keyword_searcher.search(query, top_k=top_k*2)
+        keyword_results = self.keyword_searcher.search(query, top_k=top_k*3)
         
         # Step 4: Combine
         combined = {}
@@ -238,10 +251,19 @@ class Retriever:
                 'metadata': scores['metadata']
             })
         
-        # Step 6: Sort and return
+        # Step 6: Sort by combined score
         final_results.sort(key=lambda x: x['combined_score'], reverse=True)
         
-        return final_results[:top_k]
+        # Step 7: FILTER by minimum relevance threshold
+        filtered = [r for r in final_results if r['combined_score'] >= self.min_relevance_score]
+        
+        print(f"   Raw results: {len(final_results)} | After threshold ({self.min_relevance_score}): {len(filtered)}")
+        
+        if filtered:
+            print(f"   Top result score: {filtered[0]['combined_score']:.3f}")
+            print(f"   Top result name: {filtered[0]['metadata'].get('employee_name', 'N/A')}")
+        
+        return filtered[:top_k]
     
     def batch_retrieve(self, queries: List[str], top_k: int = 5) -> Dict[str, List[Dict]]:
         """
