@@ -1,14 +1,17 @@
 """
-MAIN.PY - RAG CHATBOT (NO AUTHENTICATION)
-=========================================
+MAIN.PY - RAG CHATBOT v3.1 (NO AUTHENTICATION)
+===============================================
 
 Features:
 - Document upload and management
 - Hybrid search (vector + BM25)
-- LLM integration with FALLBACK (Gemini → Groq → OpenRouter)
-- Automatic fallback on token/context limit errors
+- LLM integration with SMART FALLBACK (Gemini -> Groq -> OpenRouter)
+- Automatic fallback on ALL provider errors (token, rate limit, network, key leak)
+- PERMANENT provider disabling on API key leaks (403)
 - SQLAlchemy database for chat history
 - LangChain for LLM interactions
+- Rotating file logs with 15-day retention
+- Separate error.log with full traces
 """
 
 # ============================================================================
@@ -39,6 +42,11 @@ import sys
 from pathlib import Path
 import json
 import secrets
+import logging
+import traceback
+from logging.handlers import RotatingFileHandler
+import glob
+import shutil
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -61,6 +69,108 @@ import PyPDF2
 from dotenv import load_dotenv
 
 load_dotenv()
+# ============================================================================
+# WINDOWS CONSOLE ENCODING FIX
+# ============================================================================
+import sys
+if sys.platform == "win32":
+    import io
+    # Force UTF-8 for stdout/stderr to prevent UnicodeEncodeError on Windows
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
+
+# ============================================================================
+# LOG MANAGER: Rotating files + 15-day retention + separate error log
+# ============================================================================
+
+class LogManager:
+    """
+    Manages rotating log files with:
+    - Size-based rotation (10MB per file, 10 backups)
+    - 15-day retention (auto-deletes old logs on startup)
+    - Separate general.log and errors.log
+    - Full stack traces in error log
+    """
+
+    def __init__(self, log_dir="logs", retention_days=15):
+        self.log_dir = Path(log_dir)
+        self.retention_days = retention_days
+        self.log_dir.mkdir(exist_ok=True)
+
+        # Clean up old logs first
+        self._cleanup_old_logs()
+
+        # Create formatters
+        detailed_formatter = logging.Formatter(
+            "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S"
+        )
+        simple_formatter = logging.Formatter(
+            "%(asctime)s | %(levelname)-8s | %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S"
+        )
+
+        # Get root logger
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.DEBUG)
+
+        # Remove existing handlers to avoid duplicates
+        for handler in root_logger.handlers[:]:
+            root_logger.removeHandler(handler)
+
+        # Console handler (INFO+)
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setLevel(logging.INFO)
+        console_handler.setFormatter(simple_formatter)
+        root_logger.addHandler(console_handler)
+
+        # General log file (INFO+, rotating 10MB)
+        general_log_path = self.log_dir / "rag_chatbot.log"
+        general_handler = RotatingFileHandler(
+            general_log_path,
+            maxBytes=10 * 1024 * 1024,  # 10MB
+            backupCount=10
+        )
+        general_handler.setLevel(logging.INFO)
+        general_handler.setFormatter(detailed_formatter)
+        root_logger.addHandler(general_handler)
+
+        # Error log file (ERROR+, rotating 10MB) with full traces
+        error_log_path = self.log_dir / "rag_chatbot_errors.log"
+        error_handler = RotatingFileHandler(
+            error_log_path,
+            maxBytes=10 * 1024 * 1024,  # 10MB
+            backupCount=10
+        )
+        error_handler.setLevel(logging.ERROR)
+        error_handler.setFormatter(detailed_formatter)
+        root_logger.addHandler(error_handler)
+
+        self.logger = logging.getLogger(__name__)
+        self.logger.info(f"LogManager initialized. Logs: {self.log_dir}")
+        self.logger.info(f"Retention: {retention_days} days")
+
+    def _cleanup_old_logs(self):
+        """Delete log files older than retention_days."""
+        cutoff = datetime.now() - timedelta(days=self.retention_days)
+        log_files = glob.glob(str(self.log_dir / "*.log*"))
+        deleted = 0
+        for f in log_files:
+            try:
+                mtime = datetime.fromtimestamp(os.path.getmtime(f))
+                if mtime < cutoff:
+                    os.remove(f)
+                    deleted += 1
+            except Exception:
+                pass
+        if deleted:
+            print(f"Cleaned up {deleted} old log files (>{self.retention_days} days)")
+
+
+# Initialize logging FIRST (before anything else)
+log_manager = LogManager(log_dir="logs", retention_days=15)
+logger = logging.getLogger(__name__)
 
 
 # ============================================================================
@@ -134,7 +244,7 @@ class ChatRequest(BaseModel):
     """Chat request. You only need to send these two fields:"""
     query: str          # Your question
     session_id: str     # Unique session ID (e.g., uuid or any string)
-    top_k: int = 5      # Number of documents to retrieve
+    top_k: int = os.getenv("TOP_K")    # Number of documents to retrieve
 
 
 class ChatResponse(BaseModel):
@@ -166,8 +276,8 @@ class ChatHistoryResponse(BaseModel):
 
 app = FastAPI(
     title="RAG Chatbot",
-    description="Advanced RAG system with document management, chat history, and automatic LLM fallback on token limits",
-    version="3.0.0"
+    description="Advanced RAG system with document management, chat history, and smart LLM fallback on all error types",
+    version="3.1.0"
 )
 
 # Add CORS
@@ -181,6 +291,7 @@ app.add_middleware(
 
 # Global instances
 retriever = None
+llm_handler = None
 evaluator = Evaluator()
 
 
@@ -198,20 +309,25 @@ def get_db():
 
 
 # ============================================================================
-# LLM WITH FALLBACK (STARTUP + RUNTIME)
+# LLM WITH SMART FALLBACK (v3.1)
 # ============================================================================
 
-class LLMWithFallback:
+class LLMWithSmartFallback:
     """
-    LLM with TWO levels of fallback:
-    1. STARTUP: Initialize all available providers (not just first working one)
-    2. RUNTIME: If current provider fails on token/context limit, auto-switch to next
+    LLM with SMART fallback:
+    1. STARTUP: Initialize all available providers
+    2. RUNTIME: Classify errors and decide action:
+       - API Key Leaked (403) -> PERMANENTLY disable provider
+       - Rate Limit (429) -> Try next provider
+       - Token/Context Limit -> Try next provider
+       - Network Error (502-504) -> Try next provider
+       - Other -> Try next provider
 
-    Fallback chain: Google Gemini → Groq → OpenRouter
+    Fallback chain: Google Gemini -> Groq -> OpenRouter
     """
 
     # FIXED: Updated to current working Gemini models as of May 2026
-    DEFAULT_GEMINI_MODEL = "gemini-2.0-flash"
+    DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
     DEFAULT_GROQ_MODEL = "llama-3.1-70b-versatile"
     DEFAULT_OPENROUTER_MODEL = "meta-llama/llama-3.1-8b-instruct:free"
 
@@ -225,23 +341,24 @@ class LLMWithFallback:
 
     def __init__(self):
         """Initialize ALL available LLM providers for runtime fallback."""
-        self.available_llms = []  # Store ALL working LLMs
-        self.current_index = 0    # Which LLM is currently active
+        self.available_llms = []      # Store ALL working LLMs
+        self.failed_providers = {}    # Track permanently failed providers: {name: reason}
+        self.current_index = 0        # Which LLM is currently active
         self.used_model = "unknown"
 
         self._initialize_all_llms()
 
     def _estimate_tokens(self, text: str) -> int:
-        """Rough token estimation (1 token ≈ 4 chars for English text)."""
+        """Rough token estimation (1 token ~ 4 chars for English text)."""
         return len(text) // 4
 
-    def _truncate_context(self, context: str, max_tokens: int, reserved: int = 1000) -> str:
+    def _truncate_context(self, context: str, max_tokens: int, reserved: int = 1500) -> str:
         """
         Truncate context to fit within token limit.
         Reserves space for system prompt + chat history + user question.
         """
         max_context_tokens = max_tokens - reserved
-        max_context_chars = max_context_tokens * 4  # 1 token ≈ 4 chars
+        max_context_chars = max_context_tokens * 4  # 1 token ~ 4 chars
 
         if len(context) > max_context_chars:
             truncated = context[:max_context_chars]
@@ -252,97 +369,46 @@ class LLMWithFallback:
             return truncated + "\n\n[Content truncated due to length...]"
         return context
 
-    def _initialize_all_llms(self):
-        """Initialize ALL providers that have API keys (not just first one)."""
-
-        print("\n" + "="*70)
-        print("INITIALIZING ALL LLM PROVIDERS")
-        print("="*70)
-
-        # [1] Google Gemini (Free Tier: 60 requests/min)
-        gemini_key = os.getenv("GEMINI_API_KEY")
-        if gemini_key:
-            try:
-                print("\n[1] Initializing Google Gemini...")
-                model_name = os.getenv("GEMINI_MODEL", self.DEFAULT_GEMINI_MODEL)
-                llm = ChatGoogleGenerativeAI(
-                    model=model_name,
-                    google_api_key=gemini_key,
-                    temperature=0.7,
-                    max_output_tokens=2048  # Prevent runaway generation
-                )
-                self.available_llms.append({
-                    "name": model_name,
-                    "llm": llm,
-                    "type": "gemini"
-                })
-                print(f"✅ Google Gemini ready: {model_name}")
-            except Exception as e:
-                print(f"❌ Google Gemini init failed: {e}")
-
-        # [2] Groq (Free Tier: 6000 TPM limit)
-        groq_key = os.getenv("GROQ_API_KEY")
-        if groq_key:
-            try:
-                print("\n[2] Initializing Groq...")
-                model_name = os.getenv("GROQ_MODEL", self.DEFAULT_GROQ_MODEL)
-                llm = ChatOpenAI(
-                    model=model_name,
-                    api_key=groq_key,
-                    base_url="https://api.groq.com/openai/v1",
-                    temperature=0.7,
-                    max_tokens=1024  # Stay under Groq TPM limits
-                )
-                self.available_llms.append({
-                    "name": model_name,
-                    "llm": llm,
-                    "type": "groq"
-                })
-                print(f"✅ Groq ready: {model_name}")
-            except Exception as e:
-                print(f"❌ Groq init failed: {e}")
-
-        # [3] OpenRouter (Free models available)
-        openrouter_key = os.getenv("OPENROUTER_API_KEY")
-        if openrouter_key:
-            try:
-                print("\n[3] Initializing OpenRouter...")
-                model_name = os.getenv("OPENROUTER_MODEL", self.DEFAULT_OPENROUTER_MODEL)
-                llm = ChatOpenAI(
-                    model=model_name,
-                    api_key=openrouter_key,
-                    base_url="https://openrouter.ai/api/v1",
-                    temperature=0.7,
-                    max_tokens=1024
-                )
-                self.available_llms.append({
-                    "name": model_name,
-                    "llm": llm,
-                    "type": "openrouter"
-                })
-                print(f"✅ OpenRouter ready: {model_name}")
-            except Exception as e:
-                print(f"❌ OpenRouter init failed: {e}")
-
-        if not self.available_llms:
-            raise HTTPException(
-                status_code=500,
-                detail="No LLM API keys found. Set GEMINI_API_KEY, GROQ_API_KEY, or OPENROUTER_API_KEY"
-            )
-
-        # Set primary LLM (first available)
-        self.current_index = 0
-        self.used_model = self.available_llms[0]["name"]
-        print(f"\n🎯 Primary LLM: {self.used_model}")
-        print(f"🔄 Fallback chain: {' → '.join([llm['name'] for llm in self.available_llms])}")
-        print("="*70)
-
-    def _is_token_error(self, error: Exception) -> bool:
+    def _classify_error(self, error: Exception) -> tuple:
         """
-        Detect if error is token/context limit related.
-        Covers Gemini, Groq, and OpenRouter error patterns.
+        Classify LLM error into category and action.
+
+        Returns:
+            (error_type, action, should_permanently_disable)
+            error_type: str describing the error
+            action: "fallback" | "raise"
+            should_permanently_disable: bool
         """
         error_str = str(error).lower()
+        error_type = type(error).__name__
+
+        # [1] API Key Leaked / Invalid (403) -> PERMANENTLY DISABLE
+        key_leak_patterns = [
+            "api_key_leaked",
+            "leaked",
+            "invalid api key",
+            "authentication failed",
+            "auth failed",
+            "unauthorized",
+            "401",
+            "403",
+        ]
+        if any(p in error_str for p in key_leak_patterns):
+            return ("api_key_leaked", "fallback", True)
+
+        # [2] Rate Limit (429) -> Fallback (temporary)
+        rate_limit_patterns = [
+            "rate limit",
+            "too many requests",
+            "429",
+            "quota exceeded",
+            "quota",
+            "limit exceeded",
+        ]
+        if any(p in error_str for p in rate_limit_patterns):
+            return ("rate_limit", "fallback", False)
+
+        # [3] Token / Context Limit -> Fallback (temporary)
         token_error_patterns = [
             "too many tokens",
             "context length",
@@ -354,10 +420,120 @@ class LLMWithFallback:
             "exceeds the limit",
             "token limit",
             "413",  # Payload Too Large
-            "quota exceeded",  # Gemini rate limit
-            "rate limit",  # Generic rate limiting
         ]
-        return any(pattern in error_str for pattern in token_error_patterns)
+        if any(p in error_str for p in token_error_patterns):
+            return ("token_limit", "fallback", False)
+
+        # [4] Network / Server Error (502, 503, 504) -> Fallback (temporary)
+        network_patterns = [
+            "connection error",
+            "timeout",
+            "502",
+            "503",
+            "504",
+            "bad gateway",
+            "service unavailable",
+            "gateway timeout",
+            "network",
+            "unable to connect",
+            "connection refused",
+        ]
+        if any(p in error_str for p in network_patterns):
+            return ("network_error", "fallback", False)
+
+        # [5] Unknown / Other -> Fallback (temporary) as last resort
+        return ("unknown_error", "fallback", False)
+
+    def _initialize_all_llms(self):
+        """Initialize ALL providers that have API keys (not just first one)."""
+
+        logger.info("=" * 70)
+        logger.info("INITIALIZING ALL LLM PROVIDERS")
+        logger.info("=" * 70)
+
+        # [1] Google Gemini (Free Tier: 60 requests/min)
+        gemini_key = os.getenv("GEMINI_API_KEY")
+        if gemini_key:
+            try:
+                logger.info("[1] Initializing Google Gemini...")
+                model_name = os.getenv("GEMINI_MODEL", self.DEFAULT_GEMINI_MODEL)
+                llm = ChatGoogleGenerativeAI(
+                    model=model_name,
+                    google_api_key=gemini_key,
+                    temperature=0.7,
+                    max_output_tokens=2048  # Prevent runaway generation
+                )
+                self.available_llms.append({
+                    "name": model_name,
+                    "llm": llm,
+                    "type": "gemini",
+                    "display_name": "Google Gemini"
+                })
+                logger.info(f"[OK] Google Gemini ready: {model_name}")
+            except Exception as e:
+                logger.error(f"[ERR] Google Gemini init failed: {e}")
+                self.failed_providers["Google Gemini"] = f"Init failed: {str(e)}"
+
+        # [2] Groq (Free Tier: 6000 TPM limit)
+        groq_key = os.getenv("GROQ_API_KEY")
+        if groq_key:
+            try:
+                logger.info("[2] Initializing Groq...")
+                model_name = os.getenv("GROQ_MODEL", self.DEFAULT_GROQ_MODEL)
+                llm = ChatOpenAI(
+                    model=model_name,
+                    api_key=groq_key,
+                    base_url="https://api.groq.com/openai/v1",
+                    temperature=0.7,
+                    max_tokens=1024  # Stay under Groq TPM limits
+                )
+                self.available_llms.append({
+                    "name": model_name,
+                    "llm": llm,
+                    "type": "groq",
+                    "display_name": "Groq"
+                })
+                logger.info(f"[OK] Groq ready: {model_name}")
+            except Exception as e:
+                logger.error(f"[ERR] Groq init failed: {e}")
+                self.failed_providers["Groq"] = f"Init failed: {str(e)}"
+
+        # [3] OpenRouter (Free models available)
+        openrouter_key = os.getenv("OPENROUTER_API_KEY")
+        if openrouter_key:
+            try:
+                logger.info("[3] Initializing OpenRouter...")
+                model_name = os.getenv("OPENROUTER_MODEL", self.DEFAULT_OPENROUTER_MODEL)
+                llm = ChatOpenAI(
+                    model=model_name,
+                    api_key=openrouter_key,
+                    base_url="https://openrouter.ai/api/v1",
+                    temperature=0.7,
+                    max_tokens=1024
+                )
+                self.available_llms.append({
+                    "name": model_name,
+                    "llm": llm,
+                    "type": "openrouter",
+                    "display_name": "OpenRouter"
+                })
+                logger.info(f"[OK] OpenRouter ready: {model_name}")
+            except Exception as e:
+                logger.error(f"[ERR] OpenRouter init failed: {e}")
+                self.failed_providers["OpenRouter"] = f"Init failed: {str(e)}"
+
+        if not self.available_llms:
+            raise HTTPException(
+                status_code=500,
+                detail="No LLM API keys found. Set GEMINI_API_KEY, GROQ_API_KEY, or OPENROUTER_API_KEY"
+            )
+
+        # Set primary LLM (first available)
+        self.current_index = 0
+        self.used_model = self.available_llms[0]["name"]
+        logger.info(f"[PRIMARY] Primary LLM: {self.used_model}")
+        logger.info(f"[FALLBACK] Fallback chain: {' -> '.join([llm['name'] for llm in self.available_llms])}")
+        logger.info("=" * 70)
 
     def _build_messages(self, context: str, question: str, chat_history: list = None) -> list:
         """Build LangChain messages with system prompt + history + question."""
@@ -366,10 +542,9 @@ class LLMWithFallback:
         raw_prompt = os.getenv("SYSTEM_PROMPT")
 
         system_prompt = raw_prompt.format(context=context)
-        
-        print(system_prompt)
+
         # DEBUG
-        print(f"\n[DEBUG] Prompt first 300 chars: {system_prompt[:300]}")
+        logger.debug(f"Prompt first 300 chars: {system_prompt[:300]}")
 
         messages.append(SystemMessage(content=system_prompt))
 
@@ -389,7 +564,7 @@ class LLMWithFallback:
     def generate_response(self, context: str, question: str, chat_history: list = None,
                          attempt: int = 0, max_attempts: int = 3) -> tuple:
         """
-        Generate response with AUTOMATIC fallback on token/context errors.
+        Generate response with SMART automatic fallback on ALL errors.
 
         Args:
             context: Retrieved documents context
@@ -402,23 +577,25 @@ class LLMWithFallback:
             Tuple of (response_text, used_model)
 
         Raises:
-            HTTPException: 413 if all LLMs fail due to token limits
-            HTTPException: 502 for non-token provider errors
+            HTTPException: 503 if all LLMs fail
+            HTTPException: 502 for non-recoverable errors
         """
 
         # Safety check: Don't exceed available LLMs or max attempts
         if attempt >= len(self.available_llms) or attempt >= max_attempts:
+            logger.error("All LLM providers exhausted")
             raise HTTPException(
-                status_code=413,
-                detail=f"All LLM providers failed. Request too large or service unavailable. Try reducing document size or question length."
+                status_code=503,
+                detail="All LLM providers failed. Service temporarily unavailable. Try again later or check API keys."
             )
 
         # Select current LLM based on attempt number
         current_llm_config = self.available_llms[attempt]
         current_llm = current_llm_config["llm"]
+        provider_name = current_llm_config["display_name"]
         self.used_model = current_llm_config["name"]
 
-        print(f"\n[LLM ATTEMPT {attempt + 1}/{len(self.available_llms)}] Using: {self.used_model}")
+        logger.info(f"[LLM ATTEMPT {attempt + 1}/{len(self.available_llms)}] Provider: {provider_name}")
 
         # Get context limit for current model and truncate if needed
         model_limit = self.CONTEXT_LIMITS.get(self.used_model, 8192)
@@ -430,21 +607,48 @@ class LLMWithFallback:
         # Estimate total tokens for logging
         total_text = " ".join([m.content for m in messages])
         estimated_tokens = self._estimate_tokens(total_text)
-        print(f"📊 Estimated tokens: {estimated_tokens} (limit: {model_limit})")
+        logger.info(f"[TOK] Estimated tokens: {estimated_tokens} (limit: {model_limit})")
 
         try:
             # Generate response
             response = current_llm.invoke(messages)
-            print(f"✅ Success with {self.used_model}")
+            logger.info(f"[OK] Success with {provider_name} ({self.used_model})")
             return response.content, self.used_model
 
         except Exception as e:
             error_msg = str(e)
-            print(f"❌ {self.used_model} failed: {error_msg}")
+            logger.error(f"[ERR] {provider_name} failed: {error_msg}")
+            logger.error(traceback.format_exc())  # Full trace to error log
 
-            # Check if this is a token/context limit error
-            if self._is_token_error(e):
-                print(f"🔄 Token/context limit error detected! Trying next LLM...")
+            # SMART ERROR CLASSIFICATION
+            error_type, action, permanently_disable = self._classify_error(e)
+            logger.warning(f"[CHECK] Error classified as: {error_type} (action={action}, permanent_disable={permanently_disable})")
+
+            if permanently_disable:
+                # PERMANENTLY disable this provider
+                self.failed_providers[provider_name] = f"{error_type}: {error_msg}"
+                # Remove from available list
+                self.available_llms.pop(attempt)
+                logger.warning(f"[WARN]  {provider_name}: {error_type} - PERMANENTLY DISABLED")
+
+                # Recursive fallback (same attempt index since we removed the failed one)
+                if self.available_llms:
+                    return self.generate_response(
+                        context=context,
+                        question=question,
+                        chat_history=chat_history,
+                        attempt=attempt,  # Same index, next provider shifted into this slot
+                        max_attempts=max_attempts
+                    )
+                else:
+                    raise HTTPException(
+                        status_code=503,
+                        detail=f"All LLM providers permanently disabled. Last error: {error_msg}"
+                    )
+
+            elif action == "fallback":
+                # Temporary failure -> try next provider
+                logger.warning(f"[FALLBACK] {provider_name}: {error_type} - trying next provider")
 
                 # RECURSIVE FALLBACK: Try next available LLM
                 return self.generate_response(
@@ -454,11 +658,12 @@ class LLMWithFallback:
                     attempt=attempt + 1,
                     max_attempts=max_attempts
                 )
+
             else:
-                # Non-token error (network, auth, server error) — don't fallback, report it
+                # Non-recoverable error
                 raise HTTPException(
                     status_code=502,
-                    detail=f"LLM provider error ({self.used_model}): {error_msg}"
+                    detail=f"LLM provider error ({provider_name}): {error_msg}"
                 )
 
 
@@ -472,27 +677,34 @@ async def startup_event():
 
     global retriever, llm_handler
 
-    print("\n" + "="*70)
-    print("STARTING RAG CHATBOT v3.0")
-    print("="*70)
+    logger.info("=" * 70)
+    logger.info("STARTING RAG CHATBOT v3.1")
+    logger.info("=" * 70)
 
     try:
         # Initialize retriever
-        retriever = Retriever(vector_weight=0.7, keyword_weight=0.3)
-        print(f"\n✅ Retriever initialized")
+        # Note: If documents exist but return "not found", check src/retriever.py threshold (default 0.35)
+        retriever = Retriever(vector_weight=0.7, keyword_weight=0.3,)
+        retriever = Retriever(
+            vector_weight=float(os.getenv("RETRIEVER_VECTOR_WEIGHT")),
+            keyword_weight=float(os.getenv("RETRIEVER_KEYWORD_WEIGHT")),
+            min_relevance_score=float(os.getenv("RETRIEVER_MIN_SCORE"))
+        )
+        logger.info("[OK] Retriever initialized")
 
         # Try to load existing documents
         try:
             num_chunks = retriever.load_and_index_documents("data/password_guide.txt")
-            print(f"✅ Loaded {num_chunks} chunks from default documents")
+            logger.info(f"[OK] Loaded {num_chunks} chunks from default documents")
         except FileNotFoundError:
-            print("⚠️  No default documents found. Users can upload documents.")
+            logger.warning("[WARN]  No default documents found. Users can upload documents.")
 
-        # Initialize LLM with full fallback chain
-        llm_handler = LLMWithFallback()
+        # Initialize LLM with smart fallback
+        llm_handler = LLMWithSmartFallback()
 
     except Exception as e:
-        print(f"\n❌ Error during startup: {e}")
+        logger.error(f"[ERR] Error during startup: {e}")
+        logger.error(traceback.format_exc())
         raise
 
 
@@ -511,8 +723,8 @@ async def upload_document(
     Supported formats: PDF, TXT, DOCX
     """
 
-    print(f"\n[UPLOAD] File: {file.filename}")
-    print("-"*70)
+    logger.info(f"[UPLOAD] File: {file.filename}")
+    logger.info("-" * 70)
 
     # Validate file
     if not file.filename:
@@ -534,7 +746,7 @@ async def upload_document(
 
         file_size = os.path.getsize(file_path)
 
-        print(f"✅ File saved: {file_path} ({file_size} bytes)")
+        logger.info(f"[OK] File saved: {file_path} ({file_size} bytes)")
 
         # Store in database
         doc = Document(
@@ -557,7 +769,7 @@ async def upload_document(
                 doc.indexed = 1
                 db.commit()
 
-                print(f"✅ Indexed {num_chunks} chunks")
+                logger.info(f"[OK] Indexed {num_chunks} chunks")
 
                 return DocumentUploadResponse(
                     filename=file.filename,
@@ -566,9 +778,8 @@ async def upload_document(
                 )
 
             except Exception as e:
-                import traceback
-                print(f"❌ Indexing error: {e}")
-                print(f"❌ Full traceback:\n{traceback.format_exc()}")
+                logger.error(f"[ERR] Indexing error: {e}")
+                logger.error(traceback.format_exc())
                 return DocumentUploadResponse(
                     filename=file.filename,
                     size=file_size,
@@ -578,6 +789,8 @@ async def upload_document(
             raise HTTPException(status_code=500, detail="Retriever not initialized")
 
     except Exception as e:
+        logger.error(f"[ERR] Upload error: {e}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Upload error: {str(e)}")
 
 
@@ -625,24 +838,35 @@ async def chat(
       1. Fetches previous messages from DB using session_id
       2. Retrieves relevant documents
       3. Tries primary LLM (Gemini)
-      4. FALLS BACK to Groq → OpenRouter if token limits hit
+      4. SMART FALLBACK to Groq -> OpenRouter on ANY error (token, rate limit, network, key leak)
     """
 
-    print(f"\n[CHAT] Query: {request.query}")
-    print("-"*70)
+    logger.info(f"[CHAT] Query: {request.query}")
+    logger.info("-" * 70)
 
     if not retriever:
         raise HTTPException(status_code=500, detail="Retriever not initialized")
 
     try:
         # Step 1: Retrieve documents
-        print("\n[STEP 1] Retrieve documents")
+        logger.info("[STEP 1] Retrieve documents")
         results = retriever.retrieve(request.query, top_k=request.top_k)
 
-        # If no results pass relevance threshold, return early
+        # If no results pass relevance threshold, try expanding search
         if not results:
-            print("⚠️ No relevant documents found above threshold")
-            
+            logger.warning("[WARN] No relevant documents found above threshold (0.35)")
+            logger.info("[FALLBACK] Trying with expanded top_k...")
+
+            # Try with more documents - maybe some will pass threshold
+            try:
+                results = retriever.retrieve(request.query, top_k=request.top_k * 2)
+            except Exception as e:
+                logger.error(f"[ERR] Expanded retrieve failed: {e}")
+                results = []
+
+            if not results:
+                logger.warning("[WARN] Still no results after expanding search")
+
             # Still save user message to history
             user_msg = ChatMessage(
                 session_id=request.session_id,
@@ -650,7 +874,7 @@ async def chat(
                 content=request.query
             )
             db.add(user_msg)
-            
+
             # Create/ensure session exists
             session = db.query(ChatSession).filter(
                 ChatSession.session_id == request.session_id
@@ -661,9 +885,9 @@ async def chat(
                     title=request.query[:50] if request.query else "New Chat"
                 )
                 db.add(session)
-            
+
             db.commit()
-            
+
             return ChatResponse(
                 session_id=request.session_id,
                 user_message=request.query,
@@ -685,11 +909,10 @@ async def chat(
             for r in results
         ]
 
-
-        print(f"✅ Retrieved {len(results)} documents")
+        logger.info(f"[OK] Retrieved {len(results)} documents")
 
         # Step 2: Get chat history (AUTO-FETCHED from DB)
-        print("\n[STEP 2] Get chat history")
+        logger.info("[STEP 2] Get chat history")
         chat_messages = db.query(ChatMessage).filter(
             ChatMessage.session_id == request.session_id
         ).order_by(ChatMessage.created_at).all()
@@ -699,21 +922,21 @@ async def chat(
             for msg in chat_messages
         ]
 
-        print(f"✅ Retrieved {len(chat_history)} history messages")
+        logger.info(f"[OK] Retrieved {len(chat_history)} history messages")
 
-        # Step 3: Generate LLM response (WITH AUTOMATIC FALLBACK)
-        print("\n[STEP 3] Generate LLM response")
+        # Step 3: Generate LLM response (WITH SMART AUTOMATIC FALLBACK)
+        logger.info("[STEP 3] Generate LLM response")
         response_text, used_model = llm_handler.generate_response(
             context=context,
             question=request.query,
             chat_history=chat_history
-            # attempt=0 is default — starts with primary LLM
+            # attempt=0 is default -- starts with primary LLM
         )
 
-        print(f"✅ Generated response using {used_model}")
+        logger.info(f"[OK] Generated response using {used_model}")
 
         # Step 4: Save to database
-        print("\n[STEP 4] Save to database")
+        logger.info("[STEP 4] Save to database")
 
         # Ensure session exists
         session = db.query(ChatSession).filter(
@@ -749,7 +972,7 @@ async def chat(
 
         db.commit()
 
-        print("✅ Saved to database")
+        logger.info("[OK] Saved to database")
 
         return ChatResponse(
             session_id=request.session_id,
@@ -761,10 +984,11 @@ async def chat(
         )
 
     except HTTPException:
-        # Re-raise HTTP exceptions (including our 413/502 errors)
+        # Re-raise HTTP exceptions (including our 503/502 errors)
         raise
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        logger.error(f"[ERR] Unexpected error: {e}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
 
 
@@ -857,14 +1081,24 @@ async def delete_session(
 
 @app.get("/api/health", tags=["System"])
 async def health():
-    """Health check."""
+    """Health check with provider status."""
 
     return {
         "status": "healthy",
+        "version": "3.1.0",
         "retriever_ready": retriever is not None,
-        "llm_ready": hasattr(sys.modules[__name__], 'llm_handler'),
-        "llm_providers": len(llm_handler.available_llms) if hasattr(sys.modules[__name__], 'llm_handler') else 0,
-        "primary_llm": llm_handler.used_model if hasattr(sys.modules[__name__], 'llm_handler') else "unknown"
+        "llm_ready": llm_handler is not None,
+        "llm": {
+            "providers_available": len(llm_handler.available_llms) if llm_handler else 0,
+            "providers_total": (len(llm_handler.available_llms) + len(llm_handler.failed_providers)) if llm_handler else 0,
+            "primary_llm": llm_handler.used_model if llm_handler else "unknown",
+            "fallback_chain": [llm["name"] for llm in llm_handler.available_llms] if llm_handler else [],
+            "failed_providers": llm_handler.failed_providers if llm_handler else {},
+        },
+        "logs": {
+            "retention_days": log_manager.retention_days,
+            "log_dir": str(log_manager.log_dir)
+        }
     }
 
 
@@ -880,7 +1114,9 @@ async def stats(db: Session = Depends(get_db)):
         "documents": num_docs,
         "chat_messages": num_messages,
         "chat_sessions": num_sessions,
-        "llm_providers_available": len(llm_handler.available_llms) if hasattr(sys.modules[__name__], 'llm_handler') else 0
+        "llm_providers_available": len(llm_handler.available_llms) if llm_handler else 0,
+        "llm_providers_failed": len(llm_handler.failed_providers) if llm_handler else 0,
+        "llm_failed_details": llm_handler.failed_providers if llm_handler else {}
     }
 
 
@@ -894,13 +1130,15 @@ async def root():
 
     return {
         "message": "RAG Chatbot",
-        "version": "3.0.0",
+        "version": "3.1.0",
         "features": [
-            "Document upload (PDF, TXT, DOCX,JSON)",
+            "Document upload (PDF, TXT, DOCX, JSON)",
             "Hybrid search (vector + BM25)",
-            "Automatic LLM fallback on token limits",
+            "Smart LLM fallback on ALL error types",
+            "Permanent provider disabling on API key leaks",
             "Chat history with sessions",
-            "Fallback chain: Gemini → Groq → OpenRouter"
+            "Rotating file logs with 15-day retention",
+            "Fallback chain: Gemini -> Groq -> OpenRouter"
         ],
         "docs": "http://localhost:8000/docs"
     }
@@ -913,6 +1151,8 @@ async def root():
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):
     """Handle HTTP exceptions."""
+
+    logger.error(f"HTTP {exc.status_code}: {exc.detail}")
 
     return JSONResponse(
         status_code=exc.status_code,
@@ -927,6 +1167,9 @@ async def http_exception_handler(request, exc):
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
     """Handle general exceptions."""
+
+    logger.error(f"Unhandled exception: {exc}")
+    logger.error(traceback.format_exc())
 
     return JSONResponse(
         status_code=500,
@@ -945,12 +1188,12 @@ async def general_exception_handler(request, exc):
 if __name__ == "__main__":
     import uvicorn
 
-    print("\n" + "="*70)
-    print("RAG CHATBOT v3.0")
-    print("="*70)
-    print("\nServer will start at: http://localhost:8000")
-    print("API docs at: http://localhost:8000/docs")
-    print("="*70 + "\n")
+    logger.info("=" * 70)
+    logger.info("RAG CHATBOT v3.1")
+    logger.info("=" * 70)
+    logger.info("Server will start at: http://localhost:8000")
+    logger.info("API docs at: http://localhost:8000/docs")
+    logger.info("=" * 70)
 
     uvicorn.run(
         app,

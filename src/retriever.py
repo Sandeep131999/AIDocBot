@@ -35,8 +35,8 @@ class Retriever:
     Into one interface with hybrid search.
     """
     
-    def __init__(self, vector_weight: float = 0.7, keyword_weight: float = 0.3,
-                 min_relevance_score: float = 0.35):
+    def __init__(self, vector_weight: float = None, keyword_weight: float = None,
+                 min_relevance_score: float = None):
         """
         Initialize retriever.
         
