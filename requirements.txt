@@ -1,63 +1,104 @@
-﻿# ALTERNATIVE: Latest Stable Versions (Recommended for new projects)
-# Use this if you want a more modern stack with fewer deprecations
+﻿# =========================
+# MODERN LANGCHAIN (LATEST ECOSYSTEM)
+# =========================
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langchain-text-splitters>=0.3.0
 
-# Core LangChain ecosystem - LATEST STABLE
-langchain==0.2.16             # Latest LangChain (with fixes for 0.2.x)
-langchain-core==0.2.38        # Latest compatible with 0.2.16
-langchain-community==0.2.16   # Latest community integrations
+# OPTIONAL (agent / experimental tools - safe modern version)
+langchain-experimental>=0.4.0
 
-# LLM integrations
-langchain-google-genai==1.0.10  # Latest Google Gemini integration
-langchain-groq==0.1.4           # Latest Groq integration
-langchain-openai==0.1.7         # Latest OpenAI integration
+# =========================
+# LLM PROVIDERS (LATEST)
+# =========================
+langchain-google-genai>=2.0.0
+langchain-groq>=0.3.0
+langchain-openai>=0.2.0
 
-# Document loading / parsing
-pypdf==4.2.0                  # PDF parsing backend
+# =========================
+# EMBEDDINGS / RAG
+# =========================
+sentence-transformers>=3.0.0
+rank-bm25>=0.2.2
+langchain-huggingface>=0.1.0
 
-# Vector database - UPGRADE TO 0.5.x (with ChromaDB reset!)
-chromadb==0.5.3               # Latest stable (requires fresh database)
+# =========================
+# VECTOR DATABASE
+# =========================
+chromadb>=0.5.0
 
-# Embeddings
-sentence-transformers==2.7.0  # Embedding models
+# =========================
+# DOCUMENT PROCESSING
+# =========================
+pypdf>=4.0.0
+PyPDF2>=3.0.0
+unstructured>=0.15.0
+openpyxl>=3.1.0
+docx2txt>=0.8
 
-# Retrieval
-rank-bm25==0.2.2              # BM25 keyword-based retrieval
+# =========================
+# RAG EVALUATION
+# =========================
+ragas>=0.1.0
 
-# Evaluation
-ragas==0.1.7                  # RAG evaluation framework
+# =========================
+# API SERVER
+# =========================
+fastapi>=0.110.0
+uvicorn>=0.29.0
+python-multipart>=0.0.9
 
-# API (FastAPI server)
-fastapi==0.110.0              # Web framework
-uvicorn==0.29.0               # ASGI server
+# =========================
+# DATA / VALIDATION
+# =========================
+pydantic>=2.7.0
+python-dotenv>=1.0.1
 
-# Supporting libraries
-python-multipart==0.0.9       # File uploads in FastAPI
-pydantic==2.7.0               # Data validation
-python-dotenv==1.0.1          # Environment variable management
-
+# =========================
 # NLP
-nltk==3.8.1                   # Natural Language Toolkit
+# =========================
+nltk>=3.8.1
 
-# Database & Authentication
-sqlalchemy==2.0.30            # ORM
-google-auth==2.29.0           # Google OAuth
-PyJWT==2.8.0                  # JWT handling
+# =========================
+# AUTH / SECURITY
+# =========================
+sqlalchemy>=2.0.0
+google-auth>=2.48.0
+PyJWT>=2.8.0
 
-# OpenAI / OpenRouter
-openai==1.30.1                # OpenAI SDK
+# =========================
+# LLM SDK
+# =========================
+openai>=1.30.0
 
-# File handling
-PyPDF2==3.0.1                 # PDF text extraction
+# =========================
+# UTILITIES
+# =========================
+requests>=2.31.0
+tiktoken>=0.7.0
 
-# Utilities
-requests==2.31.0              # HTTP client
-tiktoken==0.7.0               # Token counting
+# FIXES
+urllib3>=2.2.0
+charset-normalizer>=3.3.0
 
-# Excel and Word document support
-unstructured==0.15.0          # Core parsing engine
-openpyxl==3.1.5               # Excel .xlsx
-docx2txt==0.8                 # Word .docx
 
-# Fixed versions for requests compatibility
-urllib3==2.2.0                # Latest compatible HTTP client
-charset_normalizer==3.3.0     # Encoding detection
+# PDF → Markdown (rich formatting, tables, headers)
+pymupdf4llm
+pdfplumber
+
+# Word → Markdown (preserves heading styles)
+python-docx
+
+# Excel/CSV → Markdown tables
+pandas
+tabulate
+
+# HTML → Markdown
+markdownify
+
+# PowerPoint → Markdown
+python-pptx
+
+# RTF → text
+striprtf
