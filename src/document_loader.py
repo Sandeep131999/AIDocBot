@@ -583,13 +583,31 @@ class MarkdownConverter:
             return f"# JSON: {Path(file_path).name}\n\n```\n{json.dumps(data, indent=2)}\n```"
 
     def _convert_pdf(self, file_path: str) -> str:
+        # FIX: Wrap pymupdf4llm in try/except with fallback to plain pymupdf
         try:
             import pymupdf4llm
             md_text = pymupdf4llm.to_markdown(file_path)
             print("   ✅ Used pymupdf4llm for rich Markdown conversion")
             return md_text
+        except Exception as e:
+            # FIX: Catch ALL errors including ONNX runtime issues
+            print(f"   ⚠️  pymupdf4llm failed ({str(e)[:80]}), trying fallback...")
+
+        try:
+            import fitz  # PyMuPDF
+            doc = fitz.open(file_path)
+            md_lines = [f"# Document: {Path(file_path).name}\n"]
+            for i, page in enumerate(doc, 1):
+                text = page.get_text()
+                if text.strip():
+                    md_lines.append(f"\n## Page {i}\n")
+                    md_lines.append(text)
+            doc.close()
+            print("   ✅ Used PyMuPDF plain text fallback")
+            return "\n".join(md_lines)
         except ImportError:
             pass
+
         try:
             import pdfplumber
             md_lines = [f"# Document: {Path(file_path).name}\n"]
@@ -607,6 +625,7 @@ class MarkdownConverter:
             return "\n".join(md_lines)
         except ImportError:
             pass
+
         loader = PyPDFLoader(file_path)
         docs = loader.load()
         md_lines = [f"# Document: {Path(file_path).name}\n"]
@@ -968,8 +987,11 @@ class DocumentLoader:
         print(f"\n📂 Processing file: {file_path}")
         markdown_content = self.markdown_converter.convert_to_markdown(file_path)
 
+        # FIX: Normalize source path to avoid duplicates
+        normalized_source = os.path.normpath(file_path)
+
         metadata = {
-            "source": file_path,
+            "source": normalized_source,
             "original_format": Path(file_path).suffix.lower(),
             "converted_to": "markdown",
             "filename": Path(file_path).name

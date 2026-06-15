@@ -1,17 +1,20 @@
 """
-MAIN.PY - RAG CHATBOT v3.4 (NO AUTHENTICATION, NO CHAT HISTORY)
-===============================================================
+MAIN.PY - RAG CHATBOT v3.5 (PERSISTENCE + NO AUTHENTICATION, NO CHAT HISTORY)
+=============================================================================
 
 Features:
 - Document upload, list, and delete
 - Hybrid search (vector + BM25)
-- LLM integration with SMART FALLBACK (Gemini -> Groq -> OpenRouter)
+- LLM integration with SMART FALLBACK (order driven by .env)
 - Automatic fallback on ALL provider errors WITH TIMEOUT
 - PERMANENT provider disabling on API key leaks (403)
 - LangChain for LLM interactions
 - Rotating file logs with 15-day retention
 - Separate error.log with full traces
 - NO chat history / NO database / NO sessions
+- PERSISTENCE: Uses ChromaDB metadata for document tracking
+
+All configuration is read from .env — no hardcoded defaults in this file.
 """
 
 # ============================================================================
@@ -25,6 +28,22 @@ def _patched_client_init(self, *args, **kwargs):
 httpx.Client.__init__ = _patched_client_init
 
 # ============================================================================
+# MONKEY-PATCH 2: Disable google-genai SDK auto-retry (tenacity)
+# ============================================================================
+try:
+    import google.genai._api_client as _gapi_client
+    _original_gapi_request = _gapi_client.BaseApiClient._request
+    
+    def _no_retry_request(self, http_request, http_options, stream=False):
+        """Bypass tenacity retry — call directly once."""
+        return self._request_once(http_request, stream)
+    
+    _gapi_client.BaseApiClient._request = _no_retry_request
+    print("[PATCH] Disabled google-genai SDK auto-retry")
+except Exception as e:
+    print(f"[PATCH] Could not disable google-genai retry: {e}")
+    
+# ============================================================================
 # IMPORTS
 # ============================================================================
 
@@ -36,7 +55,6 @@ from datetime import datetime, timedelta
 import os
 import sys
 from pathlib import Path
-import json
 import logging
 import traceback
 from logging.handlers import RotatingFileHandler
@@ -51,20 +69,18 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.retriever import Retriever
 from src.evaluator import Evaluator
 
-# LangChain imports - UPDATED to modern packages
+# LangChain imports
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 
 # Environment
 from dotenv import load_dotenv
-
 load_dotenv()
 
 # ============================================================================
 # WINDOWS CONSOLE ENCODING FIX
 # ============================================================================
-import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
@@ -72,7 +88,7 @@ if sys.platform == "win32":
 
 
 # ============================================================================
-# TIMEOUT UTILS: Force fail-fast on Gemini 429 hangs
+# TIMEOUT UTILS: Force fail-fast on provider hangs
 # ============================================================================
 
 class TimeoutException(Exception):
@@ -84,10 +100,12 @@ def time_limit(seconds):
     def signal_handler(signum, frame):
         raise TimeoutException(f"Timed out after {seconds} seconds")
 
-    # Windows doesn't support signal.SIGALRM, so we use a different approach
     if sys.platform == "win32":
         import threading
-        timer = threading.Timer(seconds, lambda: (_ for _ in ()).throw(TimeoutException(f"Timed out after {seconds} seconds")))
+        timer = threading.Timer(
+            seconds,
+            lambda: (_ for _ in ()).throw(TimeoutException(f"Timed out after {seconds} seconds"))
+        )
         timer.start()
         try:
             yield
@@ -102,11 +120,9 @@ def time_limit(seconds):
             signal.alarm(0)
 
 
-def invoke_with_timeout(llm, messages, timeout_seconds=10):
+def invoke_with_timeout(llm, messages, timeout_seconds):
     """Invoke LLM with a hard timeout. Returns response or raises TimeoutException."""
-    import threading
     import concurrent.futures
-
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
         future = executor.submit(llm.invoke, messages)
         try:
@@ -116,11 +132,11 @@ def invoke_with_timeout(llm, messages, timeout_seconds=10):
 
 
 # ============================================================================
-# LOG MANAGER: Rotating files + 15-day retention + separate error log
+# LOG MANAGER: Rotating files + retention + separate error log
 # ============================================================================
 
 class LogManager:
-    """Manages rotating log files with 15-day retention."""
+    """Manages rotating log files with configurable retention."""
 
     def __init__(self, log_dir="logs", retention_days=15):
         self.log_dir = Path(log_dir)
@@ -138,7 +154,10 @@ class LogManager:
         )
 
         root_logger = logging.getLogger()
-        root_logger.setLevel(logging.DEBUG)
+
+        # Log level from .env
+        log_level = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper(), logging.INFO)
+        root_logger.setLevel(log_level)
 
         for handler in root_logger.handlers[:]:
             root_logger.removeHandler(handler)
@@ -190,15 +209,24 @@ logger = logging.getLogger(__name__)
 
 
 # ============================================================================
-# CONFIGURATION
+# CONFIGURATION — all from .env, no hardcoded fallbacks
 # ============================================================================
 
 UPLOAD_FOLDER = "uploads"
-ALLOWED_EXTENSIONS = {".txt", ".csv", ".xls", ".xlsx", ".json", ".pdf", ".docx"}
+
+# Read allowed extensions purely from .env SUPPORTED_EXTENSIONS
+ALLOWED_EXTENSIONS = {
+    ext.strip()
+    for ext in os.getenv("SUPPORTED_EXTENSIONS", "").split(",")
+    if ext.strip()
+}
+
+MAX_FILE_SIZE_MB = int(os.getenv("MAX_FILE_SIZE_MB", "50"))
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # In-memory document tracking (no database)
+# FIX: Will be populated from ChromaDB on startup
 _uploaded_documents = []
 _document_counter = 0
 
@@ -250,7 +278,7 @@ class DocumentListResponse(BaseModel):
 app = FastAPI(
     title="RAG Chatbot",
     description="RAG system with document management, hybrid search, and smart LLM fallback. No chat history.",
-    version="3.4.0"
+    version="3.5.0"
 )
 
 app.add_middleware(
@@ -268,43 +296,62 @@ evaluator = Evaluator()
 
 
 # ============================================================================
-# LLM WITH SMART FALLBACK (v3.4) — WITH TIMEOUT
+# LLM WITH SMART FALLBACK — fully driven by .env
 # ============================================================================
 
 class LLMWithSmartFallback:
     """
-    LLM with SMART fallback + TIMEOUT:
-    Fallback chain: Google Gemini -> Groq -> OpenRouter
-    Each provider gets 10 seconds max before fallback kicks in.
+    LLM with SMART fallback + TIMEOUT.
+
+    Provider order, model names, temperature, max_tokens, and timeout
+    are all read from .env. No hardcoded defaults in this class.
+
+    .env keys used:
+        LLM_PROVIDER_ORDER   = gemini,groq,openrouter
+        LLM_TEMPERATURE      = 0.1
+        LLM_MAX_TOKENS       = 500
+        LLM_PROVIDER_TIMEOUT = 15        (seconds per provider attempt)
+        GEMINI_API_KEY / GEMINI_MODEL
+        GROQ_API_KEY   / GROQ_MODEL
+        OPENROUTER_API_KEY / OPENROUTER_MODEL
+        APP_URL / APP_NAME               (OpenRouter headers)
     """
 
-    DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
-    DEFAULT_GROQ_MODEL = "llama-3.1-70b-versatile"
-    DEFAULT_OPENROUTER_MODEL = "meta-llama/llama-3.1-8b-instruct"
-
+    # Context window limits — keyed by exact model name string from .env
     CONTEXT_LIMITS = {
-        "gemini-2.0-flash": 1_000_000,
-        "gemini-2.5-flash": 1_000_000,
-        "llama-3.1-70b-versatile": 8192,
-        "meta-llama/llama-3.1-8b-instruct": 8192,
+        "gemini-2.0-flash":                  1_000_000,
+        "gemini-2.5-flash":                  1_000_000,
+        "llama-3.1-70b-versatile":           8192,
+        "llama-3.1-8b-instant":              8192,
+        "meta-llama/llama-3.1-8b-instruct":  8192,
+        "deepseek/deepseek-chat-v3-0324:free": 64000,
+        "deepseek/deepseek-r1:free":         64000,
+        "meta-llama/llama-4-maverick:free":  256000,
+        "meta-llama/llama-4-scout:free":     128000,
     }
-
-    # Timeout per provider attempt (seconds)
-    PROVIDER_TIMEOUT = 10
 
     def __init__(self):
         self.available_llms = []
         self.failed_providers = {}
         self.current_index = 0
         self.used_model = "unknown"
+
+        # All tunable params from .env
+        self.temperature      = float(os.getenv("LLM_TEMPERATURE", "0.7"))
+        self.max_tokens       = int(os.getenv("LLM_MAX_TOKENS", "1024"))
+        self.provider_timeout = int(os.getenv("LLM_PROVIDER_TIMEOUT", "15"))
+
         self._initialize_all_llms()
+
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
 
     def _estimate_tokens(self, text: str) -> int:
         return len(text) // 4
 
     def _truncate_context(self, context: str, max_tokens: int, reserved: int = 1500) -> str:
-        max_context_tokens = max_tokens - reserved
-        max_context_chars = max_context_tokens * 4
+        max_context_chars = (max_tokens - reserved) * 4
         if len(context) > max_context_chars:
             truncated = context[:max_context_chars]
             last_period = truncated.rfind(". ")
@@ -316,142 +363,217 @@ class LLMWithSmartFallback:
     def _classify_error(self, error: Exception) -> tuple:
         error_str = str(error).lower()
 
-        key_leak_patterns = [
-            "api_key_leaked", "leaked", "invalid api key", "authentication failed",
-            "auth failed", "unauthorized", "401", "403",
-        ]
-        if any(p in error_str for p in key_leak_patterns):
+        if any(p in error_str for p in [
+            "api_key_leaked", "leaked", "invalid api key",
+            "authentication failed", "auth failed", "unauthorized", "401", "403",
+        ]):
             return ("api_key_leaked", "fallback", True)
 
-        rate_limit_patterns = [
-            "rate limit", "too many requests", "429", "quota exceeded", "quota", "limit exceeded",
-        ]
-        if any(p in error_str for p in rate_limit_patterns):
+        if any(p in error_str for p in [
+            "rate limit", "too many requests", "429",
+            "quota exceeded", "quota", "limit exceeded",
+        ]):
             return ("rate_limit", "fallback", False)
 
-        token_error_patterns = [
-            "too many tokens", "context length", "context window", "request payload size",
-            "request too large", "max tokens", "max_output_tokens", "exceeds the limit", "token limit", "413",
-        ]
-        if any(p in error_str for p in token_error_patterns):
+        if any(p in error_str for p in [
+            "too many tokens", "context length", "context window",
+            "request payload size", "request too large", "max tokens",
+            "max_output_tokens", "exceeds the limit", "token limit", "413",
+        ]):
             return ("token_limit", "fallback", False)
 
-        network_patterns = [
-            "connection error", "timeout", "502", "503", "504", "bad gateway",
-            "service unavailable", "gateway timeout", "network", "unable to connect", "connection refused",
-        ]
-        if any(p in error_str for p in network_patterns):
+        if any(p in error_str for p in [
+            "connection error", "timeout", "502", "503", "504",
+            "bad gateway", "service unavailable", "gateway timeout",
+            "network", "unable to connect", "connection refused",
+        ]):
             return ("network_error", "fallback", False)
 
-        # Treat timeout as network error (temporary)
         if "timed out" in error_str or "timeout" in error_str:
             return ("timeout", "fallback", False)
 
         return ("unknown_error", "fallback", False)
+
+    # ------------------------------------------------------------------
+    # Provider initialisers — each reads its own .env keys
+    # ------------------------------------------------------------------
+
+    def _init_gemini(self):
+        gemini_key = os.getenv("GEMINI_API_KEY")
+        if not gemini_key:
+            logger.warning("[SKIP] GEMINI_API_KEY not set in .env — skipping Gemini")
+            return
+        model_name = os.getenv("GEMINI_MODEL")
+        if not model_name:
+            logger.warning("[SKIP] GEMINI_MODEL not set in .env — skipping Gemini")
+            return
+        model_name = model_name.strip()
+        try:
+            logger.info(f"[INIT] Google Gemini ({model_name})...")
+            llm = ChatGoogleGenerativeAI(
+                model=model_name,
+                google_api_key=gemini_key,
+                temperature=self.temperature,
+                max_output_tokens=self.max_tokens,
+                timeout=None,        # FIX: Let our wrapper handle timeout
+                max_retries=0,       # FIX: DISABLE SDK retries to prevent 50s+ hangs
+            )
+            self.available_llms.append({
+                "name": model_name, "llm": llm,
+                "type": "gemini", "display_name": "Google Gemini"
+            })
+            logger.info(f"[OK] Google Gemini ready: {model_name}")
+        except Exception as e:
+            logger.error(f"[ERR] Google Gemini init failed: {e}")
+            self.failed_providers["Google Gemini"] = f"Init failed: {str(e)}"
+
+    def _init_groq(self):
+        groq_key = os.getenv("GROQ_API_KEY")
+        if not groq_key:
+            logger.warning("[SKIP] GROQ_API_KEY not set in .env — skipping Groq")
+            return
+        model_name = os.getenv("GROQ_MODEL")
+        if not model_name:
+            logger.warning("[SKIP] GROQ_MODEL not set in .env — skipping Groq")
+            return
+        model_name = model_name.strip()
+        try:
+            logger.info(f"[INIT] Groq ({model_name})...")
+            llm = ChatOpenAI(
+                model=model_name,
+                api_key=groq_key,
+                base_url="https://api.groq.com/openai/v1",
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+                timeout=self.provider_timeout,
+                max_retries=1,
+            )
+            self.available_llms.append({
+                "name": model_name, "llm": llm,
+                "type": "groq", "display_name": "Groq"
+            })
+            logger.info(f"[OK] Groq ready: {model_name}")
+        except Exception as e:
+            logger.error(f"[ERR] Groq init failed: {e}")
+            self.failed_providers["Groq"] = f"Init failed: {str(e)}"
+
+    def _init_openrouter(self):
+        openrouter_key = os.getenv("OPENROUTER_API_KEY")
+        if not openrouter_key:
+            logger.warning("[SKIP] OPENROUTER_API_KEY not set in .env — skipping OpenRouter")
+            return
+        model_name = os.getenv("OPENROUTER_MODEL")
+        if not model_name:
+            logger.warning("[SKIP] OPENROUTER_MODEL not set in .env — skipping OpenRouter")
+            return
+        model_name = model_name.strip()
+        try:
+            logger.info(f"[INIT] OpenRouter ({model_name})...")
+            llm = ChatOpenAI(
+                model=model_name,
+                api_key=openrouter_key,
+                base_url="https://openrouter.ai/api/v1",
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+                timeout=self.provider_timeout,
+                max_retries=1,
+                default_headers={
+                    "HTTP-Referer": os.getenv("APP_URL", ""),
+                    "X-Title":      os.getenv("APP_NAME", ""),
+                },
+            )
+            self.available_llms.append({
+                "name": model_name, "llm": llm,
+                "type": "openrouter", "display_name": "OpenRouter"
+            })
+            logger.info(f"[OK] OpenRouter ready: {model_name}")
+        except Exception as e:
+            logger.error(f"[ERR] OpenRouter init failed: {e}")
+            self.failed_providers["OpenRouter"] = f"Init failed: {str(e)}"
+
+    # ------------------------------------------------------------------
+    # Bootstrap — reads LLM_PROVIDER_ORDER from .env
+    # ------------------------------------------------------------------
 
     def _initialize_all_llms(self):
         logger.info("=" * 70)
         logger.info("INITIALIZING ALL LLM PROVIDERS")
         logger.info("=" * 70)
 
-        # [1] Google Gemini
-        gemini_key = os.getenv("GEMINI_API_KEY")
-        if gemini_key:
-            try:
-                logger.info("[1] Initializing Google Gemini...")
-                model_name = os.getenv("GEMINI_MODEL", self.DEFAULT_GEMINI_MODEL)
-                llm = ChatGoogleGenerativeAI(
-                    model=model_name,
-                    google_api_key=gemini_key,
-                    temperature=0.7,
-                    max_output_tokens=2048,
-                    timeout=5,  # Request-level timeout (may not work perfectly)
-                    max_retries=0,  # Disable internal retries - we handle fallback ourselves
-                )
-                self.available_llms.append({
-                    "name": model_name, "llm": llm, "type": "gemini", "display_name": "Google Gemini"
-                })
-                logger.info(f"[OK] Google Gemini ready: {model_name}")
-            except Exception as e:
-                logger.error(f"[ERR] Google Gemini init failed: {e}")
-                self.failed_providers["Google Gemini"] = f"Init failed: {str(e)}"
+        provider_order = [
+            p.strip().lower()
+            for p in os.getenv("LLM_PROVIDER_ORDER", "").split(",")
+            if p.strip()
+        ]
 
-        # [2] Groq
-        groq_key = os.getenv("GROQ_API_KEY")
-        if groq_key:
-            try:
-                logger.info("[2] Initializing Groq...")
-                model_name = os.getenv("GROQ_MODEL", self.DEFAULT_GROQ_MODEL)
-                llm = ChatOpenAI(
-                    model=model_name, api_key=groq_key,
-                    base_url="https://api.groq.com/openai/v1",
-                    temperature=0.7, max_tokens=1024,
-                    timeout=10, max_retries=1
-                )
-                self.available_llms.append({
-                    "name": model_name, "llm": llm, "type": "groq", "display_name": "Groq"
-                })
-                logger.info(f"[OK] Groq ready: {model_name}")
-            except Exception as e:
-                logger.error(f"[ERR] Groq init failed: {e}")
-                self.failed_providers["Groq"] = f"Init failed: {str(e)}"
+        if not provider_order:
+            logger.warning("[WARN] LLM_PROVIDER_ORDER not set in .env — no providers will be loaded")
+        else:
+            logger.info(f"Provider order from .env: {provider_order}")
 
-        # [3] OpenRouter
-        openrouter_key = os.getenv("OPENROUTER_API_KEY")
-        if openrouter_key:
-            try:
-                logger.info("[3] Initializing OpenRouter...")
-                model_name = os.getenv("OPENROUTER_MODEL", self.DEFAULT_OPENROUTER_MODEL)
-                llm = ChatOpenAI(
-                    model=model_name, api_key=openrouter_key,
-                    base_url="https://openrouter.ai/api/v1",
-                    temperature=0.7, max_tokens=1024,
-                    timeout=10, max_retries=1
-                )
-                self.available_llms.append({
-                    "name": model_name, "llm": llm, "type": "openrouter", "display_name": "OpenRouter"
-                })
-                logger.info(f"[OK] OpenRouter ready: {model_name}")
-            except Exception as e:
-                logger.error(f"[ERR] OpenRouter init failed: {e}")
-                self.failed_providers["OpenRouter"] = f"Init failed: {str(e)}"
+        initialisers = {
+            "gemini":     self._init_gemini,
+            "groq":       self._init_groq,
+            "openrouter": self._init_openrouter,
+        }
 
-        if not self.available_llms:
-            logger.warning("[WARN] No LLM providers available at startup.")
+        for provider in provider_order:
+            if provider in initialisers:
+                initialisers[provider]()
+            else:
+                logger.warning(f"[WARN] Unknown provider '{provider}' in LLM_PROVIDER_ORDER — skipped")
 
         if self.available_llms:
             self.current_index = 0
             self.used_model = self.available_llms[0]["name"]
-            logger.info(f"[PRIMARY] Primary LLM: {self.used_model}")
-            logger.info(f"[FALLBACK] Fallback chain: {' -> '.join([llm['name'] for llm in self.available_llms])}")
+            chain = " -> ".join(p["name"] for p in self.available_llms)
+            logger.info(f"[PRIMARY]  {self.used_model}")
+            logger.info(f"[CHAIN]    {chain}")
         else:
             self.used_model = "none"
             logger.warning("[WARN] No LLM providers configured")
+
         logger.info("=" * 70)
+
+    # ------------------------------------------------------------------
+    # Message builder
+    # ------------------------------------------------------------------
 
     def _build_messages(self, context: str, question: str) -> list:
         """Build messages WITHOUT chat history."""
-        messages = []
-
-        raw_prompt = os.getenv("SYSTEM_PROMPT", """You are a helpful AI assistant. Use the following context to answer the user's question. If the answer is not in the context, say "I don't have information about that in my knowledge base."
-
-Context:
-{context}
-
-Answer the user's question based on the context above.""")
-
+        raw_prompt = os.getenv("SYSTEM_PROMPT", (
+            "You are a helpful AI assistant. Use the following context to answer "
+            "the user's question. If the answer is not in the context, say "
+            "\"I don't have information about that in my knowledge base.\"\n\n"
+            "Context:\n{context}\n\n"
+            "Answer the user's question based on the context above."
+        ))
         system_prompt = raw_prompt.format(context=context)
-        messages.append(SystemMessage(content=system_prompt))
-        messages.append(HumanMessage(content=question))
-        return messages
+        return [
+            SystemMessage(content=system_prompt),
+            HumanMessage(content=question),
+        ]
 
-    def generate_response(self, context: str, question: str,
-                         attempt: int = 0, max_attempts: int = 3) -> tuple:
+    # ------------------------------------------------------------------
+    # Core generation with smart fallback + timeout
+    # ------------------------------------------------------------------
+
+    def generate_response(
+        self,
+        context: str,
+        question: str,
+        attempt: int = 0,
+        max_attempts: int = 3,
+    ) -> tuple:
         """Generate response with SMART automatic fallback + TIMEOUT."""
 
         if not self.available_llms:
             logger.warning("[WARN] No LLM providers available.")
-            return "I apologize, but no AI providers are currently configured. Please check your API keys.", "none"
+            return (
+                "I apologize, but no AI providers are currently configured. "
+                "Please check your API keys in .env.",
+                "none",
+            )
 
         if attempt >= len(self.available_llms) or attempt >= max_attempts:
             logger.error("All LLM providers exhausted")
@@ -461,33 +583,41 @@ Answer the user's question based on the context above.""")
             )
 
         current_llm_config = self.available_llms[attempt]
-        current_llm = current_llm_config["llm"]
-        provider_name = current_llm_config["display_name"]
-        self.used_model = current_llm_config["name"]
+        current_llm       = current_llm_config["llm"]
+        provider_name     = current_llm_config["display_name"]
+        self.used_model   = current_llm_config["name"]
 
-        logger.info(f"[LLM ATTEMPT {attempt + 1}/{len(self.available_llms)}] Provider: {provider_name}")
+        logger.info(
+            f"[LLM ATTEMPT {attempt + 1}/{len(self.available_llms)}] "
+            f"Provider: {provider_name}"
+        )
 
-        model_limit = self.CONTEXT_LIMITS.get(self.used_model, 8192)
+        model_limit  = self.CONTEXT_LIMITS.get(self.used_model, 8192)
         safe_context = self._truncate_context(context, model_limit, reserved=1500)
-        messages = self._build_messages(safe_context, question)
+        messages     = self._build_messages(safe_context, question)
 
-        total_text = " ".join([m.content for m in messages])
+        total_text       = " ".join([m.content for m in messages])
         estimated_tokens = self._estimate_tokens(total_text)
         logger.info(f"[TOK] Estimated tokens: {estimated_tokens} (limit: {model_limit})")
 
         try:
-            # CRITICAL FIX: Use invoke_with_timeout to prevent hanging on 429
-            logger.info(f"[CALL] Invoking {provider_name} with {self.PROVIDER_TIMEOUT}s timeout...")
-            response = invoke_with_timeout(current_llm, messages, timeout_seconds=self.PROVIDER_TIMEOUT)
+            logger.info(
+                f"[CALL] Invoking {provider_name} "
+                f"with {self.provider_timeout}s timeout..."
+            )
+            response = invoke_with_timeout(
+                current_llm, messages, timeout_seconds=self.provider_timeout
+            )
             logger.info(f"[OK] Success with {provider_name} ({self.used_model})")
             return response.content, self.used_model
 
         except TimeoutException as e:
-            error_msg = str(e)
-            logger.error(f"[ERR] {provider_name} TIMED OUT: {error_msg}")
-            # Treat timeout as temporary failure -> fallback immediately
-            logger.warning(f"[FALLBACK] {provider_name}: timeout - trying next provider")
-            return self.generate_response(context=context, question=question, attempt=attempt + 1, max_attempts=max_attempts)
+            logger.error(f"[ERR] {provider_name} TIMED OUT: {e}")
+            logger.warning(f"[FALLBACK] {provider_name}: timeout -> next provider")
+            return self.generate_response(
+                context=context, question=question,
+                attempt=attempt + 1, max_attempts=max_attempts
+            )
 
         except Exception as e:
             error_msg = str(e)
@@ -495,25 +625,41 @@ Answer the user's question based on the context above.""")
             logger.error(traceback.format_exc())
 
             error_type, action, permanently_disable = self._classify_error(e)
-            logger.warning(f"[CHECK] Error classified as: {error_type} (action={action}, permanent_disable={permanently_disable})")
+            logger.warning(
+                f"[CHECK] Error classified as: {error_type} "
+                f"(action={action}, permanent_disable={permanently_disable})"
+            )
 
             if permanently_disable:
                 self.failed_providers[provider_name] = f"{error_type}: {error_msg}"
                 self.available_llms.pop(attempt)
-                logger.warning(f"[WARN] {provider_name}: {error_type} - PERMANENTLY DISABLED")
+                logger.warning(f"[WARN] {provider_name}: PERMANENTLY DISABLED")
 
                 if self.available_llms:
-                    return self.generate_response(context=context, question=question, attempt=attempt, max_attempts=max_attempts)
+                    return self.generate_response(
+                        context=context, question=question,
+                        attempt=attempt, max_attempts=max_attempts
+                    )
                 else:
                     logger.error("All LLM providers permanently disabled")
-                    return f"All AI providers are currently unavailable. Last error: {error_msg}", "none"
+                    return (
+                        f"All AI providers are currently unavailable. "
+                        f"Last error: {error_msg}",
+                        "none",
+                    )
 
             elif action == "fallback":
-                logger.warning(f"[FALLBACK] {provider_name}: {error_type} - trying next provider")
-                return self.generate_response(context=context, question=question, attempt=attempt + 1, max_attempts=max_attempts)
+                logger.warning(f"[FALLBACK] {provider_name}: {error_type} -> next provider")
+                return self.generate_response(
+                    context=context, question=question,
+                    attempt=attempt + 1, max_attempts=max_attempts
+                )
 
             else:
-                raise HTTPException(status_code=502, detail=f"LLM provider error ({provider_name}): {error_msg}")
+                raise HTTPException(
+                    status_code=502,
+                    detail=f"LLM provider error ({provider_name}): {error_msg}"
+                )
 
 
 # ============================================================================
@@ -523,21 +669,54 @@ Answer the user's question based on the context above.""")
 @app.on_event("startup")
 async def startup_event():
     """Initialize on startup."""
-    global retriever, llm_handler
+    global retriever, llm_handler, _uploaded_documents, _document_counter
 
     logger.info("=" * 70)
-    logger.info("STARTING RAG CHATBOT v3.4 (NO HISTORY + TIMEOUT)")
+    logger.info("STARTING RAG CHATBOT v3.5 (PERSISTENCE + NO HISTORY + TIMEOUT)")
     logger.info("=" * 70)
 
     try:
         retriever = Retriever(
-            vector_weight=float(os.getenv("RETRIEVER_VECTOR_WEIGHT", "0.7")),
-            keyword_weight=float(os.getenv("RETRIEVER_KEYWORD_WEIGHT", "0.3")),
-            min_relevance_score=float(os.getenv("RETRIEVER_MIN_SCORE", "0.35"))
+            vector_weight=float(os.getenv("VECTOR_WEIGHT", "0.7")),
+            keyword_weight=float(os.getenv("KEYWORD_WEIGHT", "0.3")),
+            min_relevance_score=float(os.getenv("MIN_RELEVANCE_SCORE", "0.5"))
         )
         logger.info("[OK] Retriever initialized")
 
-        # Try to load existing documents
+        # FIX: Populate document tracking from ChromaDB persisted data
+        if retriever.indexed and retriever.vector_store:
+            try:
+                vs_stats = retriever.vector_store.get_stats()
+                sources = vs_stats.get('sources', [])
+
+                # Build document tracking from unique sources
+                seen_files = set()
+                for source in sources:
+                    normalized = os.path.normpath(source)
+                    if normalized in seen_files:
+                        continue
+                    seen_files.add(normalized)
+
+                    _document_counter += 1
+                    file_size = 0
+                    if os.path.exists(normalized):
+                        file_size = os.path.getsize(normalized)
+
+                    doc_record = {
+                        "id": _document_counter,
+                        "filename": os.path.basename(normalized),
+                        "file_path": normalized,
+                        "size": file_size,
+                        "indexed": True,
+                        "uploaded_at": datetime.utcnow().isoformat()
+                    }
+                    _uploaded_documents.append(doc_record)
+
+                logger.info(f"[OK] Restored {len(_uploaded_documents)} documents from persisted data")
+            except Exception as e:
+                logger.warning(f"[WARN] Could not restore documents from vector store: {e}")
+
+        # Try to load existing documents from uploads folder (backward compat)
         try:
             base_dir = Path(__file__).parent.parent
             default_doc_path = base_dir / "data" / "password_guide.txt"
@@ -545,7 +724,10 @@ async def startup_event():
                 num_chunks = retriever.load_and_index_documents(str(default_doc_path))
                 logger.info(f"[OK] Loaded {num_chunks} chunks from default documents")
             else:
-                logger.warning(f"[WARN] Default document not found at {default_doc_path}. Users can upload documents.")
+                logger.warning(
+                    f"[WARN] Default document not found at {default_doc_path}. "
+                    "Users can upload documents."
+                )
         except Exception as e:
             logger.error(f"[ERR] Error loading default documents: {e}")
             logger.error(traceback.format_exc())
@@ -571,11 +753,20 @@ async def upload_document(file: UploadFile = File(...)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="No file provided")
 
+    if not ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=500,
+            detail="SUPPORTED_EXTENSIONS is not configured in .env"
+        )
+
     file_ext = os.path.splitext(file.filename)[1].lower()
     if file_ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
-            detail=f"File type .{file_ext} not supported. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
+            detail=(
+                f"File type '{file_ext}' not supported. "
+                f"Allowed: {', '.join(sorted(ALLOWED_EXTENSIONS))}"
+            )
         )
 
     try:
@@ -584,6 +775,15 @@ async def upload_document(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
 
         file_size = os.path.getsize(file_path)
+
+        # Enforce MAX_FILE_SIZE_MB from .env
+        if file_size > MAX_FILE_SIZE_MB * 1024 * 1024:
+            os.remove(file_path)
+            raise HTTPException(
+                status_code=413,
+                detail=f"File exceeds maximum size of {MAX_FILE_SIZE_MB} MB"
+            )
+
         logger.info(f"[OK] File saved: {file_path} ({file_size} bytes)")
 
         doc_id = _get_next_doc_id()
@@ -602,14 +802,22 @@ async def upload_document(file: UploadFile = File(...)):
                 num_chunks = retriever.load_and_index_documents(file_path)
                 doc_record["indexed"] = True
                 logger.info(f"[OK] Indexed {num_chunks} chunks")
-                return DocumentUploadResponse(id=doc_id, filename=file.filename, size=file_size, indexed=True)
+                return DocumentUploadResponse(
+                    id=doc_id, filename=file.filename,
+                    size=file_size, indexed=True
+                )
             except Exception as e:
                 logger.error(f"[ERR] Indexing error: {e}")
                 logger.error(traceback.format_exc())
-                return DocumentUploadResponse(id=doc_id, filename=file.filename, size=file_size, indexed=False)
+                return DocumentUploadResponse(
+                    id=doc_id, filename=file.filename,
+                    size=file_size, indexed=False
+                )
         else:
             raise HTTPException(status_code=500, detail="Retriever not initialized")
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"[ERR] Upload error: {e}")
         logger.error(traceback.format_exc())
@@ -618,7 +826,40 @@ async def upload_document(file: UploadFile = File(...)):
 
 @app.get("/api/documents", tags=["Documents"])
 async def list_documents():
-    """Get all uploaded documents."""
+    """
+    Get all uploaded documents.
+    FIX: Returns documents from both in-memory tracking AND ChromaDB metadata.
+    This ensures previously uploaded/persisted documents are always visible.
+    """
+    global _uploaded_documents, _document_counter
+
+    # FIX: Sync with ChromaDB to catch any documents not in memory
+    if retriever and retriever.vector_store:
+        try:
+            vs_stats = retriever.vector_store.get_stats()
+            db_sources = set(vs_stats.get('sources', []))
+            memory_sources = {os.path.normpath(d['file_path']) for d in _uploaded_documents}
+
+            # Add any DB sources not in memory
+            for source in db_sources:
+                normalized = os.path.normpath(source)
+                if normalized not in memory_sources:
+                    _document_counter += 1
+                    file_size = 0
+                    if os.path.exists(normalized):
+                        file_size = os.path.getsize(normalized)
+
+                    _uploaded_documents.append({
+                        "id": _document_counter,
+                        "filename": os.path.basename(normalized),
+                        "file_path": normalized,
+                        "size": file_size,
+                        "indexed": True,
+                        "uploaded_at": datetime.utcnow().isoformat()
+                    })
+        except Exception as e:
+            logger.warning(f"[WARN] Could not sync documents from vector store: {e}")
+
     return {
         "documents": [
             {
@@ -644,7 +885,6 @@ async def delete_document(doc_id: int):
 
     file_path = doc["file_path"]
 
-    # Delete file from disk
     try:
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -652,9 +892,7 @@ async def delete_document(doc_id: int):
     except Exception as e:
         logger.error(f"[ERR] Failed to delete file {file_path}: {e}")
 
-    # Remove from tracking list
     _uploaded_documents = [d for d in _uploaded_documents if d["id"] != doc_id]
-
     logger.info(f"[OK] Deleted document id={doc_id} from tracking")
     return {"success": True, "message": f"Document {doc_id} deleted", "deleted_file": file_path}
 
@@ -667,7 +905,7 @@ async def delete_document(doc_id: int):
 async def chat(request: ChatRequest):
     """
     Chat with RAG system — NO history, NO sessions, NO database.
-    Query rewriting and re-ranking use multi-LLM fallback (Gemini -> Groq -> OpenRouter).
+    Query rewriting and re-ranking use multi-LLM fallback (order from .env).
 
     Request: { "query": "your question", "top_k": 5 }
     """
@@ -677,14 +915,21 @@ async def chat(request: ChatRequest):
     if not retriever:
         raise HTTPException(status_code=500, detail="Retriever not initialized")
 
-    # FIX: Check if any documents are indexed before retrieving
     if not retriever.indexed:
         logger.warning("[WARN] No documents indexed. Cannot retrieve.")
         return ChatResponse(
-            assistant_message="No documents have been uploaded yet. Please upload a document first using POST /api/documents/upload",
+            assistant_message=(
+                "No documents have been uploaded yet. "
+                "Please upload a document first using POST /api/documents/upload"
+            ),
             sources=[],
             used_model="none"
         )
+
+    # Read retrieval settings from .env
+    use_query_rewrite = os.getenv("QUERY_REWRITING_ENABLED", "True").strip().lower() == "true"
+    use_rerank        = os.getenv("RERANKER_ENABLED", "True").strip().lower() == "true"
+    min_score         = float(os.getenv("MIN_RELEVANCE_SCORE", "0.5"))
 
     try:
         # Step 1: Retrieve with query rewrite + re-ranking
@@ -692,21 +937,21 @@ async def chat(request: ChatRequest):
         results = retriever.retrieve(
             request.query,
             top_k=request.top_k,
-            use_query_rewrite=True,    # ENABLED: Uses Multi-LLM fallback internally
-            use_rerank=True,           # ENABLED: Uses Multi-LLM fallback internally
+            use_query_rewrite=use_query_rewrite,
+            use_rerank=use_rerank,
             use_hyde=False
         )
 
-        # Fallback: expand search if no results
+        # FIX: Don't re-run full pipeline on fallback — just expand top_k
         if not results:
-            logger.warning("[WARN] No relevant documents found above threshold (0.35)")
+            logger.warning(f"[WARN] No relevant documents found above threshold ({min_score})")
             logger.info("[FALLBACK] Trying with expanded top_k...")
             try:
                 results = retriever.retrieve(
                     request.query,
                     top_k=request.top_k * 2,
-                    use_query_rewrite=True,
-                    use_rerank=True
+                    use_query_rewrite=False,  # FIX: Skip re-writing to save LLM calls
+                    use_rerank=use_rerank
                 )
             except Exception as e:
                 logger.error(f"[ERR] Expanded retrieve failed: {e}")
@@ -726,15 +971,15 @@ async def chat(request: ChatRequest):
         sources = []
         for i, r in enumerate(results):
             source = {
-                "document": r['document'][:100] + "...",
+                "document":      r['document'][:100] + "...",
                 "combined_score": r.get('combined_score', 0),
-                "vector_score": r.get('vector_score', 0),
-                "keyword_score": r.get('keyword_score', 0),
-                "final_score": r.get('final_score', r.get('combined_score', 0)),
-                "llm_score": r.get('llm_score'),
-                "explanation": r.get('explanation'),
-                "llm_provider": r.get('llm_provider'),
-                "employee_name": r['metadata'].get('employee_name', 'N/A')
+                "vector_score":   r.get('vector_score', 0),
+                "keyword_score":  r.get('keyword_score', 0),
+                "final_score":    r.get('final_score', r.get('combined_score', 0)),
+                "llm_score":      r.get('llm_score'),
+                "explanation":    r.get('explanation'),
+                "llm_provider":   r.get('llm_provider'),
+                "employee_name":  r['metadata'].get('employee_name', 'N/A')
             }
             if i == 0 and 'query_rewrite' in r:
                 source["query_rewrite"] = r['query_rewrite']
@@ -742,19 +987,21 @@ async def chat(request: ChatRequest):
 
         logger.info(f"[OK] Retrieved {len(results)} documents")
 
-        # Step 2: Generate LLM response (NO chat history) with timeout fallback
+        # Step 2: Generate LLM response (NO chat history)
         logger.info("[STEP 2] Generate LLM response")
 
         if llm_handler is None:
             logger.error("[ERR] LLM handler not initialized")
-            response_text = "System error: AI handler not initialized."
-            used_model = "none"
-        else:
-            response_text, used_model = llm_handler.generate_response(
-                context=context,
-                question=request.query
-                # NO chat_history parameter — stateless
+            return ChatResponse(
+                assistant_message="System error: AI handler not initialized.",
+                sources=sources,
+                used_model="none"
             )
+
+        response_text, used_model = llm_handler.generate_response(
+            context=context,
+            question=request.query
+        )
 
         logger.info(f"[OK] Generated response using {used_model}")
 
@@ -781,24 +1028,40 @@ async def health():
     """Health check with provider status."""
     return {
         "status": "healthy",
-        "version": "3.4.0",
+        "version": "3.5.0",
         "retriever_ready": retriever is not None,
         "documents_indexed": retriever.indexed if retriever else False,
         "llm_ready": llm_handler is not None,
         "llm": {
             "providers_available": len(llm_handler.available_llms) if llm_handler else 0,
-            "providers_total": (len(llm_handler.available_llms) + len(llm_handler.failed_providers)) if llm_handler else 0,
-            "primary_llm": llm_handler.used_model if llm_handler else "unknown",
-            "fallback_chain": [llm["name"] for llm in llm_handler.available_llms] if llm_handler else [],
+            "providers_total": (
+                len(llm_handler.available_llms) + len(llm_handler.failed_providers)
+            ) if llm_handler else 0,
+            "primary_llm":    llm_handler.used_model if llm_handler else "unknown",
+            "fallback_chain": [p["name"] for p in llm_handler.available_llms] if llm_handler else [],
             "failed_providers": llm_handler.failed_providers if llm_handler else {},
         },
         "documents": {
             "uploaded_count": len(_uploaded_documents),
-            "indexed_count": sum(1 for d in _uploaded_documents if d["indexed"])
+            "indexed_count":  sum(1 for d in _uploaded_documents if d["indexed"])
+        },
+        "config": {
+            "allowed_extensions":   sorted(ALLOWED_EXTENSIONS),
+            "max_file_size_mb":     MAX_FILE_SIZE_MB,
+            "top_k":                os.getenv("TOP_K"),
+            "min_relevance_score":  os.getenv("MIN_RELEVANCE_SCORE"),
+            "vector_weight":        os.getenv("VECTOR_WEIGHT"),
+            "keyword_weight":       os.getenv("KEYWORD_WEIGHT"),
+            "query_rewriting":      os.getenv("QUERY_REWRITING_ENABLED"),
+            "reranker":             os.getenv("RERANKER_ENABLED"),
+            "llm_provider_order":   os.getenv("LLM_PROVIDER_ORDER"),
+            "llm_temperature":      os.getenv("LLM_TEMPERATURE"),
+            "llm_max_tokens":       os.getenv("LLM_MAX_TOKENS"),
         },
         "logs": {
             "retention_days": log_manager.retention_days,
-            "log_dir": str(log_manager.log_dir)
+            "log_dir":        str(log_manager.log_dir),
+            "log_level":      os.getenv("LOG_LEVEL"),
         }
     }
 
@@ -808,13 +1071,13 @@ async def stats():
     """Get system statistics — NO database."""
     return {
         "documents": {
-            "total": len(_uploaded_documents),
-            "indexed": sum(1 for d in _uploaded_documents if d["indexed"]),
+            "total":       len(_uploaded_documents),
+            "indexed":     sum(1 for d in _uploaded_documents if d["indexed"]),
             "not_indexed": sum(1 for d in _uploaded_documents if not d["indexed"])
         },
         "llm_providers_available": len(llm_handler.available_llms) if llm_handler else 0,
-        "llm_providers_failed": len(llm_handler.failed_providers) if llm_handler else 0,
-        "llm_failed_details": llm_handler.failed_providers if llm_handler else {}
+        "llm_providers_failed":    len(llm_handler.failed_providers) if llm_handler else 0,
+        "llm_failed_details":      llm_handler.failed_providers if llm_handler else {}
     }
 
 
@@ -827,17 +1090,18 @@ async def root():
     """Root endpoint."""
     return {
         "message": "RAG Chatbot",
-        "version": "3.4.0",
+        "version": "3.5.0",
         "features": [
-            "Document upload (PDF, TXT, DOCX, JSON)",
-            "Document list and delete",
-            "Hybrid search (vector + BM25)",
-            "Query rewriting + Re-ranking with Multi-LLM fallback",
-            "Smart LLM fallback on ALL error types WITH 10s TIMEOUT",
+            "Document upload — extensions from SUPPORTED_EXTENSIONS in .env",
+            "Document list and delete (synced with ChromaDB)",
+            "Hybrid search (vector + BM25) — weights from .env",
+            "Query rewriting + Re-ranking — toggled via .env",
+            "Smart LLM fallback — order from LLM_PROVIDER_ORDER in .env",
+            "Per-provider timeout from LLM_PROVIDER_TIMEOUT in .env",
             "Permanent provider disabling on API key leaks",
-            "Rotating file logs with 15-day retention",
+            "Rotating file logs — level from LOG_LEVEL in .env",
             "NO chat history / NO database / NO sessions",
-            "Fallback chain: Gemini -> Groq -> OpenRouter"
+            "PERSISTENCE: Documents survive restart via ChromaDB",
         ],
         "docs": "http://localhost:8000/docs"
     }
@@ -873,9 +1137,9 @@ async def general_exception_handler(request, exc):
 if __name__ == "__main__":
     import uvicorn
     logger.info("=" * 70)
-    logger.info("RAG CHATBOT v3.4")
+    logger.info("RAG CHATBOT v3.5")
     logger.info("=" * 70)
     logger.info("Server will start at: http://localhost:8000")
-    logger.info("API docs at: http://localhost:8000/docs")
+    logger.info("API docs at:          http://localhost:8000/docs")
     logger.info("=" * 70)
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")

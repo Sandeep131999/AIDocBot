@@ -67,3 +67,6 @@ OPENROUTER_MODEL= openrouter/owl-alpha
 # --- App Info (for OpenRouter) ---
 APP_URL=https://localhost
 APP_NAME=RAG-System
+
+OPENROUTER_FREE_MODELS=openai/gpt-oss-120b:free,nvidia/nemotron-3-ultra:free,openai/gpt-oss-20b:free,nvidia/nemotron-3-super-120b-a12b:free,liquid/lfm-2.5-1.2b-thinking:free
+FALLBACK_ERRORS=rate limit,quota exceeded,too many requests,resource_exhausted,context length,maximum context,token limit,timeout,connection,unavailable,invalid api key,authentication,permission,out of context,context window,service unavailable,internal server error,no endpoints found,model not found,not found,404,410

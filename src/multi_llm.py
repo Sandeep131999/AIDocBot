@@ -11,6 +11,7 @@ FIXES APPLIED:
 - OpenRouter: Auto-rotates through working free models if configured model fails
 - Provider cooldown: Dead providers skipped for 5 min to avoid wasted retries
 - All settings read from .env file (UTF-8 encoding)
+- NO HARDCODED DEFAULTS - everything from .env
 
 Fallback logic:
 1. Try primary LLM
@@ -39,32 +40,56 @@ load_dotenv(encoding="utf-8")
 
 
 # =============================================================================
-# CONFIGURATION (read from .env)
+# CONFIGURATION (read from .env) - NO HARDCODED DEFAULTS
 # =============================================================================
 
 class Config:
-    """Centralized config — all values from .env"""
+    """Centralized config — all values from .env. Raises if missing."""
+
+    @staticmethod
+    def _require(key: str) -> str:
+        val = os.getenv(key)
+        if val is None or val.strip() == "":
+            raise ValueError(f"Required .env key '{key}' is missing or empty.")
+        return val
+
+    @staticmethod
+    def _get(key: str) -> str:
+        val = os.getenv(key)
+        return val if val is not None else ""
+
+    @staticmethod
+    def _parse_list(key: str) -> List[str]:
+        raw = os.getenv(key)
+        if raw is None or raw.strip() == "":
+            raise ValueError(f"Required .env key '{key}' is missing or empty.")
+        return [item.strip() for item in raw.split(",") if item.strip()]
 
     # Multi-LLM
-    LLM_PROVIDER_ORDER: List[str] = os.getenv("LLM_PROVIDER_ORDER").split(",")
-    LLM_TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE"))
-    LLM_MAX_TOKENS: int = int(os.getenv("LLM_MAX_TOKENS"))
+    LLM_PROVIDER_ORDER: List[str] = _parse_list("LLM_PROVIDER_ORDER")
+    LLM_TEMPERATURE: float = float(_require("LLM_TEMPERATURE"))
+    LLM_MAX_TOKENS: int = int(_require("LLM_MAX_TOKENS"))
+    LLM_PROVIDER_TIMEOUT: int = int(_require("LLM_PROVIDER_TIMEOUT"))
 
     # Gemini
-    GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY") or None
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL")
+    GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
+    GEMINI_MODEL: str = _require("GEMINI_MODEL")
 
     # Groq
-    GROQ_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY") or None
-    GROQ_MODEL: str = os.getenv("GROQ_MODEL").strip()
+    GROQ_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
+    GROQ_MODEL: str = _require("GROQ_MODEL")
 
     # OpenRouter
-    OPENROUTER_API_KEY: Optional[str] = os.getenv("OPENROUTER_API_KEY") or None
-    OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL").strip()
+    OPENROUTER_API_KEY: Optional[str] = os.getenv("OPENROUTER_API_KEY")
+    OPENROUTER_MODEL: str = _require("OPENROUTER_MODEL")
+    OPENROUTER_FREE_MODELS: List[str] = _parse_list("OPENROUTER_FREE_MODELS")
+
+    # Fallback errors
+    FALLBACK_ERRORS: List[str] = _parse_list("FALLBACK_ERRORS")
 
     # App Info
-    APP_URL: str = os.getenv("APP_URL", "https://localhost")
-    APP_NAME: str = os.getenv("APP_NAME", "RAG-System")
+    APP_URL: str = _require("APP_URL")
+    APP_NAME: str = _require("APP_NAME")
 
 
 # =============================================================================
@@ -126,23 +151,17 @@ class MultiLLM:
     On 404/model not found: OpenRouter auto-rotates to next free model.
     """
 
-    DEFAULT_ORDER = ["gemini", "groq", "openrouter"]
-
-    # Working free models on OpenRouter (fallback rotation)
-    OPENROUTER_FREE_MODELS = os.getenv("OPENROUTER_FREE_MODELS")
-
-    FALLBACK_ERRORS =  os.getenv("FALLBACK_ERRORS")
-
-    def __init__(self, 
+    def __init__(self,
                  provider_order: List[str] = None,
                  temperature: float = None,
                  max_tokens: int = None,
                  fallback_on_any_error: bool = True):
 
-        self.provider_order = provider_order or Config.LLM_PROVIDER_ORDER or self.DEFAULT_ORDER
+        self.provider_order = provider_order or Config.LLM_PROVIDER_ORDER
         self.temperature = temperature if temperature is not None else Config.LLM_TEMPERATURE
         self.max_tokens = max_tokens if max_tokens is not None else Config.LLM_MAX_TOKENS
         self.fallback_on_any_error = fallback_on_any_error
+        self.provider_timeout = Config.LLM_PROVIDER_TIMEOUT
 
         self.current_provider_idx = 0
         self.last_successful_provider = None
@@ -193,9 +212,13 @@ class MultiLLM:
         # OpenRouter
         or_key = Config.OPENROUTER_API_KEY or ""
         or_model = Config.OPENROUTER_MODEL
-        # If model is empty or looks like a broken one, use auto-rotation
+
+        # If configured model is empty or known broken, use first from free models list
         if not or_model or or_model in ["openrouter/owl-alpha", "x-ai/grok-3-mini-beta:free"]:
-            or_model = self.OPENROUTER_FREE_MODELS[0]
+            if Config.OPENROUTER_FREE_MODELS:
+                or_model = Config.OPENROUTER_FREE_MODELS[0]
+            else:
+                or_model = ""
 
         configs["openrouter"] = LLMConfig(
             name="openrouter",
@@ -217,12 +240,14 @@ class MultiLLM:
 
             try:
                 if name == "gemini":
+                    # FIX: Disable SDK auto-retry to prevent 50s+ hangs on 429
                     llm = ChatGoogleGenerativeAI(
                         model=config.model,
                         temperature=config.temperature,
                         max_output_tokens=config.max_tokens,
                         google_api_key=config.api_key,
-                        timeout=config.timeout
+                        timeout=None,  # Let our wrapper handle timeout
+                        max_retries=0,  # DISABLE SDK retries
                     )
 
                 elif name == "groq":
@@ -231,7 +256,7 @@ class MultiLLM:
                         temperature=config.temperature,
                         max_tokens=config.max_tokens,
                         api_key=config.api_key,
-                        timeout=config.timeout,
+                        timeout=self.provider_timeout,
                         max_retries=1  # Minimal retry
                     )
 
@@ -242,7 +267,7 @@ class MultiLLM:
                         max_tokens=config.max_tokens,
                         api_key=config.api_key,
                         base_url="https://openrouter.ai/api/v1",
-                        timeout=config.timeout,
+                        timeout=self.provider_timeout,
                         max_retries=1,
                         default_headers={
                             "HTTP-Referer": Config.APP_URL,
@@ -266,7 +291,7 @@ class MultiLLM:
         if self.fallback_on_any_error:
             return True
         error_str = str(error).lower()
-        return any(pattern in error_str for pattern in self.FALLBACK_ERRORS)
+        return any(pattern in error_str for pattern in Config.FALLBACK_ERRORS)
 
     def _get_next_provider(self) -> Optional[str]:
         """Get next available provider (skipping cooldown)."""
@@ -283,8 +308,11 @@ class MultiLLM:
         if "404" not in error_str and "no endpoints" not in error_str.lower():
             return False
 
-        self._openrouter_model_index = (self._openrouter_model_index + 1) % len(self.OPENROUTER_FREE_MODELS)
-        new_model = self.OPENROUTER_FREE_MODELS[self._openrouter_model_index]
+        if not Config.OPENROUTER_FREE_MODELS:
+            return False
+
+        self._openrouter_model_index = (self._openrouter_model_index + 1) % len(Config.OPENROUTER_FREE_MODELS)
+        new_model = Config.OPENROUTER_FREE_MODELS[self._openrouter_model_index]
 
         print(f"   🔄 Rotating OpenRouter to: {new_model}")
 
@@ -297,7 +325,7 @@ class MultiLLM:
                 max_tokens=self.max_tokens,
                 api_key=self.llm_configs["openrouter"].api_key,
                 base_url="https://openrouter.ai/api/v1",
-                timeout=30,
+                timeout=self.provider_timeout,
                 max_retries=1,
                 default_headers={
                     "HTTP-Referer": Config.APP_URL,
@@ -309,7 +337,7 @@ class MultiLLM:
             print(f"   ❌ OpenRouter rotation failed: {e}")
             return False
 
-    def invoke(self, prompt: Union[str, List], 
+    def invoke(self, prompt: Union[str, List],
                system_prompt: str = None,
                retries_per_provider: int = 1) -> Any:
         """

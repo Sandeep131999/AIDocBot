@@ -4,8 +4,8 @@ CONFIG LOADER
 Loads all settings from .env file with UTF-8 encoding.
 Centralized configuration for the entire RAG system.
 
-FIXES:
-- Updated OPENROUTER_MODEL default to working free model
+RULE: NO HARDCODED DEFAULTS. Every value MUST come from .env.
+If a required .env key is missing, the system raises an error.
 """
 
 import os
@@ -16,73 +16,121 @@ from typing import Optional, List
 load_dotenv(encoding="utf-8")
 
 
+def _require_env(key: str) -> str:
+    """Get a required env var. Raises if missing."""
+    value = os.getenv(key)
+    if value is None or value.strip() == "":
+        raise ValueError(f"Required .env key '{key}' is missing or empty.")
+    return value
+
+
+def _get_env(key: str, required: bool = True) -> str:
+    """Get env var. If required=True, raises on missing."""
+    value = os.getenv(key)
+    if required and (value is None or value.strip() == ""):
+        raise ValueError(f"Required .env key '{key}' is missing or empty.")
+    return value if value is not None else ""
+
+
+def _parse_list(key: str, required: bool = True) -> List[str]:
+    """Parse comma-separated env value into list."""
+    raw = _get_env(key, required=required)
+    if not raw:
+        return []
+    return [item.strip() for item in raw.split(",") if item.strip()]
+
+
+def _parse_bool(key: str, required: bool = True) -> bool:
+    """Parse env value as boolean."""
+    raw = _get_env(key, required=required).lower().strip()
+    return raw in ("true", "1", "yes", "on")
+
+
+def _parse_int(key: str, required: bool = True) -> int:
+    """Parse env value as int."""
+    raw = _get_env(key, required=required)
+    return int(raw)
+
+
+def _parse_float(key: str, required: bool = True) -> float:
+    """Parse env value as float."""
+    raw = _get_env(key, required=required)
+    return float(raw)
+
+
 class Config:
     """Centralized configuration manager. All settings read from .env"""
 
     # --- Chunking Settings ---
-    CHUNK_SIZE: int = int(os.getenv("CHUNK_SIZE", "500"))
-    CHUNK_OVERLAP: int = int(os.getenv("CHUNK_OVERLAP", "200"))
-    CHUNK_STRATEGY: str = os.getenv("CHUNK_STRATEGY", "recursive")
+    CHUNK_SIZE: int = _parse_int("CHUNK_SIZE")
+    CHUNK_OVERLAP: int = _parse_int("CHUNK_OVERLAP")
+    CHUNK_STRATEGY: str = _get_env("CHUNK_STRATEGY")
 
     # --- Embedding Settings ---
-    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "BAAI/bge-base-en-v1.5")
-    EMBEDDING_DEVICE: str = os.getenv("EMBEDDING_DEVICE", "cpu")
-    EMBEDDING_NORMALIZE: bool = os.getenv("EMBEDDING_NORMALIZE", "True").lower() == "true"
+    EMBEDDING_MODEL: str = _get_env("EMBEDDING_MODEL")
+    EMBEDDING_DEVICE: str = _get_env("EMBEDDING_DEVICE")
+    EMBEDDING_NORMALIZE: bool = _parse_bool("EMBEDDING_NORMALIZE")
 
     # --- Vector Store Settings ---
-    VECTOR_DB_PATH: str = os.getenv("VECTOR_DB_PATH", "./chroma_db")
-    VECTOR_COLLECTION: str = os.getenv("VECTOR_COLLECTION", "documents")
-    VECTOR_SIMILARITY_METRIC: str = os.getenv("VECTOR_SIMILARITY_METRIC", "cosine")
+    VECTOR_DB_PATH: str = _get_env("VECTOR_DB_PATH")
+    VECTOR_COLLECTION: str = _get_env("VECTOR_COLLECTION")
+    VECTOR_SIMILARITY_METRIC: str = _get_env("VECTOR_SIMILARITY_METRIC")
 
     # --- Search & Retrieval Settings ---
-    VECTOR_WEIGHT: float = float(os.getenv("VECTOR_WEIGHT", "0.7"))
-    KEYWORD_WEIGHT: float = float(os.getenv("KEYWORD_WEIGHT", "0.3"))
-    MIN_RELEVANCE_SCORE: float = float(os.getenv("MIN_RELEVANCE_SCORE", "0.5"))
-    TOP_K: int = int(os.getenv("TOP_K", "5"))
+    VECTOR_WEIGHT: float = _parse_float("VECTOR_WEIGHT")
+    KEYWORD_WEIGHT: float = _parse_float("KEYWORD_WEIGHT")
+    MIN_RELEVANCE_SCORE: float = _parse_float("MIN_RELEVANCE_SCORE")
+    TOP_K: int = _parse_int("TOP_K")
 
     # --- Multi-LLM Provider Settings ---
-    LLM_PROVIDER_ORDER: List[str] = os.getenv("LLM_PROVIDER_ORDER", "gemini,groq,openrouter").split(",")
+    LLM_PROVIDER_ORDER: List[str] = _parse_list("LLM_PROVIDER_ORDER")
 
     # Gemini
     GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    GEMINI_MODEL: str = _get_env("GEMINI_MODEL")
 
     # Groq
     GROQ_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
-    GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+    GROQ_MODEL: str = _get_env("GROQ_MODEL")
 
-    # OpenRouter — FIXED: Updated to working free model
+    # OpenRouter
     OPENROUTER_API_KEY: Optional[str] = os.getenv("OPENROUTER_API_KEY")
-    # NOTE: If left empty, multi_llm.py will auto-discover a working free model
-    OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "")
+    OPENROUTER_MODEL: str = _get_env("OPENROUTER_MODEL")
+
+    # OpenRouter Free Models (comma-separated list for auto-rotation)
+    OPENROUTER_FREE_MODELS: List[str] = _parse_list("OPENROUTER_FREE_MODELS")
+
+    # Fallback error keywords (comma-separated)
+    FALLBACK_ERRORS: List[str] = _parse_list("FALLBACK_ERRORS")
 
     # Legacy OpenAI (optional)
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY")
-    LLM_MODEL: str = os.getenv("LLM_MODEL", "gpt-4")
+    LLM_MODEL: str = _get_env("LLM_MODEL", required=False) or ""
 
     # --- LLM Settings ---
-    LLM_TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE", "0.1"))
-    LLM_MAX_TOKENS: int = int(os.getenv("LLM_MAX_TOKENS", "500"))
+    LLM_TEMPERATURE: float = _parse_float("LLM_TEMPERATURE")
+    LLM_MAX_TOKENS: int = _parse_int("LLM_MAX_TOKENS")
+    LLM_PROVIDER_TIMEOUT: int = _parse_int("LLM_PROVIDER_TIMEOUT")
 
     # --- Re-ranking Settings ---
-    RERANKER_ENABLED: bool = os.getenv("RERANKER_ENABLED", "True").lower() == "true"
-    RERANKER_TOP_N: int = int(os.getenv("RERANKER_TOP_N", "3"))
-    RERANKER_PROMPT_TEMPLATE: str = os.getenv("RERANKER_PROMPT_TEMPLATE", "default")
+    RERANKER_ENABLED: bool = _parse_bool("RERANKER_ENABLED")
+    RERANKER_TOP_N: int = _parse_int("RERANKER_TOP_N")
+    RERANKER_PROMPT_TEMPLATE: str = _get_env("RERANKER_PROMPT_TEMPLATE")
 
     # --- Query Rewriting Settings ---
-    QUERY_REWRITING_ENABLED: bool = os.getenv("QUERY_REWRITING_ENABLED", "True").lower() == "true"
-    QUERY_REWRITING_PROMPT_TEMPLATE: str = os.getenv("QUERY_REWRITING_PROMPT_TEMPLATE", "default")
+    QUERY_REWRITING_ENABLED: bool = _parse_bool("QUERY_REWRITING_ENABLED")
+    QUERY_REWRITING_PROMPT_TEMPLATE: str = _get_env("QUERY_REWRITING_PROMPT_TEMPLATE")
 
     # --- File Processing ---
-    SUPPORTED_EXTENSIONS: list = os.getenv("SUPPORTED_EXTENSIONS", ".pdf,.txt,.csv,.xlsx,.xls,.docx,.doc,.json,.md").split(",")
-    MAX_FILE_SIZE_MB: int = int(os.getenv("MAX_FILE_SIZE_MB", "50"))
+    SUPPORTED_EXTENSIONS: List[str] = _parse_list("SUPPORTED_EXTENSIONS")
+    MAX_FILE_SIZE_MB: int = _parse_int("MAX_FILE_SIZE_MB")
 
     # --- Logging ---
-    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
+    LOG_LEVEL: str = _get_env("LOG_LEVEL")
 
     # --- App Info ---
-    APP_URL: str = os.getenv("APP_URL", "https://localhost")
-    APP_NAME: str = os.getenv("APP_NAME", "RAG-System")
+    APP_URL: str = _get_env("APP_URL")
+    APP_NAME: str = _get_env("APP_NAME")
 
     @classmethod
     def print_config(cls):
