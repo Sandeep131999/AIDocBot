@@ -1,0 +1,3800 @@
+[
+  {
+    "chunk_id": "HomePage_event_1",
+    "text": "On 07-Mar-2025, SCII celebrated: Women’s Day. This is a special occasion to honor and appreciate the incredible women in our organization and their invaluable contributions.",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Women’s Day"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_2",
+    "text": "On 01-Jan-2025, SCII celebrated: New Year Celebration. As we step into another exciting year, let’s take a moment to come together and celebrate the start of 2025!",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "New Year Celebration"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_3",
+    "text": "On 22-Nov-2024, SCII celebrated: Annual Day Celebration. ",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Annual Day Celebration"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_4",
+    "text": "On 19-Nov-2024, SCII celebrated: Men’s Day Celebration. ",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Men’s Day Celebration"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_5",
+    "text": "On 09-Nov-2024, SCII celebrated: Sports Day Celebration. ",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Sports Day Celebration"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_6",
+    "text": "On 31-Oct-2024, SCII celebrated: Farewell of Alex San (SCII CEO). Goodbyes are not the end; they mark a new beginning. This year, we bid farewell to our dedicated, visionary, and unwavering CEO.\".",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Farewell of Alex San (SCII CEO)"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_7",
+    "text": "On 11-Oct-2024, SCII celebrated: Ayudh Pooja 2024. ",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Ayudh Pooja 2024"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_8",
+    "text": "On 13-Sep-2024, SCII celebrated: Engineers’ Day celebration. This year we celebrated Engineer’s Day by conducting a quiz, a Speech by Director, Kamiyama San, and playing a video cast on SCII engineers.",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Engineers’ Day celebration"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_9",
+    "text": "On 29-Feb-2024, SCII celebrated: International Mother Language Day Celebration. International Mother Language Day celebrates the diversity and richness of languages and cultures, By celebrating this day in the office has allowed us to know the diverse people around us.",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "International Mother Language Day Celebration"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_10",
+    "text": "On 01-Jan-2024, SCII celebrated: New Year. Celebrated New Year together.",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "New Year"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_11",
+    "text": "On 21-Dec-2023, SCII celebrated: Christmas. Celebrated Christmas with gift exchanging, activities, and a wonderful performance by Yogeesh.",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Christmas"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_12",
+    "text": "On 01-Dec-2023, SCII celebrated: Annual Day 2023. SCII celebrated the 18th Annual Day",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Annual Day 2023"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_13",
+    "text": "On 24-Nov-2023, SCII celebrated: Partner’s Day Event at KSC.. SCII members who are in KSC participated in the Partner’s Day event organized at KSC.",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Partner’s Day Event at KSC."
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_14",
+    "text": "On 10-Nov-2023, SCII celebrated: Gift distribution.. This year we have presented gifts to employees on the Diwali occasion",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Gift distribution."
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_15",
+    "text": "On 04-Nov-2023, SCII celebrated: Sports Day.. To build team bonding and cheer the victory.",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Sports Day."
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_16",
+    "text": "On 10-Jun-2023, SCII celebrated: World Environmental Day. For the celebration of World Environmental Day 2023, we visited Darvin International School, Sulagitti Narasamma Campus, where we conducted an environmental awareness program along with activities, which were enjoyed and actively participated by the students.",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "World Environmental Day"
+    }
+  },
+  {
+    "chunk_id": "HomePage_event_17",
+    "text": "On 27-May-2023, SCII celebrated: Act of Kindness. With the help and contribution of SCII employees and management, we have collected a good amount of helpful items (Groceries & Stationaries) for needy old people and children. We Visited Shree Shiva Shikhshanika Seva Ashrama, Kadaranahalli, Mydala post, Tumkur, for conducting the event “Act of Kindness” where we shared happiness, and joy, and distributed the collected goods with them.",
+    "metadata": {
+      "doc_id": "HomePage",
+      "category": "company_overview",
+      "title": "HomePage",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HomePage",
+      "entity_type": "company_event",
+      "entity_name": "Act of Kindness"
+    }
+  },
+  {
+    "chunk_id": "MessageFromDirector_18",
+    "text": "No language is assigned to this page. Message from KSC Director\nMessage from Mr. Kodani, Managing Director of System Consultant Co. Ltd., Tokyo, Japan. 1st Time Kodani San Speech On 20th October 2016\n2nd Time Kodani San Speech On 30th January 2017\n3rd Time Kodani San Speech On 19th May 2017\n4th Time Kodani San Speech On 12th September 2018",
+    "metadata": {
+      "doc_id": "MessageFromDirector",
+      "category": "leadership_messages",
+      "title": "MessagefromKSCDirector",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MessagefromKSCDirector",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "PresidentMessage_19",
+    "text": "MgmtMsgs\nNo language is assigned to this page. From The Director's Desk\n\"I have been working with Indian engineers here at SCII since September 2013, involved in system development and global human resource development for Japanese companies. I am truly amazed every day at the excellence of Indian engineers and their speed of approaching new things. Combining KSC's vast knowledge-base of over 50 years of system development experience with the skills of young and talented Indian engineers, I want to create a new system development mechanism.\"\nMr. Junichi Kamiyama\nDirector,System Consultant Information India (P) Ltd.",
+    "metadata": {
+      "doc_id": "PresidentMessage",
+      "category": "leadership_messages",
+      "title": "President-message.php",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=President-message.php",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "OrgStructure_20",
+    "text": "No language is assigned to this page. SCII Organization Structure",
+    "metadata": {
+      "doc_id": "OrgStructure",
+      "category": "general",
+      "title": "SCII Organization Structure",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCII%20Organization%20Structure",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "BuildingInfo_21",
+    "text": "No language is assigned to this page. Building Information\nMain Building :\nSCII building is built in such a way that building is having proper space, good ventilation and\nproper sunlight. The ambience around the building is close to nature and help to provide employees with a calm environment to work. Workplace/workstation :\nSCII building ensures congenial working condition. Office employees may concentrate their mind in\nwork under congenial working condition. A systematic arrangement of SCII office will give naturally\nmaximum efficiency at a minimum cost on all occasions. Security office:\nSafety and security are first, for that, in SCII we have well established security office. Security\noffice have record of all visitors on paper. This record should list the visitor’s name, company,\npurpose, time in, and time out. Video Surveillance is also available. Cafeteria:\nCafeteria of SCII is a place where employees can have a short meeting with coffee, can have lunch\ntogether during lunch hours.",
+    "metadata": {
+      "doc_id": "BuildingInfo",
+      "category": "facilities",
+      "title": "Building Information",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Building%20Information",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "BuildingInfo_22",
+    "text": "ce where employees can have a short meeting with coffee, can have lunch\ntogether during lunch hours.It’s a neat & clean place with proper lighting and with beautiful\nscenery in front. Guest house:\nSCII company guest house is available with all required facilities. Parking:\nSCII is having closed parking for two wheelers & open space parking for four wheelers. The parking is\nvery spacious and clean area which can accommodate all employees, vendor’s and visitor’s vehicles.",
+    "metadata": {
+      "doc_id": "BuildingInfo",
+      "category": "facilities",
+      "title": "Building Information",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Building%20Information",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SeatEast_23",
+    "text": "No language is assigned to this page. Ground Floor East Office",
+    "metadata": {
+      "doc_id": "SeatEast",
+      "category": "facilities",
+      "title": "Seat_East",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Seat_East",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SeatWest_24",
+    "text": "No language is assigned to this page. Ground Floor West Office",
+    "metadata": {
+      "doc_id": "SeatWest",
+      "category": "facilities",
+      "title": "Seat_West",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Seat_West",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "BackOffice_25",
+    "text": "No language is assigned to this page. Back Office",
+    "metadata": {
+      "doc_id": "BackOffice",
+      "category": "facilities",
+      "title": "Back Office",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Back%20Office",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "BackOfficeMembers_26",
+    "text": "No language is assigned to this page. Back Office Members\nSerial Number\nEmployee ID\nImages\nDetails\n01\n199004\nName:\nKamiyama Junichi\nEmail ID:\nj.kamiyama@scii.in\nDesignation:\nDirector\n02\n239010\nName:\nRyosuke Kuboki\nEmail ID:\nkuboki-ryosuke@ksc365.onmicrosoft.com\nDesignation:\nDirector\n03\n199002\nName:\nTsuchiya Toshimitsu\nEmail ID:\ntsuchiya@ksc.co.jp\nDesignation:\nIT Co-ordinator\n04\n148005\nName:\nPraveen T S\nEmail ID:\npraveen.301@scii.in\nDesignation:\nAccountant",
+    "metadata": {
+      "doc_id": "BackOfficeMembers",
+      "category": "employee_directory",
+      "title": "BackOffice Members",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=BackOffice%20Members",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "HRD_27",
+    "text": "English (en)\nHRD Members\nSerial Number\nEmployee ID\nDate Of Joining\nImages\nDetails\n01\n199006\n01-Aug-2019\nName:\nJuliet Thomas\nDesignation:\nManager\nEmail ID:\njuliet.438@scii.in\n02\n182001\n26-Feb-2018\nName:\nSrinidhi N V\nDesignation:\nSenior Software Engineer\nEmail ID:\nsrinidhi.401@scii.in\n03\n210014\n06-Sep-2021\nName:\nBariki Ambika\nDesignation:\nSoftware Engineer\nEmail ID:\nambika.478@scii.in\n04\n220003\n09-Feb-2022\nName:\nGuru Prasanna J\nDesignation:\nJunior Software Engineer\nEmail ID:\nprasanna.491@scii.in\n05\n230014\n30-Jan-2023\nName:\nAkash\nDesignation:\nJunior Software Engineer\nEmail ID:\nakash.503@scii.in\n06\n230005\n01-Aug-2023\nName:\nNayana RV\nDesignation:\nJunior Software Engineer\nEmail ID:\nnayana.508@scii.in",
+    "metadata": {
+      "doc_id": "HRD",
+      "category": "employee_directory",
+      "title": "hrd",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=hrd",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SD_PD1_28",
+    "text": "English (en)\nSystem Development 1 Members\nSerial Number\nEmployee ID\nDate Of Joining\nImages\nDetails\n01\n140003\n03-Nov-2014\nName:\nKausthub S Rawath\nDesignation:\nGeneral Manager\nEmail ID:\nkausthub.294@scii.in\n02\n210021\n06-Sep-2021\nName:\nPunith M S\nDesignation:\nSenior Software Engineer\nEmail ID:\npunith.485@scii.in\n03\n220008\n05-Sep-2022\nName:\nArshiya\nDesignation:\nSoftware Engineer\nEmail ID:\narshiya.496@scii.in\n04\n210011\n16-Aug-2021\nName:\nPooja G\nDesignation:\nSoftware Engineer\nEmail ID:\npooja.475@scii.in\n05\n220012\n17-Oct-2022\nName:\nS. Lavanya\nDesignation:\nJunior Software Engineer\nEmail ID:\nlavanya.500@scii.in\n06\n230006\n01-Aug-2023\nName:\nRanjith B C\nDesignation:\nJunior Software Engineer\nEmail ID:\nranjith.509@scii.in\n07\n230008\n11-Sep-2023\nName:\nRanjith B S\nDesignation:\nJunior Software Engineer\nEmail ID:\nranjith.511@scii.in\n08\n240002\n27-May-2024\nName:\nVikas U\nDesignation:\nJunior Software Engineer\nEmail ID:\nvikas.519@scii.in",
+    "metadata": {
+      "doc_id": "SD_PD1",
+      "category": "employee_directory",
+      "title": "sd_pd1",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=sd_pd1",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SD_PD2_29",
+    "text": "English (en)\nSystem Development 2 Members\nSerial Number\nEmployee ID\nDate Of Joining\nImages\nDetails\n01\n116001\n02-May-2011\nName:\nAtlaMasthan Reddy\nDesignation:\nManager\nEmail ID:\nreddy.132@scii.in\n02\n210004\n12-Jul-2021\nName:\nSoundarya R\nDesignation:\nSoftware Engineer\nEmail ID:\nsoundarya.468@scii.in\n03\n210009\n26-Jul-2021\nName:\nSagar T P\nDesignation:\nSenior Software Engineer\nEmail ID:\nsagar.473@scii.in\n04\n210016\n06-Sep-2021\nName:\nRakshitha N\nDesignation:\nSoftware Engineer\nEmail ID:\nrakshitha.480@scii.in\n05\n210017\n06-Sep-2021\nName:\nHarshith R\nDesignation:\nSoftware Engineer\nEmail ID:\nharshith.481@scii.in\n06\n210019\n06-Sep-2021\nName:\nLogesh Kumar N\nDesignation:\nSoftware Engineer\nEmail ID:\nlogesh.483@scii.in\n07\n210020\n06-Sep-2021\nName:\nP Javid\nDesignation:\nSenior Software Engineer\nEmail ID:\njavid.484@scii.in\n08\n222004\n07-Mar-2022\nName:\nMahammad Gouse Kumsugi\nDesignation:\nSenior Software Engineer\nEmail ID:\nkumsugi.492@scii.in\n09\n220009\n05-Sep-2022\nName:\nArun Kumar\nDesignation:\nJunior Software Engineer\nEmail ID:\narun.497@scii.in\n10\n220014\n17-Oct-2022\nName:\nSandeep T.R\nDesignation:\nJunior Software Engineer\nEmail ID:\nsandeep.502@scii.in\n11\n230007\n11-Sep-2023\nName:\nNawaz Khan\nDesignation:\nJunior Software Engineer\nEmail ID:\nnawaz.510@scii.in\n12\n240001\n27-May-2024\nName:\nAnusha C M\nDesignation:\nJunior Software Engineer\nEmail ID:\nanusha.518@scii.in",
+    "metadata": {
+      "doc_id": "SD_PD2",
+      "category": "employee_directory",
+      "title": "sd_pd2",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=sd_pd2",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SD3Members_30",
+    "text": "No language is assigned to this page.",
+    "metadata": {
+      "doc_id": "SD3Members",
+      "category": "employee_directory",
+      "title": "SD3 Members",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SD3%20Members",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SD3Members_31",
+    "text": "No language is assigned to this page.System Development 3 Members\nSerial Number\nEmployee ID\nDate Of Joining\nImages\nDetails\n01\n120002\n01-Aug-2012\nName:\nRajesh S N\nDesignation:\nManager\nEmail ID:\nrajesh.195@scii.in\n02\n161001\n01-Mar-2016\nName:\nChandolu Sudheer\nDesignation:\nSenior Software Engineer\nEmail ID:\nsudheer.325@scii.in\n03\n175002\n04-Dec-2017\nName:\nMegha C N\nDesignation:\nSenior Software Engineer\nEmail ID:\nmegha.399@scii.in\n04\n205001\n04-Mar-2020\nName:\nAllu Aruna\nDesignation:\nSenior Software Engineer\nEmail ID:\naruna.443@scii.in\n05\n200005\n26-Aug-2020\nName:\nSamarth M\nDesignation:\nSoftware Engineer\nEmail ID:\nsamarth.447@scii.in\n06\n210005\n01-Jul-2021\nName:\nHarshavardhan Shivdas Mahamuni\nDesignation:\nSoftware Engineer\nEmail ID:\nharsha.469@scii.in\n07\n210015\n06-Sep-2021\nName:\nBhanu Priya H L\nDesignation:\nSoftware Engineer\nEmail ID:\npriya.479@scii.in\n08\n210018\n06-Sep-2021\nName:\nKavya S\nDesignation:\nSoftware Engineer\nEmail ID:\nkavya.482@scii.in\n09\n210024\n26-Nov-2021\nName:\nKeerthana S\nDesignation:\nSoftware Engineer\nEmail ID:\nkeerthana.488@scii.in\n10\n223005\n07-Mar-2022\nName:\nShruthi S\nDesignation:\nSoftware Engineer\nEmail ID:\nshruthi.493@scii.in\n11\n220006\n07-Mar-2022\nName:\nNiveditha B H\nDesignation:\nJunior Software Engineer\nEmail ID:\nniveditha.494@scii.in\n12\n220013\n17-Oct-2022\nName:\nPruthvi J\nDesignation:\nJunior Software Engineer\nEmail ID:\npruthvi.501@scii.in\n13\n236002\n03-April-2023\nName:\nKumar Rudraprasad B E\nDesignation:\nSoftware engineer\nEmail ID:\nkumar.506@scii.in\n14\n231013\n27-Nov-2023\nName:\nYogeesh N\nDesignation:\nJunior Software Engineer\nEmail ID:\nyogeesh.516@scii.in",
+    "metadata": {
+      "doc_id": "SD3Members",
+      "category": "employee_directory",
+      "title": "SD3 Members",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SD3%20Members",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "NetworkMembers_32",
+    "text": "No language is assigned to this page. ISI Unit Members\nSerial Number\nEmployee ID\nDate Of Joining\nImages\nDetails\n01\n109003\n23-Jun-2010\nName:\nVijay Anand\nDesignation:\nSystem Administrator\nEmail ID:\nvijay.107@scii.in",
+    "metadata": {
+      "doc_id": "NetworkMembers",
+      "category": "employee_directory",
+      "title": "Network Members",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Network%20Members",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "FacilitiesMembers_33",
+    "text": "No language is assigned to this page. Facilities Team Members\nSerial Number\nEmployee ID\nDate Of Joining\nImages\nDetails\n01\n104002\n01-Apr-2010\nName:\nKamala kanth Muduli\nDesignation:\nAllied Jobs\n02\n149001\n26-May-2014\nName:\nNagalatha\nDesignation:\nAllied jobs\n03\n188004\n26-Sep-2018\nName:\nSiddharaju T S\nDesignation:\nGardener\n04\n199008\n26-Sep-2019\nName:\nNagaraju C\nDesignation:\nDriver\n05\n235009\n26-Sept-2023\nName:\nVenkatesh A C\nDesignation:\nDriver\n06\n252001\n26-Jan-2025\nName:\nDevaraju\nDesignation:\nElectrician",
+    "metadata": {
+      "doc_id": "FacilitiesMembers",
+      "category": "employee_directory",
+      "title": "Facilities Management Members",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Facilities%20Management%20Members",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "IMS_34",
+    "text": "English (en)\nLast Updated - 15 July 2024\nIMS & PMS Handbook\nVer2.0\nContents\nPersonal Information Protection Management System\nThe need for the protection of personal information\nPersonal information handling practices\nPersonal Information Protection Policies and Procedures\nPersonal Information Protection document list\nPersonal Information Protection Policy\nOrganizational structure of the personal information protection\nAcquisition of personal information\nStorage\nDisposal\nResponding to complaints and consultation\nEmergency Situation\nManagement of information system\nEntry and Exit Management\nEducation\nInternal Audit\nRegarding penalties\nNotes related to Day to Day operations\nOffice space is off-limits for outsiders\nPersonal Address and Telephone details not to be revealed unnecessarily\nSwitch power off when leaving the PC unattended for long periods, like during lunch break\nObtain permission when taking-in or taking-out any equipment\nRecording media not to be brought in or taken out\nIn th",
+    "metadata": {
+      "doc_id": "IMS",
+      "category": "policies_procedures",
+      "title": "IMS",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=IMS",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "RuleBook_35",
+    "text": "English (en)\nSYSTEM CONSULTANT INFORMATION INDIA (P) LTD.\nSTANDING ORDER FOR EMPLOYEES\nTABLE OF CONTENTS\nAPPLICATION\nDEFINITIONS\nRECRUITMENT\nCLASSIFICATION OF EMPLOYEES\nHIRING\nAPPOINTMENT IN SERVICE\nHIRING DOCUMENTS\nPROOF OF AGE OR DATE OF BIRTH\nPERMANENT HOME ADDRESS AND CHANGE OF ADDRESS\nMEDICAL\nPROBATION\nEXCLUSIVE SERVICE\nORIENTATION\nTRAINING\nSENIORITY\nWAGE OR SALARY\nPAYMENT OF WAGES/SALARIES\nDEDUCTIONS FROM WAGES\nPERFORMANCE APPRAISALS\nPROMOTION\nINCREMENT\nCOMPANY RULES\nGENERAL RULE\nDISCIPLINE\nDUTIES AND OBLIGATIONS OF EMPLOYEES\nBEHAVIOR AT WORK\nIDENTIFICATION CARD/BADGE/TOKEN\nWORK HOURS\nALTERNATE WORK\nENTRY AND EXIT\nLATE COMING\nBREAKS\nDRESS CODE\nTRANSFER\nTRAVEL AND TRANSPORT BENEFITS\nELECTRONIC COMMUNICATIONS\nINTERNET\nMAIL\nBULLETIN BOARDS\nSUFFICIENCY OF SERVICE OF NOTICE, ETC\nSUGGESTIONS\nREFERENCES\nEVENTS\nSAFETY & HEALTH\nPROPERTY\nAUTOMOBILES\nRESIDENTIAL ACCOMMODATION PROVIDED BY THE COMPANY\nGRIEVANCES\nARBITRATION\nRECORDS\nSTOPPAGE OF WORK\nSTRIKE, LOCK-OUT AND CLOSURE\nSPECIAL PROCEDU",
+    "metadata": {
+      "doc_id": "RuleBook",
+      "category": "policies_procedures",
+      "title": "RuleBook",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=RuleBook",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "POSH_36",
+    "text": "English (en)\nPOSH Policy\n(Prevention of Sexual Harassment)\nContents\nObjective\nPhilosophy\nScope\nPolicy Description: Definitions\nGuidelines\nPolicy statement\nCore Values of POSH initiative\nThe Internal Committee\nEmployee Initiative\nTHIRD PARTY Harassment\nProcess Procedure in case of a Complaint of Sexual Harassment\nFrequently Asked Questions",
+    "metadata": {
+      "doc_id": "POSH",
+      "category": "policies_procedures",
+      "title": "POSH",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=POSH",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "BusinessDays_37",
+    "text": "No language is assigned to this page. ENTRY & EXIT PROCEDURE\nBusiness Days\n|\nNon-Business Day\nGuidelines:\nTwo security Guards will be working at all time. During transition time, if there is only one Security guard, he will be responsible for job of both Security Guards. SCII Employees who have to work on a non-business day have to take permission from PM/Group Leader. The list of employees working on a non-business day (Holiday working list) will be given to Security Guards and Japanese Staff. Generally, only the persons in this list will be allowed to work on a non-business day. In case of Emergency (when working on a holiday is not pre-scheduled), the staff coming to office have to take the permission from the Person In Charge on that day. If there is no Person In Charge, the Japanese staff who stays in the guest house will act as Person In Charge. A visitor will be accompanied by the company staff through out his/her stay in the building.",
+    "metadata": {
+      "doc_id": "BusinessDays",
+      "category": "operations",
+      "title": "Business Days",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Business%20Days",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "BusinessDays_38",
+    "text": "Charge. A visitor will be accompanied by the company staff through out his/her stay in the building.All the information has to be filled in the Visitor Information Register and Visitor Information Slip. Security Guard 1 has to make sure that the information is complete.",
+    "metadata": {
+      "doc_id": "BusinessDays",
+      "category": "operations",
+      "title": "Business Days",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Business%20Days",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "HealthInsurance_39",
+    "text": "No language is assigned to this page. GROUP HEALTH INSURANCE POLICY - POLICY SCHEDULE\nAttached to and forming part of Group Health Policy No 4101200700000227-00\nAdditional Conditions : Subject to the following additional Conditions and attached Clauses / Endorsements / Warranties :\n* Pre/Post Hospitalisation of 30/60 days respectively. Cashless and Reimbursement Policy. Pre-Existing Diseases exclusion waiver waived for all members, First 30 Days Exclusion waiver waived for all members. 1st Year exclusion waiver waived for all members. Employees shall be covered from DOJ subject to availability of sufficient CD balance being maintained with insurer. Addition/deletion shall be done on prorata basis once in a month only subject to data being provided to us by 15th of succeeding month. Mid term increase in SI is not allowed. No individual can be covered more than once in the policy ?",
+    "metadata": {
+      "doc_id": "HealthInsurance",
+      "category": "benefits",
+      "title": "HealthInsurance",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HealthInsurance",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "HealthInsurance_40",
+    "text": " Mid term increase in SI is not allowed. No individual can be covered more than once in the policy ?specifically if an employee and spouse are working for the same organization both cannot cover each other and cannot cover the same set of parents. In case at the time of claim it is found that the member is covered more than once, a deletion endorsement (without any refund) of such member will be effected to ensure he/she is covered only once. The policy excludes treatment with or coverage of Inj- Bevacizumab (e.g Avastin) , Inj. Ranibizumab (e.g Lucentis). Injection Remicade, Oral Chemotherapy, Cyber Knife treatment, Stem cell therapy, Cochlear Implant Procedure, Femtolaser, Robotic surgery, Retrograde intra renal surgery, Lasik treatment for refractive error, Quantum magnetic resonance therapy, Toric Lens covered upto 30,000/- per eye, KT Laser Prostate, Holter monitoring unless otherwise specifically covered as per Policy Schedule.",
+    "metadata": {
+      "doc_id": "HealthInsurance",
+      "category": "benefits",
+      "title": "HealthInsurance",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HealthInsurance",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "HealthInsurance_41",
+    "text": ", KT Laser Prostate, Holter monitoring unless otherwise specifically covered as per Policy Schedule.For all admissible claims where treatment is taken at hospitals/nursing homes which are not in the list of network hospitals empanelled by the Company/Administrator, insured person shall bear 10% of the eligible admissible claim\nAdministration/ Registration/ Service Charges & Misc. Charges are not payable\n* Minimum and Maximum age at entry for Employee is 18 years and 65 years respectively. Baby cover from Day 1 Covered only after 90 Days of birth\nDomiciliary Hospitalization covered upto 20% of SI to a maximum of Rs. 20000\nRoom Rent Capping covered upto 2% of SI for Non-ICU & 3% of SI for ICU whichever is less. In an event of hospitalization into ICU or Non ICU room at rates exceeding the aforesaid limits, the reimbursement/payment of all other expe",
+    "metadata": {
+      "doc_id": "HealthInsurance",
+      "category": "benefits",
+      "title": "HealthInsurance",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=HealthInsurance",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "Covid19Guidelines_42",
+    "text": "English (en)\nGeneral Guidelines\nBefore coming to work each day, check if you are experiencing flu like symptoms\nIf Yes, Do not come to work, Inform your GL/Manager about the same.\nHow to Protect Yourself & Others(Prevention)\nWear face coverings at all times in office\nMaintain social distancing\nWash your hands often with soap and water for at least 20 seconds. Use an alcohol-based hand sanitizer that contains at least 60% alcohol if soap and water are not available.\nAvoid touching your eyes, nose, and mouth with unwashed hands.\nAvoid close contact with people who are sick.\nCover your cough or sneeze with a tissue, then throw the tissue in the trash.\nClean and disinfect frequently touched objects and surfaces.\nMaintain at least 1 meter (3 feet) distance between yourself and other people, particularly those who are coughing, sneezing and have a fever.\nStay home if you feel unwell.\nReporting Protocol\nHealth Status\nStep 1\nStep 2\nStep 3\nStep 4\nStep 5\nGL/Manager\nReporting each step to BackOff",
+    "metadata": {
+      "doc_id": "Covid19Guidelines",
+      "category": "policies_procedures",
+      "title": "Covid19Guidelines",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Covid19Guidelines",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_43",
+    "text": "On 18-02-2026, Harshavardhan (ID: 210005) delivered a morning speech on the topic: 'Growth Happens Outside the Comfort Zone'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Harshavardhan"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_44",
+    "text": "On 19-02-2026, Shruthi S (ID: 223005) delivered a morning speech on the topic: 'Growth Happens Outside the Comfort Zone'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Shruthi S"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_45",
+    "text": "On 20-02-2026, Keerthana S (ID: 210024) delivered a morning speech on the topic: 'Growth Happens Outside the Comfort Zone'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Keerthana S"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_46",
+    "text": "On 21-02-2026, Yogeesh N (ID: 231013) delivered a morning speech on the topic: 'Growth Happens Outside the Comfort Zone'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Yogeesh N"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_47",
+    "text": "On 23-02-2026, Vijay anand (ID: 109003) delivered a morning speech on the topic: 'What We Can Learn from Japanese Work Ethics'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Vijay anand"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_48",
+    "text": "On 24-02-2026, Juliet Thomas (ID: 199006) delivered a morning speech on the topic: 'What We Can Learn from Japanese Work Ethics'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Juliet Thomas"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_49",
+    "text": "On 25-02-2026, Srinidhi (ID: 182001) delivered a morning speech on the topic: 'What We Can Learn from Japanese Work Ethics'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Srinidhi"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_50",
+    "text": "On 26-02-2026, Bariki Ambika (ID: 210014) delivered a morning speech on the topic: 'What We Can Learn from Japanese Work Ethics'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Bariki Ambika"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_51",
+    "text": "On 27-02-2026, Pooja G (ID: 210011) delivered a morning speech on the topic: 'What We Can Learn from Japanese Work Ethics'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Pooja G"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_52",
+    "text": "On 02-03-2026, Kausthub S Rawath (ID: 140003) delivered a morning speech on the topic: '“Gemba Mindset” and Why It Matters'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Kausthub S Rawath"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_53",
+    "text": "On 03-03-2026, Punith M S (ID: 210021) delivered a morning speech on the topic: '“Gemba Mindset” and Why It Matters'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Punith M S"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_54",
+    "text": "On 04-03-2026, Arshiya (ID: 220008) delivered a morning speech on the topic: '“Gemba Mindset” and Why It Matters'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Arshiya"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_55",
+    "text": "On 05-03-2026, Lavanya S (ID: 220012) delivered a morning speech on the topic: '“Gemba Mindset” and Why It Matters'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Lavanya S"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_56",
+    "text": "On 06-03-2026, Ranjith B C (ID: 230006) delivered a morning speech on the topic: '“Gemba Mindset” and Why It Matters'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Ranjith B C"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_57",
+    "text": "On 09-03-2026, Ranjith B S (ID: 230008) delivered a morning speech on the topic: 'The Habit of Preparation'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Ranjith B S"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_58",
+    "text": "On 10-03-2026, Vikas U (ID: 240002) delivered a morning speech on the topic: 'The Habit of Preparation'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Vikas U"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_59",
+    "text": "On 11-03-2026, Guru Prasanna J (ID: 220003) delivered a morning speech on the topic: 'The Habit of Preparation'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Guru Prasanna J"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_60",
+    "text": "On 12-03-2026, Masthan Reddy (ID: 116001) delivered a morning speech on the topic: 'The Habit of Preparation'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Masthan Reddy"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_61",
+    "text": "On 13-03-2026, Soundarya R (ID: 210004) delivered a morning speech on the topic: 'The Habit of Preparation'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Soundarya R"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_62",
+    "text": "On 16-03-2026, Sagar T P (ID: 210009) delivered a morning speech on the topic: 'Time Management is Energy Management'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Sagar T P"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_63",
+    "text": "On 17-03-2026, Rakshitha N (ID: 210016) delivered a morning speech on the topic: 'Time Management is Energy Management'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Rakshitha N"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_64",
+    "text": "On 18-03-2026, Harshith R (ID: 210017) delivered a morning speech on the topic: 'Time Management is Energy Management'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Harshith R"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_65",
+    "text": "On 23-03-2026, Logesh Kumar N (ID: 210019) delivered a morning speech on the topic: 'What Failure Taught Me That Success Never Did'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Logesh Kumar N"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_66",
+    "text": "On 24-03-2026, P Javid (ID: 210020) delivered a morning speech on the topic: 'What Failure Taught Me That Success Never Did'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "P Javid"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_67",
+    "text": "On 25-03-2026, Mahammed Gouse (ID: 222004) delivered a morning speech on the topic: 'What Failure Taught Me That Success Never Did'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Mahammed Gouse"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_68",
+    "text": "On 26-03-2026, Arun Kumar (ID: 220009) delivered a morning speech on the topic: 'What Failure Taught Me That Success Never Did'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Arun Kumar"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_69",
+    "text": "On 27-03-2026, Sandeep T R (ID: 220014) delivered a morning speech on the topic: 'What Failure Taught Me That Success Never Did'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Sandeep T R"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_70",
+    "text": "On 30-03-2026, Nawaz (ID: 230007) delivered a morning speech on the topic: 'The Power of Saying “I Don’t Know”'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Nawaz"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_71",
+    "text": "On 31-03-2026, Rajesh S N (ID: 120002) delivered a morning speech on the topic: 'The Power of Saying “I Don’t Know”'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Rajesh S N"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_72",
+    "text": "On 01-04-2026, Sudheer (ID: 161001) delivered a morning speech on the topic: 'The Power of Saying “I Don’t Know”'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Sudheer"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_73",
+    "text": "On 02-04-2026, Megha C N (ID: 175002) delivered a morning speech on the topic: 'The Power of Saying “I Don’t Know”'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Megha C N"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_74",
+    "text": "On 06-04-2026, Allu Aruna (ID: 205001) delivered a morning speech on the topic: 'How Reading Changes the Way You Think'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Allu Aruna"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_75",
+    "text": "On 07-04-2026, Samarth (ID: 200005) delivered a morning speech on the topic: 'How Reading Changes the Way You Think'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Samarth"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_76",
+    "text": "On 08-04-2026, Harshavardhan (ID: 210005) delivered a morning speech on the topic: 'How Reading Changes the Way You Think'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Harshavardhan"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_77",
+    "text": "On 09-04-2026, Bhanupriya (ID: 210015) delivered a morning speech on the topic: 'How Reading Changes the Way You Think'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Bhanupriya"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_78",
+    "text": "On 10-04-2026, Kavya S (ID: 210018) delivered a morning speech on the topic: 'How Reading Changes the Way You Think'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Kavya S"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_79",
+    "text": "On 13-04-2026, Keerthana S (ID: 210024) delivered a morning speech on the topic: 'Why Silence is Also Communication in Japan'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Keerthana S"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_80",
+    "text": "On 14-04-2026, Shruthi S (ID: 223005) delivered a morning speech on the topic: 'Why Silence is Also Communication in Japan'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Shruthi S"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_81",
+    "text": "On 15-04-2026, Pruthvi J (ID: 220013) delivered a morning speech on the topic: 'Why Silence is Also Communication in Japan'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Pruthvi J"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_82",
+    "text": "On 16-04-2026, Kumar Rudraprasad (ID: 236002) delivered a morning speech on the topic: 'Why Silence is Also Communication in Japan'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Kumar Rudraprasad"
+    }
+  },
+  {
+    "chunk_id": "MorningSpeechWest_speech_83",
+    "text": "On 17-04-2026, Yogeesh N (ID: 231013) delivered a morning speech on the topic: 'Why Silence is Also Communication in Japan'.",
+    "metadata": {
+      "doc_id": "MorningSpeechWest",
+      "category": "morning_speeches",
+      "title": "MorningSpeechWest",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=MorningSpeechWest",
+      "entity_type": "morning_speech",
+      "entity_name": "Yogeesh N"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_84",
+    "text": "AMEGUMI India PVT.Ltd. visited SCII on 28-June-2022. Representative: Mr. Kotaro Fukuoka, Managing Director.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "AMEGUMI India PVT.Ltd."
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_85",
+    "text": "Sojitz India Pvt. Ltd visited SCII on 16-June-2022. Representative: General Manager, Mr. Yamamot Shigetaka.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Sojitz India Pvt. Ltd"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_86",
+    "text": "Yamato LLC visited SCII on 02-June-2022. Representative: Founder, Mr. Toshiyuki Yamato.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Yamato LLC"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_87",
+    "text": "Silicon microsystems. visited SCII on 27-May-2022. Representative: CEO, Mr. Jayachandra Aradhya.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Silicon microsystems."
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_88",
+    "text": "Marubeni. visited SCII on 24-May-2022. Representative: Mr. Ozawa Shingo, Deputy General Manager Bengaluru Branch.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Marubeni."
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_89",
+    "text": "Ex-Chief Secretary Advisor to Govt. of Karnataka visited SCII on 11-May-2022. Representative: Ex-Chief Secretary & Advisor to Govt. of Karnataka.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Ex-Chief Secretary Advisor to Govt. of Karnataka"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_90",
+    "text": "Nelito Systems Limited visited SCII on 09-May-2022. Representative: Executive Director, Mr. Ajay Chada.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Nelito Systems Limited"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_91",
+    "text": "iHaul Logistics Solution visited SCII on 03-May-2022. Representative: Mr. Ashwin D. Acharya, Co- Founder.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "iHaul Logistics Solution"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_92",
+    "text": "Hitachi Astemo visited SCII on 14-Apr-2022. Representative: Mr. Kobayashi Shigeki, Director, Mr. Ayush Agarwal, Assistant Manager, H.R.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Hitachi Astemo"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_93",
+    "text": "Coworks Solutions visited SCII on 13-Apr-2022. Representative: Mr. Prashanth S N, Director.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Coworks Solutions"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_94",
+    "text": "Indiana Economic Development Corporation visited SCII on 07-Apr-2022. Representative: Senior Advisor for India, Mr. Raju Chinthala.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Indiana Economic Development Corporation"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_95",
+    "text": "Silicon Microsystems visited SCII on 29-Mar-2022. Representative: Marubeni.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Silicon Microsystems"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_96",
+    "text": "Veena Enterprises visited SCII on 25-Mar-2022. Representative: JLL.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Veena Enterprises"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_97",
+    "text": "Nelito Systems Limited visited SCII on 22-Mar-2022. Representative: Associate Vice President, Mr. Dhriti S. Singh.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Nelito Systems Limited"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_98",
+    "text": "Nichi-ln Software Solutions Pvt. Ltd visited SCII on 09-Mar-2022. Representative: Senior AVP & Head - Finance & Human Resources P. Manjunath.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Nichi-ln Software Solutions Pvt. Ltd"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_99",
+    "text": "Shimizu Corporation visited SCII on 08-Mar-2022. Representative: Executive Business Development  Ms. Fukui Tomomi.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Shimizu Corporation"
+    }
+  },
+  {
+    "chunk_id": "VisitorList_visitor_100",
+    "text": "Consulate General of Japan - Bangalore visited SCII on 28-Feb-2022. Representative: Deputy Cosul General Mr. Maruo Katsumasa.",
+    "metadata": {
+      "doc_id": "VisitorList",
+      "category": "external_relations",
+      "title": "VisitorList",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=VisitorList",
+      "entity_type": "visitor",
+      "entity_name": "Consulate General of Japan - Bangalore"
+    }
+  },
+  {
+    "chunk_id": "IndustrialVisit_iv_101",
+    "text": "Industrial Visit: SSIT Tumkur visited SCII on 12th, 17th, 18th, 26th, 27th March. Details: SSIT Tumkur. Purpose: ",
+    "metadata": {
+      "doc_id": "IndustrialVisit",
+      "category": "external_relations",
+      "title": "Industrial-Visit",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Industrial-Visit",
+      "entity_type": "industrial_visit",
+      "entity_name": "SSIT Tumkur"
+    }
+  },
+  {
+    "chunk_id": "IndustrialVisit_iv_102",
+    "text": "Industrial Visit: CIT Tumkur and WE SCHOOL BANGALORE visited SCII on 10-MAR-2025. Details: CIT Tumkur & WE SCHOOL B'lore. Purpose: ",
+    "metadata": {
+      "doc_id": "IndustrialVisit",
+      "category": "external_relations",
+      "title": "Industrial-Visit",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Industrial-Visit",
+      "entity_type": "industrial_visit",
+      "entity_name": "CIT Tumkur and WE SCHOOL BANGALORE"
+    }
+  },
+  {
+    "chunk_id": "IndustrialVisit_iv_103",
+    "text": "Industrial Visit: SIET Polytechnique visited SCII on 06-MAR-2025. Details: SIET Polytechnique. Purpose: ",
+    "metadata": {
+      "doc_id": "IndustrialVisit",
+      "category": "external_relations",
+      "title": "Industrial-Visit",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Industrial-Visit",
+      "entity_type": "industrial_visit",
+      "entity_name": "SIET Polytechnique"
+    }
+  },
+  {
+    "chunk_id": "IndustrialVisit_iv_104",
+    "text": "Industrial Visit: GSSS College Mysore visited SCII on 24-Feb-2025. Details: GSSS College Mysore. Purpose: ",
+    "metadata": {
+      "doc_id": "IndustrialVisit",
+      "category": "external_relations",
+      "title": "Industrial-Visit",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Industrial-Visit",
+      "entity_type": "industrial_visit",
+      "entity_name": "GSSS College Mysore"
+    }
+  },
+  {
+    "chunk_id": "DownloadForm_form_105",
+    "text": "Form: SCII Holiday Working Form. Purpose: Used when employee works on holidays.",
+    "metadata": {
+      "doc_id": "DownloadForm",
+      "category": "forms_templates",
+      "title": "Download Form",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Download%20Form%20",
+      "entity_type": "form",
+      "entity_name": "SCII Holiday Working Form"
+    }
+  },
+  {
+    "chunk_id": "DownloadForm_form_106",
+    "text": "Form: External Connector Unlock. Purpose: Used when employee wants to connect external device.",
+    "metadata": {
+      "doc_id": "DownloadForm",
+      "category": "forms_templates",
+      "title": "Download Form",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Download%20Form%20",
+      "entity_type": "form",
+      "entity_name": "External Connector Unlock"
+    }
+  },
+  {
+    "chunk_id": "DownloadForm_form_107",
+    "text": "Form: System Declaration Obligation Form. Purpose: Used when employee wants to bring in / take out devices.",
+    "metadata": {
+      "doc_id": "DownloadForm",
+      "category": "forms_templates",
+      "title": "Download Form",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Download%20Form%20",
+      "entity_type": "form",
+      "entity_name": "System Declaration Obligation Form"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_108",
+    "text": "MAKARA SHANKRANTI is a holiday at SCII on 14th JAN 2026, which falls on WEDNESDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "MAKARA SHANKRANTI"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_109",
+    "text": "REPUBLIC DAY is a holiday at SCII on 26th JAN 2026, which falls on MONDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "REPUBLIC DAY"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_110",
+    "text": "UGADI is a holiday at SCII on 19th MAR 2026, which falls on THURSDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "UGADI"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_111",
+    "text": "IDUL FITR/ RAMZAN is a holiday at SCII on 20th MAR 2026, which falls on FRIDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "IDUL FITR/ RAMZAN"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_112",
+    "text": "GOOD FRIDAY is a holiday at SCII on 03rd APR 2026, which falls on FRIDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "GOOD FRIDAY"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_113",
+    "text": "MAY DAY is a holiday at SCII on 01st MAY 2026, which falls on FRIDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "MAY DAY"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_114",
+    "text": "MUHARRAM is a holiday at SCII on 26th JUN 2026, which falls on FRIDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "MUHARRAM"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_115",
+    "text": "GANDHI JAYANTHI is a holiday at SCII on 02nd OCT 2026, which falls on FRIDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "GANDHI JAYANTHI"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_116",
+    "text": "VIJAYADASHAMI/DASARA is a holiday at SCII on 20th OCT 2026, which falls on TUESDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "VIJAYADASHAMI/DASARA"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_117",
+    "text": "DEEPAVALI is a holiday at SCII on 09th NOV 2026, which falls on MONDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "DEEPAVALI"
+    }
+  },
+  {
+    "chunk_id": "HolidayList_hol_118",
+    "text": "CHRISTMAS DAY is a holiday at SCII on 25th DEC 2026, which falls on FRIDAY.",
+    "metadata": {
+      "doc_id": "HolidayList",
+      "category": "holidays_calendar",
+      "title": "Holiday List",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=Holiday%20List",
+      "entity_type": "holiday",
+      "entity_name": "CHRISTMAS DAY"
+    }
+  },
+  {
+    "chunk_id": "KSCHoliday_119",
+    "text": "English (en)\nLIST OF KSC HOLIDAYS 2026\nSL No. Date\nDay Of The Week\nName Of The Festival/Holiday\n1\n01-01-2026\nTHURSDAY\nNew Year's Day\n2\n02-01-2026\nFRIDAY\nNew Year Holidays\n3\n12-01-2026\nMONDAY\nComing of Age Day\n4\n11-02-2026\nWEDNESDAY\nNational Foundation Day\n5\n23-02-2026\nMONDAY\nEmperor's Birthday\n6\n20-03-2026\nFRIDAY\nVernal Equinox Day\n7\n29-04-2026\nWEDNESDAY\nShowa Day\n8\n03-05-2026\nSUNDAY\nConstitution Memorial Day\n9\n04-05-2026\nMONDAY\nGreenery Day\n10\n05-05-2026\nTUESDAY\nChildren's Day\n11\n06-05-2026\nWEDNESDAY\nSubstitute Holiday\n12\n20-07-2026\nMONDAY\nMarine Day\n13\n11-08-2026\nTUESDAY\nMountain Day\n14\n21-09-2026\nMONDAY\nRespect for the Aged Day\n15\n22-09-2026\nTUESDAY\nHoliday\n16\n23-09-2026\nWEDNESDAY\nAutumnal Equinox Day\n17\n12-10-2026\nMONDAY\nSports Day\n18\n03-11-2026\nTUESDAY\nCulture Day\n19\n23-11-2026\nMONDAY\nLabor Thanksgiving Day\n20\n30-12-2026\nWEDNESDAY\nYear-End Holidays\n21\n31-12-2026\nTHURSDAY\nYear-End Holidays",
+    "metadata": {
+      "doc_id": "KSCHoliday",
+      "category": "employee_onboarding",
+      "title": "KSCHoliday",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSCHoliday",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "NewEmpInfo_120",
+    "text": "No language is assigned to this page. New Employee Information:-\nInformation\nSCII Freshers 2022 September Batch\nSCII Freshers 2021 September Batch\nSCII Freshers 2020 October Batch\nSCII Freshers 2019 August Batch\nSCII Freshers 2018 August Batch\nSCII Freshers 2017 August Batch",
+    "metadata": {
+      "doc_id": "NewEmpInfo",
+      "category": "general",
+      "title": "NewEmpInfo",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=NewEmpInfo",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SCIIClub_121",
+    "text": "No language is assigned to this page. SCII CLUB\nSCII Club is a part of SCII organization,\nHaving a motive of providing a relief or stress free relaxation to the employees. Being a part of SCII,\nSCII club welcomes the new ideas from employees. Check out the Entertainment Events from the below link\nEntertainment events",
+    "metadata": {
+      "doc_id": "SCIIClub",
+      "category": "employee_engagement",
+      "title": "SCIIClub",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIClub",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "EBooks_122",
+    "text": "English (en)\nE-Book Index:\nDate\nE-Book Title\n06-08-2021\nProject To Product, by Mik Kersten",
+    "metadata": {
+      "doc_id": "EBooks",
+      "category": "learning_resources",
+      "title": "EBooks",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=EBooks",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SCIILibrary_123",
+    "text": "No language is assigned to this page. SCII LIBRARY\nContact Person:\n-\n-\nClick here to view SCII book list\nLibrary Rules & Regulations\n1. When the Employee needs to borrow the books, ask the Library Management member to open the lock of the book shelf which is located in GF Open Space East\n. 2. After taking book from the shelf, the Employee needs to sign the registration book, which is kept by the Library Management member, by agreeing with the rules of lending books. 3. If the Employee fails to find the book which the Employee needs in the book shelf, then the Employee can find the person who has borrowed the book from the registration book. 4. The Employee should not sublet the books to other person. The registration book has to be maintained properly. 5. The Employee can take the books home, but have to bring the books to the office every working day. 6. A Book will be issued for 30 days only. However, issued books may be recalled earlier, if urgently required by the Library.",
+    "metadata": {
+      "doc_id": "SCIILibrary",
+      "category": "learning_resources",
+      "title": "SCIILibrary",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIILibrary",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SCIILibrary_124",
+    "text": "or 30 days only. However, issued books may be recalled earlier, if urgently required by the Library.If member wants to keep it for more than 30 days, he/she needs to renew it. 7. A Book must be returned in the same condition in which it was issued. 8. In case of marking/underlining / folding of pages of books, the cost of the latest edition of the book will be charged from the borrower. 9. The Library Management member should check the book shelf once every month to take the inventory of all books. Rules of lending Library\nI agree with the following rules and borrow the books. •\tI will handle the books carefully. •\tI will compensate the books in case of losing the books or damaging the books. •\tI will not sublet the books the third person. •\tEven if I take the books home, I will bring the books to the office every working day.",
+    "metadata": {
+      "doc_id": "SCIILibrary",
+      "category": "learning_resources",
+      "title": "SCIILibrary",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIILibrary",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "NewsArchive_125",
+    "text": "No language is assigned to this page. News Archive:-\nDate\nDescription\n03-Jul-2014\nSankyo and Konica Minolta  have come to SCII\nTheir stay in SCII will be  from 04-Jul-2014 to 18-Jul-2014\n14-May-2014\nSecond Batch of KSC Freshers has come to SCII  on 14 May 2014 for training. 09-April-2014\nFirst Batch of KSC Freshers has come to SCII on 9-April-2014 for training. 06-Dec-2013\nSCII celebrates its 8th Annual Day\nCheck the photo gallery here. 11-Nov-2013\nANA System  has come to SCII\nTheir stay in SCII will be  from 11-Nov-2013 to 29-Nov-2013\n19-Sep-2013\nJunichi Kamiyama has come to SCII . He will  give support  to all the departments of SCII. 01-Aug-2013\nFreshers 2013-Aug Batch join SCII. 14-May-2013\nSecond Batch of KSC Freshers has come to SCII  on 14 May 2013 for training. They will stay in SCII till 06-Aug-2013. 25-April-2013\nProduct team released Canvas version 1.4.0(A)\nFeatures: All features of version 1.4.0 with Dashboard module.",
+    "metadata": {
+      "doc_id": "NewsArchive",
+      "category": "company_news",
+      "title": "NewsArchive",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=NewsArchive",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "NewsArchive_126",
+    "text": "team released Canvas version 1.4.0(A)\nFeatures: All features of version 1.4.0 with Dashboard module.24-April-2013 and 26-April-2013\nDB2 training given to SCII members by Mr. Wakayama San. Check the photo gallery. 19-April-2013\nProduct team released Canvas version 1.4.0\nFeatures: Query History, Re-Login, Improvements in Page loading, Search, DB Session Management. 17-April-2013 To 20-April-2013\nThere was Cultural Exchange activities between SCII Staff and KSC trainees between 17th and 20th April 2013. Check the photo gallery. 11-April-2013\nHappy Ugadi\n09-April-2013\nFirst Batch of KSC Freshers come to SCII for training. They will stay in SCII till 21-May-2013. 02-April-2013\nWakayama san comes to SCII for:-\n1. Training KSC Freshers\n2. Help SCII members for Database related queries\nHe stays in SCII till 7-May-2013\n01-April-2013\n2013 batch trainees join SCII. 27-March-2013\nSCII members celebrated Holi festival.",
+    "metadata": {
+      "doc_id": "NewsArchive",
+      "category": "company_news",
+      "title": "NewsArchive",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=NewsArchive",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "NewsArchive_127",
+    "text": "13\n01-April-2013\n2013 batch trainees join SCII. 27-March-2013\nSCII members celebrated Holi festival.16-March-2013\nKSC member Mr.Hara Kenta san arrives at SCII to assist SCII members in KBS BWP project. 15-March-2013\nProduct team releases Canvas version 1.3.1. Features: Custom authentication, Password policy Changes, Improvement in streaming of output data, MySQL support\n8-March-2013\nSCII Celebrates Women's Day.",
+    "metadata": {
+      "doc_id": "NewsArchive",
+      "category": "company_news",
+      "title": "NewsArchive",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=NewsArchive",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2022_emp_128",
+    "text": "ARSHIYA works at SCII in the SCIIFreshers2022 department as a Trainee Software Engineer. Employee ID: 220008. Date of Joining: 05-sep-2022.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2022",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2022",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2022",
+      "entity_type": "employee",
+      "entity_name": "ARSHIYA"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2022_emp_129",
+    "text": "ARUN KUMAR works at SCII in the SCIIFreshers2022 department as a Trainee Software Engineer. Employee ID: 220009. Date of Joining: 05-sep-2022.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2022",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2022",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2022",
+      "entity_type": "employee",
+      "entity_name": "ARUN KUMAR"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2022_emp_130",
+    "text": "DAMINI S works at SCII in the SCIIFreshers2022 department as a Trainee Software Engineer. Employee ID: 220010. Date of Joining: 05-sep-2022.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2022",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2022",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2022",
+      "entity_type": "employee",
+      "entity_name": "DAMINI S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2022_emp_131",
+    "text": "MOHAMMAD KHALID works at SCII in the SCIIFreshers2022 department as a Trainee Software Engineer. Employee ID: 220011. Date of Joining: 05-sep-2022.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2022",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2022",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2022",
+      "entity_type": "employee",
+      "entity_name": "MOHAMMAD KHALID"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2022_emp_132",
+    "text": "S. LAVANYA works at SCII in the SCIIFreshers2022 department as a Trainee Software Engineer. Employee ID: 220012. Date of Joining: 17-Oct-2022.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2022",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2022",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2022",
+      "entity_type": "employee",
+      "entity_name": "S. LAVANYA"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2022_emp_133",
+    "text": "PRUTHVI J works at SCII in the SCIIFreshers2022 department as a Trainee Software Engineer. Employee ID: 220013. Date of Joining: 17-Oct-2022.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2022",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2022",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2022",
+      "entity_type": "employee",
+      "entity_name": "PRUTHVI J"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2022_emp_134",
+    "text": "SANDEEP T.R works at SCII in the SCIIFreshers2022 department as a Trainee Software Engineer. Employee ID: 220014. Date of Joining: 17-Oct-2022.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2022",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2022",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2022",
+      "entity_type": "employee",
+      "entity_name": "SANDEEP T.R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2022_summary_135",
+    "text": "The SCIIFreshers2022 department at SCII has 7 members: ARSHIYA, ARUN KUMAR, DAMINI S, MOHAMMAD KHALID, S. LAVANYA, PRUTHVI J, SANDEEP T.R.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2022",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2022",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2022",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_136",
+    "text": "SOUNDARYA R works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210004. Date of Joining: 12-Jul-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "SOUNDARYA R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_137",
+    "text": "HARSHWARDHAN SHIVDAS MAHAMUNI works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210005. Date of Joining: 01-Jul-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "HARSHWARDHAN SHIVDAS MAHAMUNI"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_138",
+    "text": "LAVANYA N works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210006. Date of Joining: 01-Jul-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "LAVANYA N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_139",
+    "text": "NATRAJ H L works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210007. Date of Joining: 01-Jul-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "NATRAJ H L"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_140",
+    "text": "L SANTHOSH works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210008. Date of Joining: 01-Jul-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "L SANTHOSH"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_141",
+    "text": "SAGAR T P works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210009. Date of Joining: 26-Jul-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "SAGAR T P"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_142",
+    "text": "ARCHANA K works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210010. Date of Joining: 16-Aug-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "ARCHANA K"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_143",
+    "text": "POOJA G works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210011. Date of Joining: 16-Aug-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "POOJA G"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_144",
+    "text": "NAMRATHA JADAV works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 211013. Date of Joining: 02-Aug-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "NAMRATHA JADAV"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_145",
+    "text": "BARIKI AMBIKA works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210014. Date of Joining: 06-Sept-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "BARIKI AMBIKA"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_146",
+    "text": "BHANU PRIYA H L works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210015. Date of Joining: 06-Sept-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "BHANU PRIYA H L"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_147",
+    "text": "RAKSHITHA works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210016. Date of Joining: 06-Sept-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "RAKSHITHA"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_148",
+    "text": "HARSHITH R works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210017. Date of Joining: 06-Sept-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "HARSHITH R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_149",
+    "text": "KAVYA S works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210018. Date of Joining: 06-Sept-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "KAVYA S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_150",
+    "text": "LOGESH KUMAR N works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210019. Date of Joining: 06-Sept-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "LOGESH KUMAR N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_151",
+    "text": "P JAVID works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210020. Date of Joining: 06-Sept-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "P JAVID"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_152",
+    "text": "PUNITH M S works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210021. Date of Joining: 06-Sept-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "PUNITH M S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_153",
+    "text": "Jitendra Kumar works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210023. Date of Joining: 04-Oct-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "Jitendra Kumar"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_154",
+    "text": "Guruprasanna J works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 220003. Date of Joining: 09-Feb-2022.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "Guruprasanna J"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_emp_155",
+    "text": "Keerthana  S works at SCII in the SCIIFreshers2021 department as a Trainee Software Engineer. Employee ID: 210024. Date of Joining: 26-Nov-2021.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "employee",
+      "entity_name": "Keerthana  S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2021_summary_156",
+    "text": "The SCIIFreshers2021 department at SCII has 20 members: SOUNDARYA R, HARSHWARDHAN SHIVDAS MAHAMUNI, LAVANYA N, NATRAJ H L, L SANTHOSH, SAGAR T P, ARCHANA K, POOJA G, NAMRATHA JADAV, BARIKI AMBIKA, BHANU PRIYA H L, RAKSHITHA, HARSHITH R, KAVYA S, LOGESH KUMAR N, P JAVID, PUNITH M S, Jitendra Kumar, Guruprasanna J, Keerthana  S.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2021",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2021",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2021",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_157",
+    "text": "ADARSH B M works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 445. Date of Joining: 26-Aug-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "ADARSH B M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_158",
+    "text": "ANUSHA T D works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 446. Date of Joining: 26-Aug-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "ANUSHA T D"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_159",
+    "text": "SAMARTH M works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 447. Date of Joining: 26-Aug-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "SAMARTH M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_160",
+    "text": "ASHWINI G works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 448. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "ASHWINI G"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_161",
+    "text": "CHANDANA R works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 450. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "CHANDANA R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_162",
+    "text": "CHIRAG M R works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 451. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "CHIRAG M R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_163",
+    "text": "DARSHAN B V works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 452. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "DARSHAN B V"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_164",
+    "text": "DIVYABAI L works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 453. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "DIVYABAI L"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_165",
+    "text": "HARSHA GOWDA S works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 454. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "HARSHA GOWDA S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_166",
+    "text": "LEKHANA S E works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 455. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "LEKHANA S E"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_167",
+    "text": "MAYUR D N works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 456. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "MAYUR D N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_168",
+    "text": "E NANDINI works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 457. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "E NANDINI"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_169",
+    "text": "PALLAVI M S works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 458. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "PALLAVI M S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_170",
+    "text": "PRAVEEN SHANKAR D works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 459. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "PRAVEEN SHANKAR D"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_171",
+    "text": "PRIYA M works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 460. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "PRIYA M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_172",
+    "text": "PRIYANKA T M works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 461. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "PRIYANKA T M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_173",
+    "text": "RENUKA PRASAD R works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 462. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "RENUKA PRASAD R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_emp_174",
+    "text": "VIKAS V works at SCII in the SCIIFreshers2020 department as a Trainee Software Engineer. Employee ID: 463. Date of Joining: 05-Oct-2020.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "employee",
+      "entity_name": "VIKAS V"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2020_summary_175",
+    "text": "The SCIIFreshers2020 department at SCII has 18 members: ADARSH B M, ANUSHA T D, SAMARTH M, ASHWINI G, CHANDANA R, CHIRAG M R, DARSHAN B V, DIVYABAI L, HARSHA GOWDA S, LEKHANA S E, MAYUR D N, E NANDINI, PALLAVI M S, PRAVEEN SHANKAR D, PRIYA M, PRIYANKA T M, RENUKA PRASAD R, VIKAS V.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2020",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2020",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2020",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_176",
+    "text": "AMULYA H K works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 425. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "AMULYA H K"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_177",
+    "text": "ATHEESH N V works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 426. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "ATHEESH N V"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_178",
+    "text": "ISHWARYA P C works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 427. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "ISHWARYA P C"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_179",
+    "text": "JITHESH KUMAR J works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 428. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "JITHESH KUMAR J"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_180",
+    "text": "MADHU S M works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 429. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "MADHU S M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_181",
+    "text": "MANOJ KUMAR M N works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 430. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "MANOJ KUMAR M N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_182",
+    "text": "MEGHANA B N works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 431. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "MEGHANA B N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_183",
+    "text": "NISARGA H works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 432. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "NISARGA H"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_184",
+    "text": "PRERANA GOUR works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 433. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "PRERANA GOUR"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_185",
+    "text": "RAGHU RAMESH SHIRAHATTI works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 434. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "RAGHU RAMESH SHIRAHATTI"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_186",
+    "text": "RAJESHWARI M works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 435. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "RAJESHWARI M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_187",
+    "text": "SUJATHA K N works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 436. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "SUJATHA K N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_emp_188",
+    "text": "SUNEETHA K N works at SCII in the SCIIFreshers2019 department as a Trainee Software Engineer. Employee ID: 437. Date of Joining: 01-Aug-2019.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "employee",
+      "entity_name": "SUNEETHA K N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2019_summary_189",
+    "text": "The SCIIFreshers2019 department at SCII has 13 members: AMULYA H K, ATHEESH N V, ISHWARYA P C, JITHESH KUMAR J, MADHU S M, MANOJ KUMAR M N, MEGHANA B N, NISARGA H, PRERANA GOUR, RAGHU RAMESH SHIRAHATTI, RAJESHWARI M, SUJATHA K N, SUNEETHA K N.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2019",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2019",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2019",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2018_emp_190",
+    "text": "Arjun Hebbar K B works at SCII in the SCIIFreshers2018 department as a Trainee Software Engineer. Employee ID: 404. Date of Joining: 01-Aug-2018.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2018",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2018",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2018",
+      "entity_type": "employee",
+      "entity_name": "Arjun Hebbar K B"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2018_emp_191",
+    "text": "Ganesha K works at SCII in the SCIIFreshers2018 department as a Trainee Software Engineer. Employee ID: 405. Date of Joining: 01-Aug-2018.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2018",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2018",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2018",
+      "entity_type": "employee",
+      "entity_name": "Ganesha K"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2018_emp_192",
+    "text": "Pooja Padashetty works at SCII in the SCIIFreshers2018 department as a Trainee Software Engineer. Employee ID: 406. Date of Joining: 01-Aug-2018.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2018",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2018",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2018",
+      "entity_type": "employee",
+      "entity_name": "Pooja Padashetty"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2018_emp_193",
+    "text": "Praveen Kumar works at SCII in the SCIIFreshers2018 department as a Trainee Software Engineer. Employee ID: 407. Date of Joining: 01-Aug-2018.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2018",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2018",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2018",
+      "entity_type": "employee",
+      "entity_name": "Praveen Kumar"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2018_emp_194",
+    "text": "Sampath H K works at SCII in the SCIIFreshers2018 department as a Trainee Software Engineer. Employee ID: 408. Date of Joining: 01-Aug-2018.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2018",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2018",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2018",
+      "entity_type": "employee",
+      "entity_name": "Sampath H K"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2018_emp_195",
+    "text": "Suhas K S works at SCII in the SCIIFreshers2018 department as a Trainee Software Engineer. Employee ID: 409. Date of Joining: 01-Aug-2018.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2018",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2018",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2018",
+      "entity_type": "employee",
+      "entity_name": "Suhas K S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2018_emp_196",
+    "text": "Sushma R V works at SCII in the SCIIFreshers2018 department as a Trainee Software Engineer. Employee ID: 410. Date of Joining: 01-Aug-2018.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2018",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2018",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2018",
+      "entity_type": "employee",
+      "entity_name": "Sushma R V"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2018_emp_197",
+    "text": "Vani H U works at SCII in the SCIIFreshers2018 department as a Trainee Software Engineer. Employee ID: 411. Date of Joining: 01-Aug-2018.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2018",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2018",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2018",
+      "entity_type": "employee",
+      "entity_name": "Vani H U"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2018_summary_198",
+    "text": "The SCIIFreshers2018 department at SCII has 8 members: Arjun Hebbar K B, Ganesha K, Pooja Padashetty, Praveen Kumar, Sampath H K, Suhas K S, Sushma R V, Vani H U.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2018",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2018",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2018",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_199",
+    "text": "Ashwini M N works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 369. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Ashwini M N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_200",
+    "text": "Divyashree K works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 370. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Divyashree K"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_201",
+    "text": "Gokul M works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 371. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Gokul M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_202",
+    "text": "Keerthi H P S works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 372. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Keerthi H P S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_203",
+    "text": "Keerthi R K works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 373. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Keerthi R K"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_204",
+    "text": "Kishan Anegundi works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 374. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Kishan Anegundi"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_205",
+    "text": "Laxmi Volvoikar works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 375. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Laxmi Volvoikar"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_206",
+    "text": "Monisha D P works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 376. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Monisha D P"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_207",
+    "text": "Poornima M Y works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 377. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Poornima M Y"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_208",
+    "text": "Priyadarshini V Naik works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 378. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Priyadarshini V Naik"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_209",
+    "text": "Priyanka M Bhaktimath works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 379. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Priyanka M Bhaktimath"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_210",
+    "text": "Raguvaran G works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 380. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Raguvaran G"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_211",
+    "text": "Rahul Patil R works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 381. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Rahul Patil R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_212",
+    "text": "Rahul Saravanan P works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 382. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Rahul Saravanan P"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_213",
+    "text": "Rakesh A M works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 383. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Rakesh A M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_214",
+    "text": "Rakshitha S works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 384. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Rakshitha S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_215",
+    "text": "Ranjitha R works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 385. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Ranjitha R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_216",
+    "text": "Spoorthy B C works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 386. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Spoorthy B C"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_217",
+    "text": "Sradhanjali Dash works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 387. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Sradhanjali Dash"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_218",
+    "text": "Sunil Bijapur works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 388. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Sunil Bijapur"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_219",
+    "text": "Suraksha C P works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 389. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Suraksha C P"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_220",
+    "text": "Swathi H R works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 390. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Swathi H R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_emp_221",
+    "text": "Magadi Suma works at SCII in the SCIIFreshers2017 department as a Trainee Software Engineer. Employee ID: 938. Date of Joining: 01-Aug-2017.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "employee",
+      "entity_name": "Magadi Suma"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2017_summary_222",
+    "text": "The SCIIFreshers2017 department at SCII has 23 members: Ashwini M N, Divyashree K, Gokul M, Keerthi H P S, Keerthi R K, Kishan Anegundi, Laxmi Volvoikar, Monisha D P, Poornima M Y, Priyadarshini V Naik, Priyanka M Bhaktimath, Raguvaran G, Rahul Patil R, Rahul Saravanan P, Rakesh A M, Rakshitha S, Ranjitha R, Spoorthy B C, Sradhanjali Dash, Sunil Bijapur, Suraksha C P, Swathi H R, Magadi Suma.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2017",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2017",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2017",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_223",
+    "text": "Abhishek K S works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 339. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Abhishek K S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_224",
+    "text": "Amarashree K T works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 340. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Amarashree K T"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_225",
+    "text": "Asha S works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 341. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Asha S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_226",
+    "text": "Bhagyashree S works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 342. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Bhagyashree S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_227",
+    "text": "Bharath K L works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 343. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Bharath K L"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_228",
+    "text": "Lakshmi B K works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 344. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Lakshmi B K"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_229",
+    "text": "Pooja K S works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 345. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Pooja K S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_230",
+    "text": "Raksha C N works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 346. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Raksha C N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_231",
+    "text": "Raksha M K works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 347. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Raksha M K"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_232",
+    "text": "Santoshi Garibe works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 348. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Santoshi Garibe"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_233",
+    "text": "Sharadhi M works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 349. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Sharadhi M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_234",
+    "text": "Shilpa H N works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 350. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Shilpa H N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_235",
+    "text": "Sriram Pujar works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 351. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Sriram Pujar"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_236",
+    "text": "Sunitha B R works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 352. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Sunitha B R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_emp_237",
+    "text": "Vinod L works at SCII in the SCIIFreshers2016 department as a Trainee Software Engineer. Employee ID: 353. Date of Joining: 01-Aug-2016.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "employee",
+      "entity_name": "Vinod L"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2016_summary_238",
+    "text": "The SCIIFreshers2016 department at SCII has 15 members: Abhishek K S, Amarashree K T, Asha S, Bhagyashree S, Bharath K L, Lakshmi B K, Pooja K S, Raksha C N, Raksha M K, Santoshi Garibe, Sharadhi M, Shilpa H N, Sriram Pujar, Sunitha B R, Vinod L.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2016",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2016",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2016",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_239",
+    "text": "Arpitha works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 306. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Arpitha"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_240",
+    "text": "Ashwini  R works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 307. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Ashwini  R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_241",
+    "text": "Arpitha N works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 308. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Arpitha N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_242",
+    "text": "Ghazala Sultana works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 309. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Ghazala Sultana"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_243",
+    "text": "Jayasheela S works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 310. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Jayasheela S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_244",
+    "text": "Prathibha Raju K B works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 311. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Prathibha Raju K B"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_245",
+    "text": "Praful P Naik works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 312. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Praful P Naik"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_246",
+    "text": "Prakash Udagatti works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 313. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Prakash Udagatti"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_247",
+    "text": "Ranjith works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 314. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Ranjith"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_248",
+    "text": "Shubhadarshini G B works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 315. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Shubhadarshini G B"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_249",
+    "text": "Sumanth K S works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 316. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Sumanth K S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_250",
+    "text": "Vijay Kumar S M works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 317. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Vijay Kumar S M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_251",
+    "text": "Kruthika M R works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 993. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Kruthika M R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_emp_252",
+    "text": "Anupama K V works at SCII in the SCIIFreshers2015 department as a Trainee Software Engineer. Employee ID: 994. Date of Joining: 03-Aug-2015.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "employee",
+      "entity_name": "Anupama K V"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2015_summary_253",
+    "text": "The SCIIFreshers2015 department at SCII has 14 members: Arpitha, Ashwini  R, Arpitha N, Ghazala Sultana, Jayasheela S, Prathibha Raju K B, Praful P Naik, Prakash Udagatti, Ranjith, Shubhadarshini G B, Sumanth K S, Vijay Kumar S M, Kruthika M R, Anupama K V.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2015",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2015",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2015",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_254",
+    "text": "Vickey Bagdas works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 251. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Vickey Bagdas"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_255",
+    "text": "Manish Gautam works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 252. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Manish Gautam"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_256",
+    "text": "Tenzin Kunga works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 253. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Tenzin Kunga"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_257",
+    "text": "Gagan S works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 255. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Gagan S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_258",
+    "text": "Lakshmi I S works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 258. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Lakshmi I S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_259",
+    "text": "Mithila Pratap works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 259. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Mithila Pratap"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_260",
+    "text": "K Manoj works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 260. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "K Manoj"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_261",
+    "text": "Manjushree M works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 261. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Manjushree M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_262",
+    "text": "Madhuri M R works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 262. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Madhuri M R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_263",
+    "text": "Manoj Kichidi G works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 263. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Manoj Kichidi G"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_264",
+    "text": "Peetambari B P works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 264. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Peetambari B P"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_265",
+    "text": "Pooja B S works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 265. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Pooja B S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_266",
+    "text": "Prasanna Kumar H A works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 266. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Prasanna Kumar H A"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_267",
+    "text": "Pavan Kumar N works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 267. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Pavan Kumar N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_268",
+    "text": "Pavan M T works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 268. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Pavan M T"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_269",
+    "text": "Poornima R works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 269. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Poornima R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_270",
+    "text": "S Pooja works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 270. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "S Pooja"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_271",
+    "text": "Ranjan M R works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 272. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Ranjan M R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_272",
+    "text": "Renkua Prasad S works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 273. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Renkua Prasad S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_273",
+    "text": "Reshma R works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 274. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Reshma R"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_274",
+    "text": "Shalini S works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 275. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Shalini S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_275",
+    "text": "Sindhu G N works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 276. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Sindhu G N"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_276",
+    "text": "Srilakshmi S works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 277. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Srilakshmi S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_277",
+    "text": "Sandesh S works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 278. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Sandesh S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_278",
+    "text": "Shruthi B works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 279. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Shruthi B"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_279",
+    "text": "Swathi P V works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 280. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Swathi P V"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_280",
+    "text": "Thaiyab Iqbal works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 281. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Thaiyab Iqbal"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_281",
+    "text": "Vinod Kumar P V works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 282. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Vinod Kumar P V"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_282",
+    "text": "Vidyashree R S works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 283. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Vidyashree R S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_283",
+    "text": "Vardhan R P works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 284. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Vardhan R P"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_284",
+    "text": "Yogeesha H M works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 285. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Yogeesha H M"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_285",
+    "text": "Yadhushree H S works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 286. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Yadhushree H S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_286",
+    "text": "Harsha Ganesha K works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 287. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Harsha Ganesha K"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_287",
+    "text": "Chandan works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 291. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Chandan"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_288",
+    "text": "Preethi H E works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 293. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Preethi H E"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_emp_289",
+    "text": "Monica works at SCII in the SCIIFreshers2014 department as a Trainee Software Engineer. Employee ID: 985. Date of Joining: 01-Aug-2014.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "employee",
+      "entity_name": "Monica"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2014_summary_290",
+    "text": "The SCIIFreshers2014 department at SCII has 36 members: Vickey Bagdas, Manish Gautam, Tenzin Kunga, Gagan S, Lakshmi I S, Mithila Pratap, K Manoj, Manjushree M, Madhuri M R, Manoj Kichidi G, Peetambari B P, Pooja B S, Prasanna Kumar H A, Pavan Kumar N, Pavan M T, Poornima R, S Pooja, Ranjan M R, Renkua Prasad S, Reshma R, Shalini S, Sindhu G N, Srilakshmi S, Sandesh S, Shruthi B, Swathi P V, Thaiyab Iqbal, Vinod Kumar P V, Vidyashree R S, Vardhan R P, Yogeesha H M, Yadhushree H S, Harsha Ganesha K, Chandan, Preethi H E, Monica.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2014",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2014",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2014",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_291",
+    "text": "Ashwini.G.A works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: ashwini.228@scii.in. Employee ID: 228. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Ashwini.G.A"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_292",
+    "text": "Deekshith works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: deekshith.230@scii.in. Employee ID: 230. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Deekshith"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_293",
+    "text": "Gururaj A.S works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: gururaj.231@scii.in. Employee ID: 231. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Gururaj A.S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_294",
+    "text": "Himanshu Kumar works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: himanshu.232@scii.in. Employee ID: 232. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Himanshu Kumar"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_295",
+    "text": "Harshini M.V works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: harshini.233@scii.in. Employee ID: 233. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Harshini M.V"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_296",
+    "text": "Karthik K.B works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Employee ID: 247. Date of Joining: Email Id:.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Karthik K.B"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_297",
+    "text": "Madhuri.D.L works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: madhuri.235@scii.in. Employee ID: 235. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Madhuri.D.L"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_298",
+    "text": "Mohammed Ali Khan works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: mohamed.236@scii.in. Employee ID: 236. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Mohammed Ali Khan"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_299",
+    "text": "Niti Sachan works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: niti.237@scii.in. Employee ID: 237. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Niti Sachan"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_300",
+    "text": "Prajwal.D.C works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: prajwal.238@scii.in. Employee ID: 238. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Prajwal.D.C"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_301",
+    "text": "Pooja.A works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: pooja.239@scii.in. Employee ID: 239. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Pooja.A"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_302",
+    "text": "Prajwal.P.Shetty works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: prajwal.240@scii.in. Employee ID: 240. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Prajwal.P.Shetty"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_303",
+    "text": "Rashmi works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: rashmi.241@scii.in. Employee ID: 241. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Rashmi"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_304",
+    "text": "Stuthi.S works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: stuthi.242@scii.in. Employee ID: 242. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Stuthi.S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_305",
+    "text": "Satya.A.S works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: satya.243@scii.in. Employee ID: 243. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Satya.A.S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_306",
+    "text": "Venu.B.S works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: venu.244@scii.in. Employee ID: 244. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Venu.B.S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_307",
+    "text": "Varun.K.V works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: varun.245@scii.in. Employee ID: 245. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Varun.K.V"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_308",
+    "text": "Bharath.H.G works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: bharath.246@scii.in. Employee ID: 246. Date of Joining: 01-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Bharath.H.G"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_309",
+    "text": "Shruthi K S works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: shruthi.234@scii.in. Employee ID: 234. Date of Joining: 19-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Shruthi K S"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_emp_310",
+    "text": "Thejaswini N C works at SCII in the SCIIFreshers2013 department as a Trainee Software Engineer. Email: thejaswini.227@scii.in. Employee ID: 227. Date of Joining: 19-Aug-2013.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "employee",
+      "entity_name": "Thejaswini N C"
+    }
+  },
+  {
+    "chunk_id": "SCIIFreshers2013_summary_311",
+    "text": "The SCIIFreshers2013 department at SCII has 20 members: Ashwini.G.A, Deekshith, Gururaj A.S, Himanshu Kumar, Harshini M.V, Karthik K.B, Madhuri.D.L, Mohammed Ali Khan, Niti Sachan, Prajwal.D.C, Pooja.A, Prajwal.P.Shetty, Rashmi, Stuthi.S, Satya.A.S, Venu.B.S, Varun.K.V, Bharath.H.G, Shruthi K S, Thejaswini N C.",
+    "metadata": {
+      "doc_id": "SCIIFreshers2013",
+      "category": "employee_onboarding",
+      "title": "SCIIFreshers2013",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=SCIIFreshers2013",
+      "entity_type": "department_summary"
+    }
+  },
+  {
+    "chunk_id": "KSC2023September_312",
+    "text": "English (en)\nKSC Freshers 2023(September) Batch\nName:\nHikari Sakurai\nDesignation:\nTrainee Software Engineer\nName:\nIkuma Baba\nDesignation:\nTrainee Software Engineer\nName:\nKatsuki Tanihata\nDesignation:\nTrainee Software Engineer\nName:\nRina Okane\nDesignation:\nTrainee Software Engineer\nName:\nRei Moriya\nDesignation:\nTrainee Software Engineer\nName:\nRuka Goto\nDesignation:\nTrainee Software Engineer\nName:\nHinata Yanagihara\nDesignation:\nTrainee Software Engineer\nName:\nYuto Kanani\nDesignation:\nTrainee Software Engineer",
+    "metadata": {
+      "doc_id": "KSC2023September",
+      "category": "employee_onboarding",
+      "title": "KSC2023September",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2023September",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "KSC2023May_313",
+    "text": "English (en)\nKSC Freshers 2023(May) Batch\nName:\nABE TOMOMITSU\nDesignation:\nTrainee Software Engineer\nName:\nEBIHARA HIROYA\nDesignation:\nTrainee Software Engineer\nName:\nGOTO DAIKI\nDesignation:\nTrainee Software Engineer\nName:\nKAWAUCHI RYUSEI\nDesignation:\nTrainee Software Engineer\nName:\nMACHIDA EMIKO\nDesignation:\nTrainee Software Engineer\nName:\nMINAMI KOTARO\nDesignation:\nTrainee Software Engineer\nName:\nNAGAI YUDAI\nDesignation:\nTrainee Software Engineer\nName:\nNARAZAKI YUYA\nDesignation:\nTrainee Software Engineer\nName:\nOBA MITSUKI\nDesignation:\nTrainee Software Engineer\nName:\nOTA SHUN\nDesignation:\nTrainee Software Engineer\nName:\nHATTORI AKO\nDesignation:\nTrainee Software Engineer\nName:\nSEKIYA SORA\nDesignation:\nTrainee Software Engineer\nName:\nTAKAHASHI NAOFUMI\nDesignation:\nTrainee Software Engineer\nName:\nWAMURA YURI\nDesignation:\nTrainee Software Engineer\nBack",
+    "metadata": {
+      "doc_id": "KSC2023May",
+      "category": "employee_onboarding",
+      "title": "KSC2023May",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2023May",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "KSC2017May_314",
+    "text": "No language is assigned to this page. KSC Freshers 2017(May) Batch\nName:\nIMAI NAOYA\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHis hobby is cleaning. He is good at organizing things. He likes clean things. Absorbs everything properly, even small things. Continue to devote\nevery day to learn to play active role in the company like his seniors. Name:\nENDO DAICHI\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHis hobbies are Game, Competitive dance. He is good at Whistling. He likes Delicious things. He hopes to improve skills by experiencing various things without\nforgetting his original intention. Jiro Ramen of Hibarigaoka is absolutely delicious, so he says please do come and\nTry it once!! Name:\nENDO YOSHIKAZU\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHis hobby is Watching Sports. He is good at Wake up before the alarm goes off. He likes Baseball.",
+    "metadata": {
+      "doc_id": "KSC2017May",
+      "category": "employee_onboarding",
+      "title": "KSC2017May",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2017May",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "KSC2017May_315",
+    "text": "m:\nHis hobby is Watching Sports. He is good at Wake up before the alarm goes off. He likes Baseball.As a member of society, he is still immature but he will strive to become a\nContributing member of System Consultant, Japan as early as possible. Name:\nKAI MEGUMI\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Her:\nHer hobbies are Film appreciation, Theater (actors, screenwriter)\nKaraoke. She is good at Wrapping up things. She likes overseas drama · bourbon · B'z . She come from Osaka. She will do her best to familiarize herself with Tokyo\nand the company as soon as possible.She watch all types of movies, from\nserious movies to comedy, so if you are interested, she",
+    "metadata": {
+      "doc_id": "KSC2017May",
+      "category": "employee_onboarding",
+      "title": "KSC2017May",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2017May",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "KSC2014May_316",
+    "text": "No language is assigned to this page. KSC Freshers 2014(May) Batch\nName:\nOHASHI KENTO\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHe is from Chiba, Japan\nHis hobbies are watching tv and Playing sports. If god grant Him few Wishes:\nHe want god to grant Good Health for Him, his Family and Friends. He feels India staffs is very kind, India has lot of Traffic and feels Indian food is Spicy. Name:\nOZAKI YOHEI\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHe is from Tokyo, Japan\nHis hobbies are Listening music, playing violin, Japanese Traditional flower Arrangment(Ikebana) and photography. His main aim in life is make others happy and he wants to live in other countries. If god grant Him few Wishes:\nwant to become a good Software Engineer. want to travel all around the world. want this world to be peacefull. He feels India has different people with different Custom, they welcome different customs and have very diverse culture.",
+    "metadata": {
+      "doc_id": "KSC2014May",
+      "category": "employee_onboarding",
+      "title": "KSC2014May",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2014May",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "KSC2014May_317",
+    "text": "ifferent people with different Custom, they welcome different customs and have very diverse culture.His Funniest situation was when he visited a museum, looking at a local news paper ad that today is the last day of that perticular event and came to know that it was scheduled the same day next year when he enquired in reception. Name:\nKATOU DAICHI\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHe is from Chiba, Japan\nHis hobbies are Listening music, playing Guitar and piano. His main aim in life is to work globally. If god grant Him few Wishes:\nwant to become a good Guitarist. want to improve his english ",
+    "metadata": {
+      "doc_id": "KSC2014May",
+      "category": "employee_onboarding",
+      "title": "KSC2014May",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2014May",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "KSC2014April_318",
+    "text": "No language is assigned to this page. KSC Freshers 2014(April) Batch\nName:\nTANOKA SAEKO\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Her:\nShe is from Yamagata Prefecture\nShe has graduated in Human Culture\nHer hobbies are Sleeping, Reading, Shopping and Drawing Pictures. She likes to eat Sushi. If god grant her few Wishes:\nShe want to go to space. She want to develop a system which should be helpfull to all. She feels India is very Hot and likes India's nature which is different form Japan's\nName:\nENDO MINAMI\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Her:\nShe is from Tokyo\nShe has graduated in LAW\nShe lived in America for few years. Her hobbies are Travelling, Shoping and Archery. She likes to eat Sushi, Pasta and Naan. If god grant her few Wishes:\nShe want to travel all around the world. She want to go back to past (Before Christ)\nShe want to live happily without working. Funniest situation was thinking about the funniest situation.",
+    "metadata": {
+      "doc_id": "KSC2014April",
+      "category": "employee_onboarding",
+      "title": "KSC2014April",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2014April",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "KSC2014April_319",
+    "text": " want to live happily without working. Funniest situation was thinking about the funniest situation.She just want to lead a normal life. She feels Indians are very friendly than she thought, India is very Hot and Humid, likes Indian nature\nName:\nKIYOHARA ANNA\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Her:\nShe is from Kumamoto\nShe has graduated in LAW\nHer hobbies are watching Movies,Playing Piano and Flute,  Japanese Animation. If god grant her few Wishes:\nShe want to meet Johny Depp. She want to swim with Shark. She want to be a good System Engineer. She feels Indians are very kind, She want to learn ",
+    "metadata": {
+      "doc_id": "KSC2014April",
+      "category": "employee_onboarding",
+      "title": "KSC2014April",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2014April",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "KSC2013May_320",
+    "text": "No language is assigned to this page. KSC Freshers 2013(May) Batch\nPhoto gallery(Interview). Name:\nKIYOTAKA IGA\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHe is from Tokyo. He likes to watch non-fiction and romantic movies. His hobby is playing Saxophone and he is playing from past 14 years. His favorite game is Football. He likes J-Pop and Classical music. He likes Sushi and Kabab(boneless). Places he  would like to visit is USA, Disney Land and New york. His aim in life is to make 10 close friends. Name:\nYUTA OISHI\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHe is from Shizouka\nHis hobbies are playing tennis, playing guitar and reading books. He likes Japanese rock music. His favorite food are Sushi and Tandoori Chicken. His aim in life is to have house and to be good Engineer. Name:\nTAKAFUMI KADOSAWA\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHe is from Tokyo.",
+    "metadata": {
+      "doc_id": "KSC2013May",
+      "category": "employee_onboarding",
+      "title": "KSC2013May",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2013May",
+      "entity_type": "general"
+    }
+  },
+  {
+    "chunk_id": "KSC2013May_321",
+    "text": ":\nTAKAFUMI KADOSAWA\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHe is from Tokyo.His hobbies are driving father's car, listening to music, playing guitar and playing dart. His favorite game is Baseball. He likes Rock, pop and punk music. His favorite food is Curry. Place he would like to visit is Okinawi. Name:\nISAO SAKAI\nEmployee ID:\nDesignation:\nTrainee Software Engineer\nAbout Him:\nHe is from Saitama Prefecture. His hobbies are playing Tennis and Japanese Archery. He likes Japanese pop. His favorite food are Japanese rice and Tandoori Chicken. He would like to visit to America in future. Name:\nKENTA SAKAI\nEmployee ID:\nDesignation:\nTrain",
+    "metadata": {
+      "doc_id": "KSC2013May",
+      "category": "employee_onboarding",
+      "title": "KSC2013May",
+      "source_url": "http://10.17.2.248:1234/scii/tiki-index.php?page=KSC2013May",
+      "entity_type": "general"
+    }
+  }
+]
