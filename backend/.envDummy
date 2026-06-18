@@ -1,0 +1,72 @@
+# ============================================
+# RAG SYSTEM CONFIGURATION (.env)
+# ============================================
+# All settings are read from this file
+# Encoding: UTF-8
+# ============================================
+
+# --- Chunking Settings ---
+CHUNK_SIZE=500
+CHUNK_OVERLAP=200
+CHUNK_STRATEGY=recursive
+# Options: recursive, semantic, token, sentence, markdown
+
+# --- Embedding Settings ---
+EMBEDDING_MODEL=BAAI/bge-base-en-v1.5
+EMBEDDING_DEVICE=cpu
+# Options: cpu, cuda, mps
+EMBEDDING_NORMALIZE=True
+
+# --- Vector Store Settings ---
+VECTOR_DB_PATH=./chroma_db
+VECTOR_COLLECTION=documents
+VECTOR_SIMILARITY_METRIC=cosine
+
+# --- Search & Retrieval Settings ---
+VECTOR_WEIGHT=0.7
+KEYWORD_WEIGHT=0.3
+MIN_RELEVANCE_SCORE=0.5
+TOP_K=2
+
+# --- LLM Settings (for Query Rewriting & Re-ranking) ---
+LLM_TEMPERATURE=0.1
+LLM_MAX_TOKENS=500
+
+# --- Re-ranking Settings ---
+RERANKER_ENABLED=True
+RERANKER_TOP_N=3
+RERANKER_PROMPT_TEMPLATE=default
+
+# --- Query Rewriting Settings ---
+QUERY_REWRITING_ENABLED=True
+QUERY_REWRITING_PROMPT_TEMPLATE=default
+
+# --- File Processing ---
+SUPPORTED_EXTENSIONS=.pdf,.txt,.csv,.xlsx,.xls,.docx,.doc,.json,.md
+MAX_FILE_SIZE_MB=50
+
+# --- Logging ---
+LOG_LEVEL=INFO
+# Options: DEBUG, INFO, WARNING, ERROR
+
+# --- Multi-LLM Provider Settings ---
+LLM_PROVIDER_ORDER=gemini,groq,openrouter
+
+# Gemini (Google) - Free tier available
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-2.5-flash
+
+# Groq - Fast inference, free tier available
+GROQ_API_KEY=
+GROQ_MODEL= llama-3.1-8b-instant
+
+# OpenRouter - Free tier access to many models
+OPENROUTER_API_KEY= 
+OPENROUTER_MODEL= openrouter/owl-alpha
+
+# --- App Info (for OpenRouter) ---
+APP_URL=https://localhost
+APP_NAME=RAG-System
+
+OPENROUTER_FREE_MODELS=openai/gpt-oss-120b:free,nvidia/nemotron-3-ultra:free,openai/gpt-oss-20b:free,nvidia/nemotron-3-super-120b-a12b:free,liquid/lfm-2.5-1.2b-thinking:free
+FALLBACK_ERRORS=rate limit,quota exceeded,too many requests,resource_exhausted,context length,maximum context,token limit,timeout,connection,unavailable,invalid api key,authentication,permission,out of context,context window,service unavailable,internal server error,no endpoints found,model not found,not found,404,410
