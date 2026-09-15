@@ -38,7 +38,6 @@ try:
         """Bypass tenacity retry — call directly once."""
         return self._request_once(http_request, stream)
     
-    _gapi_client.BaseApiClient._request = _no_retry_request
     print("[PATCH] Disabled google-genai SDK auto-retry")
 except Exception as e:
     print(f"[PATCH] Could not disable google-genai retry: {e}")
@@ -441,10 +440,8 @@ class LLMWithSmartFallback:
             logger.info(f"[INIT] Groq ({model_name})...")
             llm = ChatOpenAI(
                 model=model_name,
-                api_key=groq_key,
                 base_url="https://api.groq.com/openai/v1",
                 temperature=self.temperature,
-                max_tokens=self.max_tokens,
                 timeout=self.provider_timeout,
                 max_retries=1,
             )
@@ -471,10 +468,8 @@ class LLMWithSmartFallback:
             logger.info(f"[INIT] OpenRouter ({model_name})...")
             llm = ChatOpenAI(
                 model=model_name,
-                api_key=openrouter_key,
                 base_url="https://openrouter.ai/api/v1",
                 temperature=self.temperature,
-                max_tokens=self.max_tokens,
                 timeout=self.provider_timeout,
                 max_retries=1,
                 default_headers={
