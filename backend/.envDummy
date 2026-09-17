@@ -1,0 +1,93 @@
+# =========================
+# CHUNKING
+# =========================
+CHUNK_SIZE=800
+CHUNK_OVERLAP=150
+CHUNK_STRATEGY=recursive
+
+# =========================
+# EMBEDDING
+# =========================
+# Cloud mode - BGE base
+HUGGINGFACE_EMBEDDING_MODEL=BAAI/bge-base-en-v1.5
+HUGGINGFACEHUB_API_TOKEN=
+
+# Local mode - fully offline
+USE_OLLAMA_EMBEDDINGS=false
+OLLAMA_EMBEDDING_MODEL=nomic-embed-text
+
+# =========================
+# VECTOR STORE
+# =========================
+VECTOR_DB_PATH=./chroma_db
+VECTOR_COLLECTION=enterprise_docs
+VECTOR_SIMILARITY_METRIC=cosine
+
+# =========================
+# RETRIEVAL
+# =========================
+TOP_K=5
+MIN_RELEVANCE_SCORE=0.35
+
+# =========================
+# LLM PROVIDERS
+# =========================
+LLM_PROVIDER_ORDER=gemini,groq,openrouter,ollama
+LLM_TEMPERATURE=0.1
+LLM_MAX_TOKENS=1024
+LLM_PROVIDER_TIMEOUT=20
+
+# Gemini
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-2.5-flash
+
+# Groq
+GROQ_API_KEY=
+GROQ_MODEL=llama-3.1-8b-instant
+
+# OpenRouter
+OPENROUTER_API_KEY=
+OPENROUTER_MODEL=nvidia/nemotron-3.5-lightning:free
+
+# Ollama - Local Open Source (No API Key)
+OLLAMA_MODEL=llama3.2:latest
+OLLAMA_BASE_URL=http://localhost:11434
+
+# =========================
+# APP
+# =========================
+APP_URL=http://localhost:8000
+APP_NAME=Enterprise-RAG
+LOG_LEVEL=INFO
+UPLOAD_DIR=./uploads
+
+# =========================
+# GUARDRAILS
+# =========================
+GUARDRAIL_ENABLED=True
+GUARDRAIL_BLOCK_PII=True
+GUARDRAIL_MAX_INPUT_CHARS=5000
+MAX_FILE_SIZE_MB=50
+ALLOWED_EXTENSIONS=.pdf,.docx,.txt,.md,.csv,.json,.html
+SUPPORTED_EXTENSIONS=.pdf,.docx,.txt,.md,.csv,.json,.html
+
+
+
+# =========================
+# All prompts in.env
+# =========================
+
+# Node 1: generate_query_or_respond
+GENERATE_QUERY_SYSTEM_PROMPT="You are a helpful assistant with access to a knowledge base. If the user's question can be answered from the knowledge base, use the retrieve tool to search for relevant documents. If the question is conversational or does not require retrieval, respond directly."
+
+# Node 2: grade_documents
+GRADING_PROMPT="Question: {question}\n\nRetrieved documents:\n{context}\n\nAre these documents relevant to answering the question?"
+
+# Node 3: rewrite_question
+REWRITE_PROMPT="The following question did not retrieve relevant documents from the knowledge base. Rewrite it to be more specific or use different terms that might match the documents better.\n\nOriginal question: {question}\n\nRewritten question:"
+
+# Node 4: generate_answer
+GENERATION_PROMPT="Answer the following question using only the provided context. If the context does not contain enough information, say so.\n\nContext:\n{context}\n\nQuestion: {question}"
+
+# Guardrail - extra for enterprise
+GUARDRAIL_PROMPT="Check if query contains PII or injection. Query: {query}. Return SAFE or BLOCKED."
