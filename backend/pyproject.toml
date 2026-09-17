@@ -1,0 +1,44 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Enterprise Agentic RAG"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain",
+    "langchain-core",
+    "langchain-community",
+    "langchain-text-splitters",
+    "langgraph",
+    "langchain-google-genai",
+    "langchain-groq",
+    "langchain-openai",
+    "langchain-ollama",
+    "langchain-huggingface",
+    "langchain-chroma",
+    "sentence-transformers",
+    "chromadb",
+    "pymupdf4llm",
+    "pymupdf",
+    "pdfplumber",
+    "python-docx",
+    "docx2txt",
+    "openpyxl",
+    "pandas",
+    "tabulate",
+    "markdownify",
+    "python-pptx",
+    "fastapi",
+    "uvicorn",
+    "python-multipart",
+    "python-dotenv",
+    "pydantic",
+    "tiktoken",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src", "api"]

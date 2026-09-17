@@ -1,102 +1,67 @@
-"""
-document_loader.py
--------------------
-LangChain-based document loading for AIDocBot.
-Supported formats: PDF, DOCX, PPTX, XLSX, CSV, TXT, MD, HTML, JSON.
-"""
-
-from __future__ import annotations
-
-import json
-import os
 from pathlib import Path
-from typing import Callable
-
+import json
+from typing import List
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
 from langchain_community.document_loaders import (
-    PyPDFLoader,
-    Docx2txtLoader,
-    UnstructuredPowerPointLoader,
-    UnstructuredExcelLoader,
-    CSVLoader,
-    TextLoader,
-    UnstructuredMarkdownLoader,
-    UnstructuredHTMLLoader,
+    PyPDFLoader, Docx2txtLoader, TextLoader, CSVLoader, UnstructuredHTMLLoader
 )
+from src.config import Config
+import os
 
-
-def _load_json(path: str) -> list[Document]:
-    """JSON has no single 'right' loader shape, so flatten it ourselves."""
+def _load_json(path: str) -> List[Document]:
+    """Enterprise JSON loader - flattens any structure."""
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    text = json.dumps(data, indent=2, ensure_ascii=False)
-    return [Document(page_content=text, metadata={"source": path})]
 
+    # Handle list of objects or single object
+    if isinstance(data, list):
+        docs = []
+        for i, item in enumerate(data):
+            text = json.dumps(item, indent=2, ensure_ascii=False) if isinstance(item, dict) else str(item)
+            docs.append(Document(
+                page_content=text,
+                metadata={"source": path, "format": "json", "chunk_index": i, "filename": Path(path).name}
+            ))
+        return docs
+    else:
+        text = json.dumps(data, indent=2, ensure_ascii=False)
+        return [Document(page_content=text, metadata={"source": path, "format": "json", "filename": Path(path).name})]
 
-# Extension -> callable that returns list[Document].
-# Swap/extend this to match whatever your ContentBlock pipeline covers.
-LOADER_REGISTRY: dict[str, Callable[[str], list[Document]]] = {
+LOADER_REGISTRY = {
     ".pdf": lambda p: PyPDFLoader(p).load(),
     ".docx": lambda p: Docx2txtLoader(p).load(),
-    ".pptx": lambda p: UnstructuredPowerPointLoader(p).load(),
-    ".xlsx": lambda p: UnstructuredExcelLoader(p, mode="elements").load(),
-    ".csv": lambda p: CSVLoader(p).load(),
     ".txt": lambda p: TextLoader(p, encoding="utf-8").load(),
-    ".md": lambda p: UnstructuredMarkdownLoader(p).load(),
+    ".md": lambda p: TextLoader(p, encoding="utf-8").load(),
+    ".csv": lambda p: CSVLoader(p).load(),
     ".html": lambda p: UnstructuredHTMLLoader(p).load(),
     ".htm": lambda p: UnstructuredHTMLLoader(p).load(),
     ".json": _load_json,
 }
 
-
-def load_document(file_path: str) -> list[Document]:
-    """Load a single file into LangChain Documents, tagged with format + source."""
+def load_and_split(file_path: str) -> List[Document]:
     path = Path(file_path)
-    if not path.exists():
-        raise FileNotFoundError(file_path)
+    if not path.exists(): raise FileNotFoundError(file_path)
+
+    # Enterprise Guard: file size
+    size_mb = path.stat().st_size / (1024*1024)
+    if size_mb > Config.MAX_FILE_SIZE_MB:
+        raise ValueError(f"File {size_mb:.2f}MB exceeds limit {Config.MAX_FILE_SIZE_MB}MB")
 
     ext = path.suffix.lower()
-    loader_fn = LOADER_REGISTRY.get(ext)
-    if loader_fn is None:
-        raise ValueError(
-            f"Unsupported format '{ext}'. Supported: {sorted(LOADER_REGISTRY)}"
-        )
+    if ext not in LOADER_REGISTRY:
+        raise ValueError(f"Unsupported {ext}. Allowed: {list(LOADER_REGISTRY.keys())}")
 
-    docs = loader_fn(str(path))
+    docs = LOADER_REGISTRY[ext](str(path))
+
+    # Tag metadata enterprise standard
     for doc in docs:
         doc.metadata.setdefault("source", str(path))
-        doc.metadata["format"] = ext.lstrip(".")
         doc.metadata["filename"] = path.name
-    return docs
+        doc.metadata["format"] = ext.lstrip(".")
 
-
-def load_documents(directory: str, recursive: bool = True) -> list[Document]:
-    """Load every supported file under `directory`."""
-    directory_path = Path(directory)
-    pattern = "**/*" if recursive else "*"
-    all_docs: list[Document] = []
-
-    for file_path in directory_path.glob(pattern):
-        if file_path.is_file() and file_path.suffix.lower() in LOADER_REGISTRY:
-            try:
-                all_docs.extend(load_document(str(file_path)))
-            except Exception as exc:
-                # Don't let one bad file kill the whole ingestion run.
-                print(f"[document_loader] skipped {file_path.name}: {exc}")
-
-    return all_docs
-
-
-def split_documents(
-    docs: list[Document],
-    chunk_size: int,
-    chunk_overlap
-) -> list[Document]:
-    """Token-aware chunking via LangChain's recursive splitter."""
     splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
+        chunk_size=Config.CHUNK_SIZE,
+        chunk_overlap=Config.CHUNK_OVERLAP
     )
     return splitter.split_documents(docs)
