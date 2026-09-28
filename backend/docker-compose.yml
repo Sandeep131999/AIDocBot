@@ -1,0 +1,169 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Enterprise Agentic RAG — Full Stack
+#
+# Services:
+#   app       — FastAPI RAG backend
+#   postgres  — Conversation checkpointing + audit logs
+#   redis     — Semantic cache + rate limiting + session memory
+#   mcp       — FastMCP server (MCP protocol for A2A / IDE integration)
+#
+# Usage:
+#   docker compose up -d              # start everything
+#   docker compose up app             # start only the RAG API
+#   docker compose logs -f app        # tail app logs
+#   docker compose down -v            # stop + remove volumes
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── PostgreSQL ──────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: rag_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     ${POSTGRES_USER:-raguser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ragpassword}
+      POSTGRES_DB:       ${POSTGRES_DB:-ragdb}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-raguser} -d ${POSTGRES_DB:-ragdb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rag_network
+
+  # ── Redis ───────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: rag_redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD:-redispassword}
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --save 60 1
+      --loglevel notice
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redispassword}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rag_network
+
+  # ── Main RAG API ─────────────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: rag_app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Override connection strings to use Docker service names
+      REDIS_ENABLED:    "true"
+      REDIS_URL:        "redis://:${REDIS_PASSWORD:-redispassword}@redis:6379/0"
+      REDIS_PASSWORD:   "${REDIS_PASSWORD:-redispassword}"
+      POSTGRES_ENABLED: "true"
+      POSTGRES_URL:     "postgresql+asyncpg://${POSTGRES_USER:-raguser}:${POSTGRES_PASSWORD:-ragpassword}@postgres:5432/${POSTGRES_DB:-ragdb}"
+      CHECKPOINTER_BACKEND: "postgres"
+      APP_ENV:          "${APP_ENV:-production}"
+    volumes:
+      - chroma_data:/app/chroma_db
+      - uploads_data:/app/uploads
+      - logs_data:/app/logs
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    networks:
+      - rag_network
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+          cpus: "2.0"
+
+  # ── MCP Server ───────────────────────────────────────────────────────────────
+  mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: rag_mcp
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MCP_ENABLED:      "true"
+      MCP_TRANSPORT:    "streamable-http"
+      MCP_SERVER_HOST:  "0.0.0.0"
+      MCP_SERVER_PORT:  "8001"
+      REDIS_ENABLED:    "true"
+      REDIS_URL:        "redis://:${REDIS_PASSWORD:-redispassword}@redis:6379/1"
+      POSTGRES_ENABLED: "true"
+      POSTGRES_URL:     "postgresql+asyncpg://${POSTGRES_USER:-raguser}:${POSTGRES_PASSWORD:-ragpassword}@postgres:5432/${POSTGRES_DB:-ragdb}"
+    volumes:
+      - chroma_data:/app/chroma_db:ro   # read-only — indexing is done via main app
+      - uploads_data:/app/uploads:ro
+    ports:
+      - "8001:8001"
+    depends_on:
+      - app
+    command: ["python", "-m", "src.mcp_server"]
+    networks:
+      - rag_network
+    profiles:
+      - mcp   # only start with: docker compose --profile mcp up
+
+  # ── Dev convenience: Adminer (Postgres UI) ────────────────────────────────────
+  adminer:
+    image: adminer:latest
+    container_name: rag_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - rag_network
+    profiles:
+      - dev   # only start with: docker compose --profile dev up
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Volumes
+# ─────────────────────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+  redis_data:
+  chroma_data:
+  uploads_data:
+  logs_data:
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Networks
+# ─────────────────────────────────────────────────────────────────────────────
+networks:
+  rag_network:
+    driver: bridge

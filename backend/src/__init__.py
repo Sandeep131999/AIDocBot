@@ -1,27 +1,80 @@
 """
 Enterprise Agentic RAG System
+─────────────────────────────
+LangGraph + FastAPI + Hybrid Search + Guardrails + MCP + Observability
 
-LangChain + LangGraph only with Guardrails
+All imports here are lazy to avoid loading heavy optional deps
+(torch, structlog, prometheus, opentelemetry) at package import time.
+Call the getter functions to pull in specific modules on demand.
 """
 
-from src.config import Config
-from src.document_loader import load_and_split
-from src.embeddings import get_embeddings
-from src.vector_store import get_vector_store, get_retriever
-from src.tools import get_retriever_tool
-from src.graph import build_agentic_rag_graph
-from src.guardrails import check_input_guard, check_output_guard
-from src.multi_llm import build_llm
+# Only truly lightweight, always-available imports at package level
+from src.config import Config, get_settings
+from src.state import AgentState, GuardResult, TokenUsage, RetrievalScores
+
+# ── Lazy getters — call these when you need the actual functions ─────────────
+
+def get_document_loader():
+    from src.document_loader import load_and_split, load_and_split_async, get_supported_extensions
+    return load_and_split, load_and_split_async, get_supported_extensions
+
+
+def get_vector_store_module():
+    from src.vector_store import get_vector_store, get_retriever, retrieve, retrieve_async
+    return get_vector_store, get_retriever, retrieve, retrieve_async
+
+
+def get_tools_module():
+    from src.tools import get_retriever_tool, get_all_tools
+    return get_retriever_tool, get_all_tools
+
+
+def get_graph_module():
+    from src.graph import build_agentic_rag_graph, build_supervisor_graph
+    return build_agentic_rag_graph, build_supervisor_graph
+
+
+def get_guardrails_module():
+    from src.guardrails import check_input_guard, check_output_guard, redact_pii
+    return check_input_guard, check_output_guard, redact_pii
+
+
+def get_llm_module():
+    from src.multi_llm import (
+        build_llm, get_llm, get_fast_llm, get_quality_llm,
+        get_grader_llm, get_guardrail_llm, estimate_cost,
+    )
+    return build_llm, get_llm, get_fast_llm, get_quality_llm, get_grader_llm, get_guardrail_llm, estimate_cost
+
+
+def get_memory_module():
+    from src.memory import (
+        trim_messages, summarize_conversation,
+        save_user_memory, get_user_memory, build_memory_context,
+    )
+    return trim_messages, summarize_conversation, save_user_memory, get_user_memory, build_memory_context
+
+
+def get_cache_module():
+    from src.cache import get_cached_response, cache_response, get_cache_stats, invalidate_cache
+    return get_cached_response, cache_response, get_cache_stats, invalidate_cache
+
+
+def get_evaluator_module():
+    from src.evaluator import Evaluator, run_ragas_evaluation, golden_dataset_eval
+    return Evaluator, run_ragas_evaluation, golden_dataset_eval
+
+
+def get_observability_module():
+    from src.observability import get_logger, record_chat_metrics, observe
+    return get_logger, record_chat_metrics, observe
+
 
 __all__ = [
-    'Config',
-    'load_and_split',
-    'get_embeddings',
-    'get_vector_store',
-    'get_retriever',
-    'get_retriever_tool',
-    'build_agentic_rag_graph',
-    'build_llm',
-    'check_input_guard',
-    'check_output_guard',
+    "Config", "get_settings",
+    "AgentState", "GuardResult", "TokenUsage", "RetrievalScores",
+    "get_document_loader", "get_vector_store_module", "get_tools_module",
+    "get_graph_module", "get_guardrails_module", "get_llm_module",
+    "get_memory_module", "get_cache_module", "get_evaluator_module",
+    "get_observability_module",
 ]
