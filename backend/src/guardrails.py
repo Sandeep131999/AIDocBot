@@ -111,7 +111,7 @@ def _get_presidio():
         try:
             from presidio_analyzer import AnalyzerEngine
             from presidio_anonymizer import AnonymizerEngine
-            _presidio_analyzer = AnalyzerEngine()
+            _presidio_analyzer = AnalyzerEngine(supported_languages=["en"])
             _presidio_anonymizer = AnonymizerEngine()
             logger.info("[Guardrails] Presidio loaded")
         except ImportError:
