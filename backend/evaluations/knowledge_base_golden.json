@@ -1,0 +1,27 @@
+[
+  {
+    "question": "According to the library rules, how long may a book be borrowed?",
+    "ground_truth": "A book is issued for 30 days. It may be recalled earlier if the library needs it.",
+    "relevant_doc_ids": ["SCIILibrary"]
+  },
+  {
+    "question": "What should happen while a visitor is in the office, and what information is recorded?",
+    "ground_truth": "A visitor must be accompanied by a company staff member. The visitor register records the visitor's name, company, purpose, time in, and time out.",
+    "relevant_doc_ids": ["BusinessDays", "BuildingInfo"]
+  },
+  {
+    "question": "What facilities are described for the SCII main building?",
+    "ground_truth": "The building has space, ventilation, and sunlight, plus a cafeteria, guest house, and parking.",
+    "relevant_doc_ids": ["BuildingInfo"]
+  },
+  {
+    "question": "What does the information-protection guidance say about personal addresses and telephone details?",
+    "ground_truth": "Personal addresses and telephone details should not be revealed unnecessarily.",
+    "relevant_doc_ids": ["IMS"]
+  },
+  {
+    "question": "What activities were listed for the 2025 Women's Day event?",
+    "ground_truth": "The event included plantation and cake cutting.",
+    "relevant_doc_ids": ["HomePage"]
+  }
+]

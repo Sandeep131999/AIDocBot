@@ -61,7 +61,7 @@ from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
 from src.config import Config
-from src.observability import (
+from src.observability.observability import (
     get_logger,
     record_chat_metrics,
     record_guard_block,
@@ -76,8 +76,8 @@ logger = get_logger(__name__)
 # ─────────────────────────────────────────────────────────────────────────────
 
 class AppState:
-    graph = None
-    supervisor_graph = None
+    graph: Any = None
+    supervisor_graph: Any = None
 
 
 _app_state = AppState()
@@ -93,7 +93,7 @@ async def lifespan(app: FastAPI):
     logger.info("startup", app=Config.APP_NAME, version=Config.APP_VERSION, env=Config.APP_ENV)
     try:
         # Build RAG graph
-        from src.graph import build_agentic_rag_graph
+        from src.agent.graph import build_agentic_rag_graph
         _app_state.graph = build_agentic_rag_graph()
         logger.info("graph_ready", type="agentic_rag")
 
@@ -172,6 +172,10 @@ class SourceDoc(BaseModel):
     page: Optional[int] = None
     excerpt: str
     chunk_index: Optional[int] = None
+    document_id: Optional[str] = None
+    label: Optional[str] = None
+    title: Optional[str] = None
+    url: Optional[str] = None
 
 
 class ChatResponse(BaseModel):
@@ -201,6 +205,7 @@ class EvalRequest(BaseModel):
     questions: List[str]
     ground_truths: Optional[List[str]] = None
     relevant_doc_ids: Optional[List[List[str]]] = None
+    k: int = Field(default=5, ge=1, le=50)
 
 
 class TokenRequest(BaseModel):
@@ -240,6 +245,10 @@ def _build_sources(result: Dict[str, Any]) -> List[SourceDoc]:
             page=meta.get("page"),
             excerpt=getattr(doc, "page_content", "")[:300],
             chunk_index=meta.get("chunk_index"),
+            document_id=meta.get("document_id"),
+            label=meta.get("label"),
+            title=meta.get("title"),
+            url=meta.get("url"),
         ))
     return sources
 
@@ -282,7 +291,7 @@ async def health():
 
     # Vector DB
     try:
-        from src.vector_store import get_vector_store
+        from src.retrieval.vector_store import get_vector_store
         vs = get_vector_store()
         checks["vector_db"] = {"status": "ok", "chunks": vs._collection.count()}
     except Exception as e:
@@ -338,7 +347,7 @@ async def chat(
     # ── Cache check ───────────────────────────────────────────────────────────
     if request.use_cache:
         try:
-            from src.cache import get_cached_response
+            from src.retrieval.cache import get_cached_response
             cached = await get_cached_response(query)
             if cached:
                 logger.info("cache_hit", query=query[:60], cache_type=cached.get("cache_type"))
@@ -411,7 +420,7 @@ async def chat(
     # ── Write-through cache ───────────────────────────────────────────────────
     if request.use_cache and not result.get("guard_blocked") and answer:
         try:
-            from src.cache import cache_response
+            from src.retrieval.cache import cache_response
             asyncio.create_task(cache_response(
                 query,
                 {
@@ -583,12 +592,11 @@ async def chat_websocket(
 async def _index_document_background(file_path: str, job_id: str) -> None:
     """Background task: load, chunk, embed and index a document."""
     try:
-        from src.document_loader import load_and_split_async
-        from src.vector_store import get_vector_store
+        from src.retrieval.document_loader import load_and_split_async
+        from src.retrieval.vector_store import index_documents
         docs = await load_and_split_async(file_path)
-        vs = get_vector_store()
-        vs.add_documents(docs)
-        logger.info("index_complete", job_id=job_id, chunks=len(docs), file=Path(file_path).name)
+        indexed_ids = index_documents(docs)
+        logger.info("index_complete", job_id=job_id, chunks=len(indexed_ids), file=Path(file_path).name)
     except Exception as e:
         logger.error("index_failed", job_id=job_id, error=str(e))
 
@@ -654,14 +662,14 @@ async def upload_document(
 async def list_documents():
     """List all documents currently indexed in the knowledge base."""
     try:
-        from src.vector_store import get_vector_store
+        from src.retrieval.vector_store import get_vector_store
         vs = get_vector_store()
         result = vs._collection.get(include=["metadatas"])
-        metadatas = result.get("metadatas", [])
+        metadatas = result.get("metadatas") or []
 
-        files: Dict[str, Dict] = {}
+        files: Dict[str, Dict[str, Any]] = {}
         for meta in metadatas:
-            fname = meta.get("filename", "Unknown")
+            fname = str(meta.get("filename") or "Unknown")
             if fname not in files:
                 files[fname] = {
                     "filename":   fname,
@@ -681,7 +689,7 @@ async def list_documents():
 async def delete_document(filename: str):
     """Remove all chunks for a document from the vector store."""
     try:
-        from src.vector_store import get_vector_store
+        from src.retrieval.vector_store import get_vector_store
         vs = get_vector_store()
         ids_to_delete = vs._collection.get(
             where={"filename": {"$eq": filename}},
@@ -720,20 +728,23 @@ async def evaluate(
         raise HTTPException(status_code=400, detail="At least one question required")
     if len(request.questions) > 50:
         raise HTTPException(status_code=400, detail="Max 50 questions per evaluation run")
+    if request.ground_truths is not None and len(request.ground_truths) != len(request.questions):
+        raise HTTPException(status_code=400, detail="ground_truths must match the number of questions")
+    if request.relevant_doc_ids is not None and len(request.relevant_doc_ids) != len(request.questions):
+        raise HTTPException(status_code=400, detail="relevant_doc_ids must match the number of questions")
 
     try:
-        from src.evaluator import golden_dataset_eval
+        from src.observability.evaluator import golden_dataset_eval
 
-        dataset = [
-            {
-                "question": q,
-                "ground_truth": (request.ground_truths or [""])[i] if request.ground_truths else "",
-                "relevant_doc_ids": (request.relevant_doc_ids or [[]])[i] if request.relevant_doc_ids else [],
-            }
-            for i, q in enumerate(request.questions)
-        ]
+        dataset = []
+        for index, question in enumerate(request.questions):
+            dataset.append({
+                "question": question,
+                "ground_truth": request.ground_truths[index] if request.ground_truths else "",
+                "relevant_doc_ids": request.relevant_doc_ids[index] if request.relevant_doc_ids else [],
+            })
 
-        results = await golden_dataset_eval(dataset=dataset, graph=graph)
+        results = await golden_dataset_eval(dataset=dataset, graph=graph, k=request.k)
         return {"status": "ok", "results": results}
 
     except Exception as e:
@@ -746,14 +757,14 @@ async def evaluate(
 @app.get("/api/cache/stats", tags=["Cache"])
 async def cache_stats():
     """Return cache hit/miss statistics."""
-    from src.cache import get_cache_stats
+    from src.retrieval.cache import get_cache_stats
     return get_cache_stats()
 
 
 @app.post("/api/cache/invalidate", tags=["Cache"])
 async def invalidate_cache(pattern: str = "cache:*"):
     """Flush cache entries matching pattern (admin only)."""
-    from src.cache import invalidate_cache as _invalidate
+    from src.retrieval.cache import invalidate_cache as _invalidate
     deleted = await _invalidate(pattern)
     return {"deleted": deleted, "pattern": pattern}
 

@@ -22,8 +22,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy only dependency manifests first (layer-cache friendly)
-COPY requirements.txt .
+# requirements.txt installs the project itself through its -e . entry.
+COPY pyproject.toml README.md ./
+COPY src ./src
+COPY api ./api
+COPY requirements.txt ./
 
 # Create a venv and install into it
 RUN python -m venv /opt/venv

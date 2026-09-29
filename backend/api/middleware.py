@@ -84,7 +84,7 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
 
         # Record Prometheus metric
         try:
-            from src.observability import record_chat_metrics
+            from src.observability.observability import record_chat_metrics
             if request.url.path == "/api/chat":
                 record_chat_metrics(
                     latency_ms=elapsed_ms,

@@ -294,7 +294,7 @@ The MCP server exposes the RAG system to any MCP-compatible client (Claude Deskt
 
 ```bash
 # Start standalone
-python -m src.mcp_server
+python -m src.integrations.mcp_server
 
 # Or via Docker Compose
 docker compose --profile mcp up -d

@@ -131,7 +131,7 @@ services:
       - "8001:8001"
     depends_on:
       - app
-    command: ["python", "-m", "src.mcp_server"]
+    command: ["python", "-m", "src.integrations.mcp_server"]
     networks:
       - rag_network
     profiles:
