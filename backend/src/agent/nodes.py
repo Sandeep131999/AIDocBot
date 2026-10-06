@@ -33,10 +33,9 @@ from langchain_core.documents import Document
 from pydantic import BaseModel, Field
 
 from src.config import Config
-from src.routing.multi_llm import get_llm, get_fast_llm, get_grader_llm
+from src.routing.multi_llm import get_fast_llm, get_grader_llm
 from src.agent.prompts import PromptLoader
-from src.agent.state import AgentState, GuardResult, TokenUsage
-from src.routing.tools import get_retriever_tool
+from src.agent.state import AgentState, TokenUsage
 
 logger = logging.getLogger(__name__)
 
@@ -105,12 +104,12 @@ _llm_with_tools = None
 def _get_llm_with_tools():
     global _llm_with_tools
     if _llm_with_tools is None:
-        tool = get_retriever_tool()
         # Use get_llm_with_tools which binds tools to base LLMs before
         # wrapping with resilience/fallbacks (RunnableLambda/with_fallbacks
         # don't have bind_tools method)
         from src.routing.multi_llm import get_llm_with_tools
-        _llm_with_tools = get_llm_with_tools([tool])
+        from src.routing.tools import get_all_tools
+        _llm_with_tools = get_llm_with_tools(get_all_tools())
     return _llm_with_tools
 
 

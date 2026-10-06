@@ -55,12 +55,16 @@ class TokenPayload(BaseModel):
     role: Role = Role.USER
     jti: str = ""           # JWT ID (for revocation)
     exp: Optional[int] = None
+    email: str = ""
+    tenant_id: str = ""
 
 
 class AuthUser(BaseModel):
     user_id: str
     role: Role
     token_type: str = "bearer"   # bearer | api_key
+    email: str = ""
+    tenant_id: str = ""
 
 
 class TokenPair(BaseModel):
@@ -78,6 +82,8 @@ def _create_token(
     user_id: str,
     role: Role,
     expires_delta: timedelta,
+    email: str = "",
+    tenant_id: str = "",
 ) -> str:
     now = datetime.now(timezone.utc)
     payload = {
@@ -87,27 +93,48 @@ def _create_token(
         "iat":  now,
         "exp":  now + expires_delta,
     }
+    if email:
+        payload["email"] = email
+    if tenant_id:
+        payload["tenant_id"] = tenant_id
     return jwt.encode(payload, Config.JWT_SECRET_KEY, algorithm=Config.JWT_ALGORITHM)
 
 
-def create_access_token(user_id: str, role: Role = Role.USER) -> str:
+def create_access_token(
+    user_id: str,
+    role: Role = Role.USER,
+    email: str = "",
+    tenant_id: str = "",
+) -> str:
     return _create_token(
         user_id, role,
         timedelta(minutes=Config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES),
+        email, tenant_id,
     )
 
 
-def create_refresh_token(user_id: str, role: Role = Role.USER) -> str:
+def create_refresh_token(
+    user_id: str,
+    role: Role = Role.USER,
+    email: str = "",
+    tenant_id: str = "",
+) -> str:
     return _create_token(
         user_id, role,
         timedelta(days=Config.JWT_REFRESH_TOKEN_EXPIRE_DAYS),
+        email, tenant_id,
     )
 
 
-def create_token_pair(user_id: str, role: Role = Role.USER) -> TokenPair:
+def create_token_pair(
+    user_id: str,
+    role: Role = Role.USER,
+    email: str = "",
+    tenant_id: str = "",
+) -> TokenPair:
     return TokenPair(
-        access_token=create_access_token(user_id, role),
-        refresh_token=create_refresh_token(user_id, role),
+        access_token=create_access_token(user_id, role, email, tenant_id),
+        refresh_token=create_refresh_token(user_id, role, email, tenant_id),
     )
 
 
@@ -127,6 +154,8 @@ def decode_token(token: str) -> TokenPayload:
             sub=payload["sub"],
             role=Role(payload.get("role", "user")),
             jti=payload.get("jti", ""),
+            email=payload.get("email", ""),
+            tenant_id=payload.get("tenant_id", ""),
         )
     except JWTError as e:
         raise HTTPException(
@@ -210,7 +239,12 @@ async def get_current_user(
     if bearer and bearer.credentials:
         try:
             payload = decode_token(bearer.credentials)
-            user = AuthUser(user_id=payload.sub, role=payload.role)
+            user = AuthUser(
+                user_id=payload.sub,
+                role=payload.role,
+                email=payload.email,
+                tenant_id=payload.tenant_id,
+            )
             _audit(request, user, "authenticate", True, "jwt")
             return user
         except HTTPException:

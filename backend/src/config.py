@@ -5,7 +5,7 @@ Single source of truth for all environment variables.
 Uses pydantic-settings for validation, type coercion, and IDE autocomplete.
 
 Groups:
-  Chunking | Embedding | VectorStore | Retrieval | LLM | Auth | Redis |
+    Chunking | Embedding | VectorStore | Retrieval | LLM | Auth |
   Postgres | LangSmith | MCP | RateLimit | Guardrails | Observability |
   App | Prompts
 """
@@ -13,9 +13,9 @@ from __future__ import annotations
 
 import os
 from functools import lru_cache
-from typing import List, Literal, Optional
+from typing import List, Literal
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -43,17 +43,14 @@ class Settings(BaseSettings):
     CHUNK_SEMANTIC_THRESHOLD: float = 0.85   # cosine threshold for semantic splits
 
     # ── Embedding ──────────────────────────────────────────────────────────
-    HUGGINGFACE_EMBEDDING_MODEL: str = "BAAI/bge-base-en-v1.5"
-    HUGGINGFACEHUB_API_TOKEN: str = ""
-    USE_OLLAMA_EMBEDDINGS: bool = False
-    OLLAMA_EMBEDDING_MODEL: str = "nomic-embed-text"
+    HUGGINGFACE_EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
+    EMBEDDING_DIMENSION: int = 384
+    EMBEDDING_DEVICE: str = "cpu"
     EMBEDDING_BATCH_SIZE: int = 32
     EMBEDDING_CACHE_TTL: int = 3600          # seconds
 
     # ── Vector Store ───────────────────────────────────────────────────────
-    VECTOR_DB_PATH: str = "./chroma_db"
     VECTOR_COLLECTION: str = "enterprise_docs"
-    VECTOR_SIMILARITY_METRIC: Literal["cosine", "l2", "ip"] = "cosine"
 
     # ── Retrieval ──────────────────────────────────────────────────────────
     TOP_K: int = 5
@@ -109,6 +106,7 @@ class Settings(BaseSettings):
     ADMIN_API_KEY: str = ""              # master API key (set in prod)
     CORS_ORIGINS: str = "*"              # comma-sep list or "*"
     CORS_ALLOW_CREDENTIALS: bool = False
+    PROJECT_HEADER_NAME: str = "X-Project-ID"
 
     # ── Rate Limiting ──────────────────────────────────────────────────────
     RATE_LIMIT_ENABLED: bool = True
@@ -116,23 +114,18 @@ class Settings(BaseSettings):
     RATE_LIMIT_UPLOAD: str = "10/minute"
     RATE_LIMIT_EVAL: str = "5/minute"
 
-    # ── Redis ──────────────────────────────────────────────────────────────
-    REDIS_ENABLED: bool = False
-    REDIS_URL: str = "redis://localhost:6379/0"
-    REDIS_PASSWORD: str = ""
-    REDIS_CACHE_TTL: int = 3600          # default cache TTL in seconds
-    REDIS_SEMANTIC_CACHE_TTL: int = 7200 # semantic cache TTL
-    REDIS_POOL_SIZE: int = 10
+    # ── In-process cache ────────────────────────────────────────────────────
+    CACHE_TTL: int = 3600
 
     # ── Postgres ───────────────────────────────────────────────────────────
-    POSTGRES_ENABLED: bool = False
-    POSTGRES_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/ragdb"
+    POSTGRES_ENABLED: bool = True
+    POSTGRES_URL: str = "postgresql+psycopg://raguser:ragpassword@localhost:5432/ragdb"
     POSTGRES_POOL_SIZE: int = 10
     POSTGRES_MAX_OVERFLOW: int = 20
     POSTGRES_ECHO: bool = False           # SQL query logging
 
-    # Checkpointer backend: "memory" | "postgres" | "redis"
-    CHECKPOINTER_BACKEND: Literal["memory", "postgres", "redis"] = "memory"
+    # Checkpointer backend: "memory" | "postgres"
+    CHECKPOINTER_BACKEND: Literal["memory", "postgres"] = "postgres"
 
     # ── LangSmith / Observability ──────────────────────────────────────────
     LANGSMITH_ENABLED: bool = False
@@ -161,6 +154,8 @@ class Settings(BaseSettings):
     GUARDRAIL_BLOCK_PII: bool = True
     GUARDRAIL_MAX_INPUT_CHARS: int = 5000
     GUARDRAIL_HALLUCINATION_THRESHOLD: float = 0.75
+    RELEASE_MIN_HIT_AT_K: float = 0.8
+    RELEASE_MIN_FAITHFULNESS: float = 0.8
     PII_DETECTION_ENABLED: bool = True
     PII_REDACT_BEFORE_LLM: bool = True
     PII_ENTITIES: str = "PERSON,EMAIL_ADDRESS,PHONE_NUMBER,CREDIT_CARD,SSN,IP_ADDRESS,IBAN_CODE,LOCATION"
@@ -173,7 +168,7 @@ class Settings(BaseSettings):
     # ── Prompts (versioned, loaded from .env) ──────────────────────────────
     GENERATE_QUERY_SYSTEM_PROMPT: str = (
         "You are a helpful enterprise assistant with access to a knowledge base. "
-        "Use the retrieve_documents tool to search for relevant information before answering. "
+        "Use retrieve_documents for uploaded knowledge-base content and web_search for current public information. "
         "Always cite your sources. If you cannot find relevant information, say so clearly."
     )
     GRADING_PROMPT: str = (
@@ -231,6 +226,15 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def _sync_langsmith(self) -> "Settings":
         """Auto-set LANGCHAIN env vars for LangSmith tracing."""
+        if self.APP_ENV == "production":
+            if not self.AUTH_ENABLED:
+                raise ValueError("AUTH_ENABLED must be true in production")
+            if len(self.JWT_SECRET_KEY) < 32 or self.JWT_SECRET_KEY.startswith("change-me"):
+                raise ValueError("JWT_SECRET_KEY must be a unique secret of at least 32 characters")
+            if self.CORS_ORIGINS == "*":
+                raise ValueError("CORS_ORIGINS must list trusted frontend origins in production")
+            if not self.POSTGRES_ENABLED:
+                raise ValueError("POSTGRES_ENABLED must be true in production")
         if self.LANGSMITH_ENABLED and self.LANGSMITH_API_KEY:
             os.environ["LANGCHAIN_TRACING_V2"] = "true"
             os.environ["LANGCHAIN_API_KEY"] = self.LANGSMITH_API_KEY

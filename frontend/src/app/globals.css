@@ -2,6 +2,147 @@ html, body, #__next {
   height: 100%;
 }
 
+body {
+  color: #182230;
+  background: #f4f7fb !important;
+}
+
+.dashboard-shell {
+  width: min(100%, 1600px);
+  min-height: 0;
+  flex: 1 0 auto;
+  margin: 0 auto;
+  padding: 28px clamp(16px, 3vw, 44px) 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-heading {
+  margin-bottom: 22px;
+}
+
+.dashboard-project-label {
+  color: #364152;
+  background: #fff;
+  border: 1px solid #e4e9f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.dashboard-nav {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  border-bottom: 1px solid #dfe5ed;
+  margin-bottom: 20px;
+  scrollbar-width: thin;
+}
+
+.dashboard-nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex: 0 0 auto;
+  padding: 12px 15px;
+  color: #667085;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dashboard-nav-item:hover,
+.dashboard-nav-item.active {
+  color: #2866d6;
+}
+
+.dashboard-nav-item.active {
+  border-bottom-color: #2866d6;
+}
+
+.dashboard-content {
+  padding: clamp(18px, 2.5vw, 30px);
+  background: #fff;
+  border: 1px solid #e5eaf1;
+  border-radius: 14px;
+  box-shadow: 0 3px 14px rgba(28, 43, 64, 0.04);
+}
+
+.dashboard-content-fill {
+  min-height: 560px;
+  flex: 1 1 auto;
+  display: flex;
+}
+
+.dashboard-content-fill > .card {
+  width: 100%;
+}
+
+.dashboard-stat {
+  min-height: 115px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 18px 20px;
+  background: #f8faff;
+  border: 1px solid #e7edf6;
+  border-radius: 11px;
+}
+
+.dashboard-stat strong {
+  color: #152641;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.dashboard-empty {
+  padding: 24px;
+  color: #667085;
+  background: #f8faff;
+  border: 1px dashed #d7e0ed;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.dashboard-json {
+  max-height: 420px;
+  overflow: auto;
+  padding: 16px;
+  color: #e5edf9;
+  background: #172437;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-footer {
+  color: #667085;
+  background: #fff;
+}
+
+@media (max-width: 767px) {
+  .dashboard-shell {
+    padding-top: 20px;
+  }
+
+  .dashboard-content-fill {
+    min-height: 500px;
+    padding: 10px;
+  }
+
+  .dashboard-nav-item {
+    padding: 11px 12px;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

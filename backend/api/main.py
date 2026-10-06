@@ -3,12 +3,11 @@ api/main.py — Enterprise FastAPI Application
 ──────────────────────────────────────────────
 Endpoints:
   GET  /                           — root health ping
-  GET  /api/health                 — detailed health (vector DB, Redis, LLM)
+    GET  /api/health                 — detailed health (PostgreSQL/pgvector, LLM)
   GET  /metrics                    — Prometheus metrics (if enabled)
 
   POST /api/chat                   — standard JSON chat
   POST /api/chat/stream            — SSE streaming chat
-  WS   /api/chat/ws/{session_id}   — WebSocket real-time chat
 
   POST /api/documents/upload       — upload + index a document (background task)
   GET  /api/documents              — list all indexed documents
@@ -23,7 +22,6 @@ Endpoints:
 
 Features:
   • SSE streaming via sse-starlette
-  • WebSocket with session continuity
   • Background tasks for indexing (non-blocking upload)
   • Dependency injection (get_graph, get_cache)
   • JWT + API Key auth with RBAC (bypass when AUTH_ENABLED=false)
@@ -36,13 +34,13 @@ Features:
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
-import logging
 import time
 import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Any, AsyncGenerator, Dict, List, Optional
+from typing import Any, AsyncGenerator, Dict, List, Literal, Optional
 
 from fastapi import (
     BackgroundTasks,
@@ -52,15 +50,18 @@ from fastapi import (
     HTTPException,
     Request,
     UploadFile,
-    WebSocket,
-    WebSocketDisconnect,
-    status,
 )
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
 from src.config import Config
+from api.auth import Role
+from api.projects import (
+    ProjectContext,
+    get_project_context,
+    require_project_role,
+)
 from src.observability.observability import (
     get_logger,
     record_chat_metrics,
@@ -78,6 +79,7 @@ logger = get_logger(__name__)
 class AppState:
     graph: Any = None
     supervisor_graph: Any = None
+    checkpointer_cleanup: Any = None
 
 
 _app_state = AppState()
@@ -93,14 +95,13 @@ async def lifespan(app: FastAPI):
     logger.info("startup", app=Config.APP_NAME, version=Config.APP_VERSION, env=Config.APP_ENV)
     try:
         # Build RAG graph
-        from src.agent.graph import build_agentic_rag_graph
-        _app_state.graph = build_agentic_rag_graph()
+        from src.agent.graph import build_agentic_rag_graph, create_checkpointer
+        checkpointer, _app_state.checkpointer_cleanup = await create_checkpointer()
+        _app_state.graph = build_agentic_rag_graph(checkpointer=checkpointer)
         logger.info("graph_ready", type="agentic_rag")
 
         # Ensure directories exist
         Path(Config.UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
-        Path(Config.VECTOR_DB_PATH).mkdir(parents=True, exist_ok=True)
-
         # Log config (masks secrets)
         if Config.DEBUG:
             Config.print_config()
@@ -112,6 +113,13 @@ async def lifespan(app: FastAPI):
     yield
 
     # ── Shutdown ─────────────────────────────────────────────────────────────
+    if _app_state.checkpointer_cleanup:
+        await _app_state.checkpointer_cleanup()
+        _app_state.checkpointer_cleanup = None
+    from src.retrieval.vector_store import close_vector_store
+    close_vector_store()
+    from src.observability.memory import close_memory_pool
+    await close_memory_pool()
     logger.info("shutdown", app=Config.APP_NAME)
 
 
@@ -137,6 +145,11 @@ def create_app() -> FastAPI:
     # Register all middleware
     from api.middleware import register_middleware
     register_middleware(app)
+    from api.projects import router as projects_router
+    app.include_router(projects_router)
+    if Config.OTEL_ENABLED:
+        from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+        FastAPIInstrumentor.instrument_app(app)
 
     return app
 
@@ -199,6 +212,7 @@ class UploadResponse(BaseModel):
     message: str
     file_hash: str = ""
     job_id: str = ""
+    version: int = 1
 
 
 class EvalRequest(BaseModel):
@@ -206,6 +220,7 @@ class EvalRequest(BaseModel):
     ground_truths: Optional[List[str]] = None
     relevant_doc_ids: Optional[List[List[str]]] = None
     k: int = Field(default=5, ge=1, le=50)
+    evaluation_framework: Literal["ragas", "deepeval", "both"] = "both"
 
 
 class TokenRequest(BaseModel):
@@ -257,17 +272,61 @@ async def _run_graph(
     query: str,
     session_id: str,
     graph,
+    context: ProjectContext | None = None,
 ) -> Dict[str, Any]:
     """Invoke the LangGraph graph with proper config and return the state dict."""
-    config = {"configurable": {"thread_id": session_id}}
+    thread_id = session_id
+    state: Dict[str, Any] = {
+        "messages": [{"role": "user", "content": query}],
+        "question": query,
+        "session_id": session_id,
+    }
+    if context:
+        thread_id = f"{context.project_id}:{context.user.user_id}:{session_id}"
+        state["user_id"] = context.user.user_id
+    config = {
+        "configurable": {
+            "thread_id": thread_id,
+            **({"project_id": context.project_id} if context else {}),
+        }
+    }
     return await graph.ainvoke(
-        {
-            "messages": [{"role": "user", "content": query}],
-            "question": query,
-            "session_id": session_id,
-        },
+        state,
         config=config,
     )
+
+
+async def _log_question(
+    *,
+    context: ProjectContext,
+    request: Request,
+    question: str,
+    answer: str = "",
+    status: str,
+    error: str = "",
+    latency_ms: float = 0,
+    provider: str = "",
+    cost_usd: float = 0,
+) -> None:
+    from src.retrieval.vector_store import get_vector_store
+
+    entry = {
+        "id": str(uuid.uuid4()),
+        "project_id": context.project_id,
+        "user_id": context.user.user_id,
+        "question": question,
+        "answer": answer,
+        "status": status,
+        "error": error,
+        "latency_ms": latency_ms,
+        "provider": provider,
+        "estimated_cost_usd": cost_usd,
+        "request_id": getattr(request.state, "request_id", ""),
+    }
+    try:
+        await asyncio.to_thread(get_vector_store().log_question, entry)
+    except Exception as exc:
+        logger.error("question_log_write_failed", project_id=context.project_id, error=str(exc))
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -293,24 +352,10 @@ async def health():
     try:
         from src.retrieval.vector_store import get_vector_store
         vs = get_vector_store()
-        checks["vector_db"] = {"status": "ok", "chunks": vs._collection.count()}
+        checks["vector_db"] = {"status": "ok", "chunks": vs.count(), "backend": "postgresql_pgvector"}
     except Exception as e:
         checks["vector_db"] = {"status": "error", "detail": str(e)}
         checks["status"] = "degraded"
-
-    # Redis
-    if Config.REDIS_ENABLED:
-        try:
-            import redis.asyncio as aioredis
-            r = aioredis.from_url(Config.REDIS_URL)
-            await r.ping()
-            await r.aclose()
-            checks["redis"] = {"status": "ok"}
-        except Exception as e:
-            checks["redis"] = {"status": "error", "detail": str(e)}
-            checks["status"] = "degraded"
-    else:
-        checks["redis"] = {"status": "disabled"}
 
     # Features
     checks["features"] = {
@@ -319,7 +364,7 @@ async def health():
         "reranker":             Config.RERANKER_ENABLED,
         "hyde":                 Config.HYDE_ENABLED,
         "hybrid_search":        Config.RETRIEVAL_STRATEGY == "hybrid",
-        "semantic_cache":       Config.REDIS_ENABLED,
+        "response_cache":       True,
         "langsmith_tracing":    Config.LANGSMITH_ENABLED,
         "mcp_server":           Config.MCP_ENABLED,
         "auth":                 Config.AUTH_ENABLED,
@@ -334,7 +379,9 @@ async def health():
 @app.post("/api/chat", response_model=ChatResponse, tags=["Chat"])
 async def chat(
     request: ChatRequest,
+    http_request: Request,
     graph=Depends(get_graph),
+    context: ProjectContext = Depends(get_project_context),
 ):
     """
     Standard synchronous chat endpoint.
@@ -348,25 +395,51 @@ async def chat(
     if request.use_cache:
         try:
             from src.retrieval.cache import get_cached_response
-            cached = await get_cached_response(query)
+            cached = await get_cached_response(query, project_id=context.project_id)
             if cached:
                 logger.info("cache_hit", query=query[:60], cache_type=cached.get("cache_type"))
+                latency_ms = round((time.perf_counter() - start) * 1000, 1)
+                await _log_question(
+                    context=context,
+                    request=http_request,
+                    question=query,
+                    answer=cached.get("answer", ""),
+                    status="success",
+                    latency_ms=latency_ms,
+                )
                 return ChatResponse(
                     answer=cached.get("answer", ""),
                     sources=[SourceDoc(**s) for s in cached.get("sources", [])],
                     session_id=session_id,
                     cache_hit=True,
                     cache_type=cached.get("cache_type", "exact"),
-                    latency_ms=round((time.perf_counter() - start) * 1000, 1),
+                    latency_ms=latency_ms,
                 )
         except Exception as e:
             logger.warning("cache_check_error", error=str(e))
 
     # ── Graph invocation ──────────────────────────────────────────────────────
     try:
-        result = await _run_graph(query, session_id, graph)
+        from src.observability.observability import observe
+        async with observe(
+            "rag.chat",
+            {
+                "project_id": context.project_id,
+                "user_id": context.user.user_id,
+                "request_id": getattr(http_request.state, "request_id", ""),
+            },
+        ):
+            result = await _run_graph(query, session_id, graph, context)
     except Exception as e:
         logger.error("graph_invoke_error", error=str(e))
+        await _log_question(
+            context=context,
+            request=http_request,
+            question=query,
+            status="error",
+            error=str(e),
+            latency_ms=round((time.perf_counter() - start) * 1000, 1),
+        )
         raise HTTPException(status_code=500, detail=f"Agent error: {str(e)}")
 
     # ── Build response ────────────────────────────────────────────────────────
@@ -417,6 +490,17 @@ async def chat(
     if result.get("guard_blocked"):
         record_guard_block(result.get("guard_reason", "unknown"))
 
+    await _log_question(
+        context=context,
+        request=http_request,
+        question=query,
+        answer=answer,
+        status="blocked" if result.get("guard_blocked") else "success",
+        latency_ms=latency_ms,
+        provider=result.get("llm_provider_used", ""),
+        cost_usd=token_usage.get("estimated_cost_usd", 0.0) if token_usage else 0.0,
+    )
+
     # ── Write-through cache ───────────────────────────────────────────────────
     if request.use_cache and not result.get("guard_blocked") and answer:
         try:
@@ -427,6 +511,7 @@ async def chat(
                     "answer": answer,
                     "sources": [s.model_dump() for s in sources],
                 },
+                project_id=context.project_id,
             ))
         except Exception:
             pass
@@ -439,7 +524,9 @@ async def chat(
 @app.post("/api/chat/stream", tags=["Chat"])
 async def chat_stream(
     request: ChatRequest,
+    http_request: Request,
     graph=Depends(get_graph),
+    context: ProjectContext = Depends(get_project_context),
 ):
     """
     SSE streaming chat. Streams token-by-token via LangGraph astream_events.
@@ -450,7 +537,13 @@ async def chat_stream(
 
     async def _event_generator() -> AsyncGenerator[Dict[str, Any], None]:
         inc_active_sessions(1)
-        config = {"configurable": {"thread_id": session_id}}
+        thread_id = f"{context.project_id}:{context.user.user_id}:{session_id}"
+        config = {
+            "configurable": {
+                "thread_id": thread_id,
+                "project_id": context.project_id,
+            }
+        }
         accumulated_answer = ""
         try:
             async for event in graph.astream_events(
@@ -458,6 +551,7 @@ async def chat_stream(
                     "messages": [{"role": "user", "content": query}],
                     "question": query,
                     "session_id": session_id,
+                    "user_id": context.user.user_id,
                 },
                 config=config,
                 version="v2",
@@ -502,9 +596,23 @@ async def chat_stream(
                 "event": "done",
                 "data": json.dumps({"answer": accumulated_answer, "session_id": session_id}),
             }
+            await _log_question(
+                context=context,
+                request=http_request,
+                question=query,
+                answer=accumulated_answer,
+                status="success",
+            )
 
         except Exception as e:
             logger.error("stream_error", error=str(e))
+            await _log_question(
+                context=context,
+                request=http_request,
+                question=query,
+                status="error",
+                error=str(e),
+            )
             yield {
                 "event": "error",
                 "data": json.dumps({"error": str(e)}),
@@ -515,96 +623,62 @@ async def chat_stream(
     return EventSourceResponse(_event_generator())
 
 
-# ── Chat: WebSocket ──────────────────────────────────────────────────────────
-
-@app.websocket("/api/chat/ws/{session_id}")
-async def chat_websocket(
-    websocket: WebSocket,
-    session_id: str,
-    graph=Depends(get_graph),
-):
-    """
-    WebSocket endpoint for real-time multi-turn chat.
-    Client sends: {"query": "..."}
-    Server streams: {"event": "token", "data": "..."}
-                    {"event": "done", "answer": "...", "sources": [...]}
-                    {"event": "error", "detail": "..."}
-    """
-    await websocket.accept()
-    inc_active_sessions(1)
-    logger.info("ws_connected", session_id=session_id)
-
-    try:
-        while True:
-            raw = await websocket.receive_text()
-            try:
-                data = json.loads(raw)
-                query = data.get("query", "").strip()
-            except json.JSONDecodeError:
-                query = raw.strip()
-
-            if not query:
-                await websocket.send_json({"event": "error", "detail": "Empty query"})
-                continue
-
-            config = {"configurable": {"thread_id": session_id}}
-            accumulated = ""
-
-            try:
-                async for event in graph.astream_events(
-                    {
-                        "messages": [{"role": "user", "content": query}],
-                        "question": query,
-                        "session_id": session_id,
-                    },
-                    config=config,
-                    version="v2",
-                ):
-                    kind = event.get("event", "")
-                    if kind == "on_chat_model_stream":
-                        node = event.get("metadata", {}).get("langgraph_node", "")
-                        if node in ("generate_answer", "generate_query_or_respond"):
-                            chunk = event.get("data", {}).get("chunk")
-                            if chunk:
-                                token = _extract_text(getattr(chunk, "content", ""))
-                                if token:
-                                    accumulated += token
-                                    await websocket.send_json({"event": "token", "data": token})
-
-                await websocket.send_json({
-                    "event": "done",
-                    "answer": accumulated,
-                    "session_id": session_id,
-                })
-
-            except Exception as e:
-                logger.error("ws_graph_error", error=str(e))
-                await websocket.send_json({"event": "error", "detail": str(e)})
-
-    except WebSocketDisconnect:
-        logger.info("ws_disconnected", session_id=session_id)
-    finally:
-        inc_active_sessions(-1)
-
-
 # ── Documents ────────────────────────────────────────────────────────────────
 
-async def _index_document_background(file_path: str, job_id: str) -> None:
+async def _index_document_background(
+    file_path: str,
+    job_id: str,
+    project_id: str,
+    user_id: str,
+    filename: str,
+    file_hash: str,
+    version: int,
+    storage_key: str,
+) -> None:
     """Background task: load, chunk, embed and index a document."""
     try:
         from src.retrieval.document_loader import load_and_split_async
         from src.retrieval.vector_store import index_documents
-        docs = await load_and_split_async(file_path)
+        docs = await load_and_split_async(
+            file_path,
+            metadata_overrides={
+                "filename": filename,
+                "project_id": project_id,
+                "uploaded_by": user_id,
+                "file_hash": file_hash,
+                "document_id": file_hash,
+                "version": version,
+                "active_version": False,
+                "storage_key": storage_key,
+            },
+        )
         indexed_ids = index_documents(docs)
-        logger.info("index_complete", job_id=job_id, chunks=len(indexed_ids), file=Path(file_path).name)
+        from src.retrieval.vector_store import get_vector_store
+        get_vector_store().activate_document_version(project_id, filename, file_hash)
+        logger.info(
+            "index_complete",
+            job_id=job_id,
+            chunks=len(indexed_ids),
+            file=filename,
+            project_id=project_id,
+            version=version,
+        )
     except Exception as e:
-        logger.error("index_failed", job_id=job_id, error=str(e))
+        logger.error("index_failed", job_id=job_id, project_id=project_id, error=str(e))
+        try:
+            from src.retrieval.vector_store import get_vector_store
+            get_vector_store().fail_document_version(project_id, filename, file_hash)
+        except Exception as storage_error:
+            logger.error("document_version_status_failed", job_id=job_id, error=str(storage_error))
 
 
 @app.post("/api/documents/upload", response_model=UploadResponse, tags=["Documents"])
 async def upload_document(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
+    context: ProjectContext = Depends(
+        require_project_role(Role.ADMIN, Role.USER)
+    ),
 ):
     """
     Upload and index a document asynchronously.
@@ -614,7 +688,10 @@ async def upload_document(
     if not file.filename:
         raise HTTPException(status_code=400, detail="No filename provided")
 
-    ext = Path(file.filename).suffix.lower()
+    filename = Path(file.filename).name
+    if not filename or filename in {".", ".."}:
+        raise HTTPException(status_code=400, detail="Invalid filename")
+    ext = Path(filename).suffix.lower()
     if ext not in Config.allowed_extensions_list:
         raise HTTPException(
             status_code=400,
@@ -632,40 +709,77 @@ async def upload_document(
         )
 
     # Save file — read async, write via executor (no aiofiles dependency)
-    save_path = Path(Config.UPLOAD_DIR) / file.filename
-    job_id = str(uuid.uuid4())[:8]
-
     try:
         content = await file.read()
+        if not content:
+            raise HTTPException(status_code=400, detail="Uploaded file is empty")
+        file_hash = hashlib.sha256(content).hexdigest()
+        from src.retrieval.vector_store import get_vector_store
+
+        job_id = str(uuid.uuid4())
+        storage_name = f"{uuid.uuid4()}{ext}"
+        project_dir = Path(Config.UPLOAD_DIR) / context.project_id
+        project_dir.mkdir(parents=True, exist_ok=True)
+        save_path = project_dir / storage_name
+        storage_key = f"{context.project_id}/{storage_name}"
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, save_path.write_bytes, content)
-        logger.info("file_saved", filename=file.filename, size_mb=f"{size_mb:.2f}", job_id=job_id)
+        version = get_vector_store().create_document_version(
+            context.project_id, filename, file_hash, context.user.user_id
+        )
+        logger.info(
+            "file_saved",
+            filename=filename,
+            project_id=context.project_id,
+            size_mb=f"{size_mb:.2f}",
+            job_id=job_id,
+        )
+    except HTTPException:
+        if "save_path" in locals() and save_path.exists():
+            save_path.unlink()
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to save file: {e}")
+        if "save_path" in locals() and save_path.exists():
+            save_path.unlink()
+        raise HTTPException(status_code=500, detail=f"Failed to save or register file: {e}")
 
     # Kick off background indexing
-    background_tasks.add_task(_index_document_background, str(save_path), job_id)
+    background_tasks.add_task(
+        _index_document_background,
+        str(save_path),
+        job_id,
+        context.project_id,
+        context.user.user_id,
+        filename,
+        file_hash,
+        version,
+        storage_key,
+    )
     record_upload(ext.lstrip("."), success=True)
 
     # Quick synchronous chunk count estimate
     estimated_chunks = max(1, int((size_mb * 1024) / Config.CHUNK_SIZE))
 
     return UploadResponse(
-        filename=file.filename,
+        filename=filename,
         indexed_chunks=estimated_chunks,
         message=f"File accepted. Indexing in background (job_id={job_id}). Actual chunk count logged on completion.",
         job_id=job_id,
+        file_hash=file_hash,
+        version=version,
     )
 
 
 @app.get("/api/documents", tags=["Documents"])
-async def list_documents():
+async def list_documents(
+    context: ProjectContext = Depends(get_project_context),
+):
     """List all documents currently indexed in the knowledge base."""
     try:
         from src.retrieval.vector_store import get_vector_store
         vs = get_vector_store()
-        result = vs._collection.get(include=["metadatas"])
-        metadatas = result.get("metadatas") or []
+        indexed_documents = vs.list_documents(project_id=context.project_id, active_only=True)
+        metadatas = [doc.metadata for doc in indexed_documents]
 
         files: Dict[str, Dict[str, Any]] = {}
         for meta in metadatas:
@@ -677,8 +791,27 @@ async def list_documents():
                     "chunks":     0,
                     "indexed_at": meta.get("indexed_at", ""),
                     "file_hash":  meta.get("file_hash", ""),
+                    "version":    meta.get("version", 1),
+                    "project_id": context.project_id,
+                    "status":     "indexed",
                 }
             files[fname]["chunks"] += 1
+
+        for version in vs.list_project_document_versions(context.project_id):
+            filename = version["filename"]
+            entry = files.setdefault(filename, {
+                "filename": filename,
+                "format": Path(filename).suffix.lower().lstrip(".") or "?",
+                "chunks": 0,
+                "indexed_at": version["created_at"],
+                "file_hash": version["file_hash"],
+                "project_id": context.project_id,
+            })
+            entry.update({
+                "version": version["version"],
+                "status": version["status"],
+                "file_hash": version["file_hash"],
+            })
 
         return {"documents": list(files.values()), "total_chunks": len(metadatas)}
     except Exception as e:
@@ -686,31 +819,50 @@ async def list_documents():
 
 
 @app.delete("/api/documents/{filename}", tags=["Documents"])
-async def delete_document(filename: str):
+async def delete_document(
+    filename: str,
+    context: ProjectContext = Depends(require_project_role(Role.ADMIN)),
+):
     """Remove all chunks for a document from the vector store."""
     try:
         from src.retrieval.vector_store import get_vector_store
         vs = get_vector_store()
-        ids_to_delete = vs._collection.get(
-            where={"filename": {"$eq": filename}},
-        ).get("ids", [])
+        version_documents = vs.list_documents(filename=filename, project_id=context.project_id)
+        storage_keys = {
+            doc.metadata.get("storage_key")
+            for doc in version_documents
+            if doc.metadata.get("storage_key")
+        }
+        deleted_count = vs.delete(filename=filename, project_id=context.project_id)
 
-        if not ids_to_delete:
+        if not deleted_count:
             raise HTTPException(status_code=404, detail=f"Document '{filename}' not found")
+        vs.delete_document_versions(context.project_id, filename)
 
-        vs._collection.delete(ids=ids_to_delete)
-        logger.info("document_deleted", filename=filename, chunks=len(ids_to_delete))
+        logger.info("document_deleted", filename=filename, chunks=deleted_count)
 
         # Remove upload file if it exists
-        upload_path = Path(Config.UPLOAD_DIR) / filename
-        if upload_path.exists():
-            upload_path.unlink()
+        for storage_key in storage_keys:
+            upload_path = Path(Config.UPLOAD_DIR) / storage_key
+            if upload_path.is_file():
+                upload_path.unlink()
 
-        return {"message": f"Deleted {len(ids_to_delete)} chunks for '{filename}'"}
+        return {"message": f"Deleted {deleted_count} chunks for '{filename}'"}
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/documents/{filename}/versions", tags=["Documents"])
+async def document_versions(
+    filename: str,
+    context: ProjectContext = Depends(get_project_context),
+):
+    return {
+        "filename": filename,
+        "versions": get_vector_store().document_version_history(context.project_id, filename),
+    }
 
 
 # ── Evaluation ───────────────────────────────────────────────────────────────
@@ -719,6 +871,7 @@ async def delete_document(filename: str):
 async def evaluate(
     request: EvalRequest,
     graph=Depends(get_graph),
+    context: ProjectContext = Depends(require_project_role(Role.ADMIN)),
 ):
     """
     Run RAGAS + retrieval evaluation against a question set.
@@ -744,35 +897,99 @@ async def evaluate(
                 "relevant_doc_ids": request.relevant_doc_ids[index] if request.relevant_doc_ids else [],
             })
 
-        results = await golden_dataset_eval(dataset=dataset, graph=graph, k=request.k)
-        return {"status": "ok", "results": results}
+        thread_prefix = f"eval-{context.project_id}-{context.user.user_id}"
+        results = await golden_dataset_eval(
+            dataset=dataset,
+            graph=graph,
+            k=request.k,
+            evaluation_framework=request.evaluation_framework,
+            thread_prefix=thread_prefix,
+        )
+        hit_at_k = results.get("retrieval", {}).get("hit_at_k", {}).get("mean")
+        faithfulness = results.get("ragas", {}).get("faithfulness")
+        if faithfulness is None:
+            faithfulness = results.get("deepeval", {}).get("FaithfulnessMetric")
+        checks = {
+            "hit_at_k": {
+                "value": hit_at_k,
+                "minimum": Config.RELEASE_MIN_HIT_AT_K,
+                "passed": hit_at_k is not None and hit_at_k >= Config.RELEASE_MIN_HIT_AT_K,
+            },
+            "faithfulness": {
+                "value": faithfulness,
+                "minimum": Config.RELEASE_MIN_FAITHFULNESS,
+                "passed": (
+                    faithfulness is not None
+                    and faithfulness >= Config.RELEASE_MIN_FAITHFULNESS
+                ),
+            },
+        }
+        release_passed = all(check["passed"] for check in checks.values())
+        run_id = str(uuid.uuid4())
+        results["release_gate"] = {"passed": release_passed, "checks": checks}
+        from src.retrieval.vector_store import get_vector_store
+        await asyncio.to_thread(
+            get_vector_store().save_evaluation,
+            run_id,
+            context.project_id,
+            context.user.user_id,
+            results,
+            release_passed,
+        )
+        return {
+            "status": "ok",
+            "run_id": run_id,
+            "release_gate": results["release_gate"],
+            "results": results,
+        }
 
     except Exception as e:
         logger.error("eval_error", error=str(e))
         raise HTTPException(status_code=500, detail=f"Evaluation error: {str(e)}")
 
 
+@app.get("/api/evaluations", tags=["Evaluation"])
+async def list_evaluations(
+    limit: int = 50,
+    context: ProjectContext = Depends(require_project_role(Role.ADMIN)),
+):
+    if not 1 <= limit <= 200:
+        raise HTTPException(status_code=422, detail="limit must be between 1 and 200")
+    from src.retrieval.vector_store import get_vector_store
+    return {
+        "evaluations": get_vector_store().list_evaluations(context.project_id, limit),
+        "project_id": context.project_id,
+    }
+
+
 # ── Cache management ─────────────────────────────────────────────────────────
 
 @app.get("/api/cache/stats", tags=["Cache"])
-async def cache_stats():
+async def cache_stats(
+    context: ProjectContext = Depends(get_project_context),
+):
     """Return cache hit/miss statistics."""
     from src.retrieval.cache import get_cache_stats
-    return get_cache_stats()
+    return get_cache_stats(project_id=context.project_id)
 
 
 @app.post("/api/cache/invalidate", tags=["Cache"])
-async def invalidate_cache(pattern: str = "cache:*"):
+async def invalidate_cache(
+    pattern: str = "cache:*",
+    context: ProjectContext = Depends(require_project_role(Role.ADMIN)),
+):
     """Flush cache entries matching pattern (admin only)."""
     from src.retrieval.cache import invalidate_cache as _invalidate
-    deleted = await _invalidate(pattern)
+    deleted = await _invalidate(pattern, project_id=context.project_id)
     return {"deleted": deleted, "pattern": pattern}
 
 
 # ── Config / Admin ───────────────────────────────────────────────────────────
 
 @app.get("/api/config", tags=["Admin"])
-async def get_config():
+async def get_config(
+    context: ProjectContext = Depends(require_project_role(Role.ADMIN)),
+):
     """Return current configuration (non-sensitive). Admin only."""
     return {
         "app_name":            Config.APP_NAME,
@@ -786,7 +1003,6 @@ async def get_config():
         "hyde_enabled":        Config.HYDE_ENABLED,
         "guardrails_enabled":  Config.GUARDRAIL_ENABLED,
         "pii_detection":       Config.PII_DETECTION_ENABLED,
-        "redis_enabled":       Config.REDIS_ENABLED,
         "postgres_enabled":    Config.POSTGRES_ENABLED,
         "langsmith_enabled":   Config.LANGSMITH_ENABLED,
         "mcp_enabled":         Config.MCP_ENABLED,
@@ -815,6 +1031,8 @@ async def issue_token(request: TokenRequest):
     Issue a JWT token. For development and testing only.
     In production, integrate with your identity provider.
     """
+    if Config.AUTH_ENABLED or Config.APP_ENV == "production":
+        raise HTTPException(status_code=404, detail="Not found")
     from api.auth import Role, create_token_pair
     try:
         role = Role(request.role)

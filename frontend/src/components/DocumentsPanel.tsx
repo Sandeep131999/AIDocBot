@@ -158,7 +158,9 @@ export default function DocumentsPanel() {
                       {doc.filename}
                     </div>
                     <div className="d-flex gap-2 align-items-center">
-                      <small className="text-muted">{formatBytes(doc.size)}</small>
+                      <small className="text-muted">
+                        {doc.size > 0 ? formatBytes(doc.size) : doc.uploaded_at ? new Date(doc.uploaded_at).toLocaleDateString() : "Indexed"}
+                      </small>
                       <MDBBadge color={statusColor(doc.status)} pill className="small">
                         {doc.status}
                       </MDBBadge>

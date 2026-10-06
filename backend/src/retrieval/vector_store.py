@@ -2,7 +2,7 @@
 src/vector_store.py — Enterprise Hybrid Search + Reranking
 ────────────────────────────────────────────────────────────
 Features:
-  • Hybrid search: BM25 (sparse) + ChromaDB dense, RRF fusion
+    • Hybrid search: PostgreSQL full-text + pgvector dense, RRF fusion
   • Cross-encoder reranking (ms-marco-MiniLM-L-6-v2)
   • HyDE: Hypothetical Document Embeddings for better query coverage
   • Relevance score filtering (MIN_RELEVANCE_SCORE)
@@ -15,23 +15,42 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import logging
+from contextvars import ContextVar
 from functools import lru_cache, partial
 from typing import List, Optional, Tuple
 
-from langchain_chroma import Chroma
 from langchain_core.documents import Document
 
 from src.config import Config
 from src.retrieval.embeddings import get_embeddings
+from src.retrieval.postgres_store import PostgresVectorStore
 
 logger = logging.getLogger(__name__)
+_project_id: ContextVar[str] = ContextVar("rag_project_id", default="default")
+
+
+def set_project_scope(project_id: str):
+    """Set the project scope for retrieval performed during this request."""
+    return _project_id.set(project_id)
+
+
+def reset_project_scope(token) -> None:
+    _project_id.reset(token)
+
+
+def current_project_scope() -> str:
+    return _project_id.get()
 
 
 def _document_identity(doc: Document) -> str:
     metadata = doc.metadata
+    vector_id = metadata.get("_vector_id")
+    if vector_id:
+        return str(vector_id)
     document_id = metadata.get("document_id")
     if document_id:
-        return str(document_id)
+        chunk_index = metadata.get("chunk_index")
+        return f"{document_id}#chunk-{chunk_index}" if chunk_index is not None else str(document_id)
     source = metadata.get("file_hash") or metadata.get("source")
     if source:
         return f"{source}#chunk-{metadata.get('chunk_index', 0)}"
@@ -43,19 +62,23 @@ def _document_identity(doc: Document) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 @lru_cache(maxsize=1)
-def get_vector_store() -> Chroma:
-    """Thread-safe Chroma singleton. Cached for the life of the process."""
-    logger.info(f"[VectorStore] Initializing ChromaDB at {Config.VECTOR_DB_PATH}")
-    return Chroma(
-        persist_directory=Config.VECTOR_DB_PATH,
-        collection_name=Config.VECTOR_COLLECTION,
-        embedding_function=get_embeddings(),
-        collection_metadata={"hnsw:space": Config.VECTOR_SIMILARITY_METRIC},
-    )
+def get_vector_store() -> PostgresVectorStore:
+    """Return the process-wide PostgreSQL/pgvector store."""
+    connection_string = Config.POSTGRES_URL.replace("+asyncpg", "+psycopg")
+    logger.info("[VectorStore] Initializing PostgreSQL pgvector store")
+    return PostgresVectorStore(connection_string, get_embeddings())
+
+
+def close_vector_store() -> None:
+    """Close the database pool if the vector store was initialized."""
+    if get_vector_store.cache_info().currsize:
+        vector_store = get_vector_store()
+        get_vector_store.cache_clear()
+        vector_store.close()
 
 
 def index_documents(documents: List[Document]) -> List[str]:
-    """Upsert one source file's chunks and remove chunks absent from its latest version."""
+    """Index one version of a source file without destroying its history."""
     if not documents:
         return []
 
@@ -63,6 +86,10 @@ def index_documents(documents: List[Document]) -> List[str]:
     if len(filenames) != 1 or not next(iter(filenames)):
         raise ValueError("All indexed chunks must belong to one named source file")
     filename = next(iter(filenames))
+    project_ids = {str(doc.metadata.get("project_id", "default")) for doc in documents}
+    if len(project_ids) != 1:
+        raise ValueError("All indexed chunks must belong to exactly one project")
+    project_id = next(iter(project_ids))
 
     ids = []
     for position, doc in enumerate(documents):
@@ -72,50 +99,24 @@ def index_documents(documents: List[Document]) -> List[str]:
             or doc.metadata.get("file_hash")
             or filename
         )
+        file_hash = str(doc.metadata.get("file_hash", document_id))
         chunk_index = str(doc.metadata.get("chunk_index", position))
-        identity = f"{source}\0{document_id}\0{chunk_index}"
+        doc.metadata.setdefault("active_version", True)
+        identity = f"{project_id}\0{source}\0{file_hash}\0{document_id}\0{chunk_index}"
         ids.append(hashlib.sha256(identity.encode("utf-8")).hexdigest())
 
     if len(ids) != len(set(ids)):
         raise ValueError("Indexed chunks produced duplicate stable IDs")
 
     vector_store = get_vector_store()
-    previous = vector_store._collection.get(
-        where={"filename": {"$eq": filename}},
-        include=["metadatas"],
-    ).get("ids", [])
-
     vector_store.add_documents(documents, ids=ids)
-
-    stale_ids = set(previous) - set(ids)
-    if stale_ids:
-        vector_store._collection.delete(ids=list(stale_ids))
 
     return ids
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# BM25 index (built on-demand from the current Chroma collection)
+# PostgreSQL native full-text search
 # ─────────────────────────────────────────────────────────────────────────────
-
-def _build_bm25_index(docs: List[Document]):
-    """Build a BM25Okapi index from a list of documents."""
-    from rank_bm25 import BM25Okapi
-    tokenized = [doc.page_content.lower().split() for doc in docs]
-    return BM25Okapi(tokenized)
-
-
-def _bm25_search(query: str, docs: List[Document], k: int) -> List[Tuple[Document, float]]:
-    """Return top-k docs with BM25 scores."""
-    if not docs:
-        return []
-    from rank_bm25 import BM25Okapi
-    tokenized = [doc.page_content.lower().split() for doc in docs]
-    bm25 = BM25Okapi(tokenized)
-    scores = bm25.get_scores(query.lower().split())
-    ranked = sorted(zip(docs, scores), key=lambda x: x[1], reverse=True)
-    return ranked[:k]
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Reciprocal Rank Fusion
@@ -243,6 +244,7 @@ def retrieve(
     top_k = k or Config.TOP_K
     strat = strategy or Config.RETRIEVAL_STRATEGY
     threshold = score_threshold if score_threshold is not None else Config.MIN_RELEVANCE_SCORE
+    project_id = _project_id.get()
 
     vs = get_vector_store()
     fetch_k = top_k * 4   # fetch more candidates for fusion/reranking
@@ -259,7 +261,7 @@ def retrieve(
     if strat in ("dense", "hybrid", "hyde"):
         try:
             results_with_scores = vs.similarity_search_with_relevance_scores(
-                embed_query, k=fetch_k
+                embed_query, k=fetch_k, project_id=project_id
             )
             # Filter by score threshold
             dense_results = [
@@ -270,21 +272,11 @@ def retrieve(
         except Exception as e:
             logger.warning(f"[Dense] Retrieval error: {e}")
 
-    # ── BM25 sparse retrieval ──────────────────────────────────────────────
+    # ── PostgreSQL full-text sparse retrieval ───────────────────────────────
     sparse_results: List[Tuple[Document, float]] = []
     if strat in ("bm25", "hybrid"):
         try:
-            # Get all docs from collection for BM25 (capped at 5000)
-            all_data = vs._collection.get(limit=5000, include=["documents", "metadatas"])
-            all_docs = [
-                Document(page_content=text, metadata=meta or {})
-                for text, meta in zip(
-                    all_data.get("documents", []),
-                    all_data.get("metadatas", [{}] * len(all_data.get("documents", [])))
-                )
-                if text
-            ]
-            sparse_results = _bm25_search(query, all_docs, k=fetch_k)
+            sparse_results = vs.keyword_search(query, k=fetch_k, project_id=project_id)
             logger.debug(f"[BM25] {len(sparse_results)} results")
         except Exception as e:
             logger.warning(f"[BM25] Error: {e}")

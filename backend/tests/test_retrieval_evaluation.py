@@ -1,6 +1,8 @@
 import asyncio
 import json
+import sys
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
 from langchain_core.documents import Document
@@ -53,6 +55,27 @@ def test_retriever_tool_returns_documents_as_artifact(monkeypatch):
     assert artifact == [document]
 
 
+def test_web_search_tool_returns_duckduckgo_sources(monkeypatch):
+    from src.routing.tools import web_search
+
+    class FakeDuckDuckGo:
+        def text(self, query, max_results):
+            assert query == "pgvector indexing"
+            assert max_results == 3
+            return [{
+                "title": "pgvector docs",
+                "body": "Vector similarity search for PostgreSQL.",
+                "href": "https://example.test/pgvector",
+            }]
+
+    monkeypatch.setitem(sys.modules, "ddgs", SimpleNamespace(DDGS=FakeDuckDuckGo))
+
+    result = web_search.invoke({"query": "pgvector indexing", "max_results": 3})
+
+    assert "pgvector docs" in result
+    assert "https://example.test/pgvector" in result
+
+
 def test_hit_precision_recall_and_ranking_deduplicate_chunks():
     metrics = Evaluator().evaluate_query(
         retrieved=["page-a", "page-a", "page-b", "page-c"],
@@ -81,6 +104,23 @@ def test_rrf_keeps_distinct_records_from_same_file():
     fused = vector_store._rrf_fusion(docs, [])
 
     assert {doc.metadata["document_id"] for doc in fused} == {"page-a", "page-b"}
+
+
+def test_rrf_keeps_distinct_chunks_from_one_document():
+    docs = [
+        Document(
+            page_content="first chunk",
+            metadata={"document_id": "page-a", "chunk_index": 0},
+        ),
+        Document(
+            page_content="second chunk",
+            metadata={"document_id": "page-a", "chunk_index": 1},
+        ),
+    ]
+
+    fused = vector_store._rrf_fusion(docs, [])
+
+    assert [doc.page_content for doc in fused] == ["first chunk", "second chunk"]
 
 
 def test_grader_captures_retriever_tool_artifact(monkeypatch):

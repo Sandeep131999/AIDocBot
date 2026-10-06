@@ -1,12 +1,22 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { sendMessage, type Message, type Source } from "@/lib/api";
+import { useAuth } from "@/components/AuthProvider";
 
 export function useChat() {
+  const { selectedProjectId } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requestVersion = useRef(0);
+
+  useEffect(() => {
+    requestVersion.current += 1;
+    setMessages([]);
+    setError(null);
+    setIsLoading(false);
+  }, [selectedProjectId]);
 
   const addMessage = useCallback((msg: Message) => {
     setMessages((prev) => [...prev, msg]);
@@ -18,6 +28,7 @@ export function useChat() {
 
       setError(null);
       setIsLoading(true);
+      const currentVersion = requestVersion.current;
 
       const userMsg: Message = {
         id: crypto.randomUUID(),
@@ -32,6 +43,7 @@ export function useChat() {
 
       try {
         const data = await sendMessage(query);
+        if (currentVersion !== requestVersion.current) return;
         const latency = Math.round(performance.now() - startTime);
 
         const provider =
@@ -51,6 +63,7 @@ export function useChat() {
 
         addMessage(assistantMsg);
       } catch (err) {
+        if (currentVersion !== requestVersion.current) return;
         const msg = err instanceof Error ? err.message : "Unknown error";
         setError(msg);
 
@@ -61,13 +74,14 @@ export function useChat() {
           timestamp: new Date().toISOString(),
         });
       } finally {
-        setIsLoading(false);
+        if (currentVersion === requestVersion.current) setIsLoading(false);
       }
     },
     [isLoading, addMessage]
   );
 
   const clear = useCallback(() => {
+    requestVersion.current += 1;
     setMessages([]);
     setError(null);
   }, []);

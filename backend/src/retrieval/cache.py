@@ -2,24 +2,22 @@
 src/cache.py — Enterprise Semantic & Prompt Cache
 ───────────────────────────────────────────────────
 Two cache layers:
-  1. Exact prompt cache   — hash(query) → cached answer (Redis, fast)
-  2. Semantic cache       — embedding similarity → nearest cached answer
-     (ChromaDB collection "cache", cosine threshold)
+    Exact prompt cache — hash(query) → cached answer in a bounded in-process TTL cache
 
 Features:
-  • Async-first (Redis async client)
+    • Async-compatible API, with process-local storage
   • TTL-aware (configurable per cache type)
   • Cache invalidation by key pattern
   • Hit/miss metrics for observability
-  • Graceful degradation when Redis is down or embeddings fail
 """
+import fnmatch
 import hashlib
 import json
 import logging
-import time
+import threading
 from typing import Any
 
-import redis.asyncio as redis
+from cachetools import TTLCache
 
 from src.config import Config
 
@@ -27,172 +25,90 @@ logger = logging.getLogger(__name__)
 
 
 class CacheManager:
+    """Small process-local exact-query response cache; shared by no external service."""
+
     def __init__(self):
-        self.redis_client: redis.Redis | None = None
+        self.responses: TTLCache[str, str] = TTLCache(maxsize=500, ttl=Config.CACHE_TTL)
         self.hits = 0
         self.misses = 0
-        self._redis_retry_after = 0.0
-        self._redis_available = False
-        if Config.REDIS_ENABLED:
-            try:
-                self.redis_client = redis.from_url(
-                    Config.REDIS_URL,
-                    password=Config.REDIS_PASSWORD or None,
-                    decode_responses=True,
-                    socket_connect_timeout=1,
-                )
-            except Exception as e:
-                self._mark_redis_failure(e)
-
-        # Lazy initialization of embedding model - only load when needed
-        # This avoids DLL load issues at import time (Windows App Control policies)
-        self._embed_model = None
-        self._embed_model_failed = False
-
-    def _can_use_redis(self) -> bool:
-        return (
-            Config.REDIS_ENABLED
-            and self.redis_client is not None
-            and time.monotonic() >= self._redis_retry_after
-        )
-
-    def _mark_redis_failure(self, error: Exception) -> None:
-        self._redis_available = False
-        self._redis_retry_after = time.monotonic() + 30
-        logger.warning("[Cache] Redis unavailable; retrying in 30 seconds: %s", error)
-
-    def _mark_redis_success(self) -> None:
-        self._redis_available = True
-        self._redis_retry_after = 0.0
-
-    def _get_embed_model(self):
-        """Lazily initialize the embedding model with error handling."""
-        if self._embed_model is not None:
-            return self._embed_model
-        if self._embed_model_failed:
-            return None
-
-        try:
-            # Import here to avoid loading at module import time
-            from sentence_transformers import SentenceTransformer
-            logger.info("[Embeddings] Loading HF model: BAAI/bge-base-en-v1.5")
-            self._embed_model = SentenceTransformer("BAAI/bge-base-en-v1.5")
-            logger.info("[Embeddings] Model loaded successfully")
-        except Exception as e:
-            # Handle Windows App Control policy blocking DLLs
-            error_msg = str(e)
-            if "DLL load failed" in error_msg or "Application Control policy" in error_msg:
-                logger.warning(
-                    "[Cache] Embedding model failed to load due to Windows App Control policy "
-                    "blocking native DLLs (likely onnxruntime). Semantic cache disabled. "
-                    "Exact cache (Redis) will still work. Error: %s", error_msg
-                )
-            else:
-                logger.warning(f"[Cache] Embed model failed to load: {e}")
-            self._embed_model_failed = True
-            self._embed_model = None
-        return self._embed_model
-
-    async def get_embedding(self, text: str):
-        model = self._get_embed_model()
-        if not model:
-            return None
-        try:
-            return model.encode(text, normalize_embeddings=True).tolist()
-        except Exception as e:
-            logger.warning(f"[Cache] Embedding generation failed: {e}")
-            return None
-
-    async def ping(self):
-        if not self._can_use_redis():
-            return False
-        try:
-            await self.redis_client.ping()
-            self._mark_redis_success()
-            return True
-        except redis.RedisError as exc:
-            self._mark_redis_failure(exc)
-            return False
+        self.project_hits: dict[str, int] = {}
+        self.project_misses: dict[str, int] = {}
+        self._lock = threading.RLock()
 
 
 cache = CacheManager()
 
 
-def _cache_key(query: str) -> str:
-    digest = hashlib.sha256(query.strip().encode("utf-8")).hexdigest()
-    return f"cache:exact:{digest}"
+def _cache_key(query: str, project_id: str = "default") -> str:
+    project_digest = hashlib.sha256(project_id.encode("utf-8")).hexdigest()[:16]
+    digest = hashlib.sha256(f"{project_id}\0{query.strip()}".encode("utf-8")).hexdigest()
+    return f"cache:exact:{project_digest}:{digest}"
 
 
-async def get_cached_response(query: str) -> dict[str, Any] | None:
+async def get_cached_response(
+    query: str, project_id: str = "default"
+) -> dict[str, Any] | None:
     """Return an exact-query cache entry, or None when it is unavailable."""
-    if not cache._can_use_redis():
-        cache.misses += 1
-        return None
-
-    try:
-        value = await cache.redis_client.get(_cache_key(query))
-        cache._mark_redis_success()
+    with cache._lock:
+        value = cache.responses.get(_cache_key(query, project_id))
         if value is None:
             cache.misses += 1
+            cache.project_misses[project_id] = cache.project_misses.get(project_id, 0) + 1
             return None
-        response = json.loads(value)
+        try:
+            response = json.loads(value)
+        except json.JSONDecodeError:
+            cache.misses += 1
+            cache.project_misses[project_id] = cache.project_misses.get(project_id, 0) + 1
+            logger.warning("[Cache] Ignoring invalid cached response")
+            return None
         if not isinstance(response, dict):
             cache.misses += 1
-            logger.warning("[Cache] Ignoring cached response with invalid shape")
+            cache.project_misses[project_id] = cache.project_misses.get(project_id, 0) + 1
             return None
         cache.hits += 1
+        cache.project_hits[project_id] = cache.project_hits.get(project_id, 0) + 1
         response.setdefault("cache_type", "exact")
         return response
-    except redis.RedisError as exc:
-        cache.misses += 1
-        cache._mark_redis_failure(exc)
-        return None
-    except (json.JSONDecodeError, TypeError, ValueError) as exc:
-        cache.misses += 1
-        logger.warning("[Cache] Invalid cached response: %s", exc)
-        return None
 
 
-async def cache_response(query: str, response: dict[str, Any]) -> None:
-    """Store a response under its normalized query hash with the configured TTL."""
-    if not cache._can_use_redis():
-        return
-
+async def cache_response(
+    query: str, response: dict[str, Any], project_id: str = "default"
+) -> None:
+    """Store an exact-query response in the bounded process-local cache."""
     try:
-        await cache.redis_client.set(
-            _cache_key(query),
-            json.dumps(response, ensure_ascii=False),
-            ex=Config.REDIS_CACHE_TTL,
-        )
-        cache._mark_redis_success()
-    except redis.RedisError as exc:
-        cache._mark_redis_failure(exc)
+        serialized = json.dumps(response, ensure_ascii=False)
     except (TypeError, ValueError) as exc:
         logger.warning("[Cache] Response could not be serialized: %s", exc)
+        return
+    with cache._lock:
+        cache.responses[_cache_key(query, project_id)] = serialized
 
 
-def get_cache_stats() -> dict[str, int | float | bool]:
-    """Return process-local cache counters and Redis availability."""
-    total = cache.hits + cache.misses
+def get_cache_stats(project_id: str | None = None) -> dict[str, int | float | bool]:
+    if project_id is None:
+        hits, misses = cache.hits, cache.misses
+    else:
+        hits = cache.project_hits.get(project_id, 0)
+        misses = cache.project_misses.get(project_id, 0)
+    total = hits + misses
     return {
-        "hits": cache.hits,
-        "misses": cache.misses,
-        "hit_rate": cache.hits / total if total else 0.0,
-        "redis_available": cache._redis_available,
+        "hits": hits,
+        "misses": misses,
+        "hit_rate": hits / total if total else 0.0,
+        "cache_enabled": True,
     }
 
 
-async def invalidate_cache(pattern: str = "cache:*") -> int:
-    """Delete cache keys matching a Redis glob pattern."""
-    if not cache._can_use_redis():
-        return 0
-
-    deleted = 0
-    try:
-        async for key in cache.redis_client.scan_iter(match=pattern):
-            deleted += await cache.redis_client.delete(key)
-    except redis.RedisError as exc:
-        cache._mark_redis_failure(exc)
-    else:
-        cache._mark_redis_success()
-    return deleted
+async def invalidate_cache(
+    pattern: str = "cache:*", project_id: str | None = None
+) -> int:
+    """Delete process-local cache entries matching a glob pattern."""
+    if project_id is not None:
+        project_digest = hashlib.sha256(project_id.encode("utf-8")).hexdigest()[:16]
+        pattern = f"cache:exact:{project_digest}:*"
+    with cache._lock:
+        matching = [key for key in cache.responses if fnmatch.fnmatch(key, pattern)]
+        for key in matching:
+            del cache.responses[key]
+    return len(matching)

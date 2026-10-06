@@ -5,7 +5,7 @@ Two evaluation tracks:
 
 Track 1 — Retrieval metrics (offline, no LLM cost):
   Hit@K, Precision@K, Recall@K, MRR, NDCG@K, F1@K
-  Works with live Chroma retriever or pre-fetched results.
+    Works with the live PostgreSQL/pgvector retriever or pre-fetched results.
 
 Track 2 — RAGAS end-to-end metrics (LLM-based):
   faithfulness, answer_relevancy, context_precision, context_recall
@@ -51,7 +51,7 @@ def _doc_id(doc: Document) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 class Evaluator:
-    """Classical retrieval quality metrics with live Chroma + LangGraph integration."""
+    """Classical retrieval quality metrics with live pgvector + LangGraph integration."""
 
     def __init__(self) -> None:
         logger.info("[Evaluator] Initialized")
@@ -149,7 +149,7 @@ class Evaluator:
     def evaluate_retriever(
         self, query: str, relevant_docs: List[str], k: int = 5
     ) -> Dict[str, float]:
-        """Run query through live Chroma EnterpriseRetriever and score."""
+        """Run query through the live EnterpriseRetriever and score."""
         results = get_retriever(k=k).invoke(query)
         retrieved = [_doc_id(doc) for doc in results]
         return self.evaluate_query(retrieved, relevant_docs, k)
@@ -266,10 +266,69 @@ async def run_ragas_evaluation(
         return {"_error": str(exc)}
 
 
+async def run_deepeval_evaluation(
+    questions: List[str],
+    answers: List[str],
+    contexts: List[List[str]],
+) -> Dict[str, float]:
+    """Evaluate grounding and answer relevance with DeepEval and the configured chat model."""
+    from deepeval.metrics import AnswerRelevancyMetric, FaithfulnessMetric
+    from deepeval.models import DeepEvalBaseLLM
+    from deepeval.test_case import LLMTestCase
+    from src.routing.multi_llm import get_ragas_llm
+
+    class ConfiguredChatModel(DeepEvalBaseLLM):
+        def __init__(self):
+            self.model = get_ragas_llm()
+
+        def load_model(self):
+            return self.model
+
+        def generate(self, prompt: str, schema=None) -> str:
+            response = self.model.invoke(prompt)
+            content = getattr(response, "content", response)
+            return content if isinstance(content, str) else str(content)
+
+        async def a_generate(self, prompt: str, schema=None) -> str:
+            response = await self.model.ainvoke(prompt)
+            content = getattr(response, "content", response)
+            return content if isinstance(content, str) else str(content)
+
+        def get_model_name(self) -> str:
+            return "configured-langchain-model"
+
+    def _evaluate() -> Dict[str, float]:
+        model = ConfiguredChatModel()
+        metrics = [
+            FaithfulnessMetric(model=model, include_reason=False),
+            AnswerRelevancyMetric(model=model, include_reason=False),
+        ]
+        scores: Dict[str, List[float]] = {metric.__name__: [] for metric in metrics}
+        for question, answer, context in zip(questions, answers, contexts, strict=True):
+            test_case = LLMTestCase(
+                input=question,
+                actual_output=answer,
+                retrieval_context=context,
+            )
+            for metric in metrics:
+                metric.measure(test_case)
+                if metric.score is not None:
+                    scores[metric.__name__].append(float(metric.score))
+        return {
+            name: float(np.mean(values))
+            for name, values in scores.items()
+            if values
+        }
+
+    return await asyncio.to_thread(_evaluate)
+
+
 async def golden_dataset_eval(
     dataset: List[Dict[str, Any]],
     graph=None,
     k: int = 5,
+    evaluation_framework: str = "ragas",
+    thread_prefix: str = "golden-eval",
 ) -> Dict[str, Any]:
     """
     Run RAGAS + retrieval metrics over a golden dataset.
@@ -292,8 +351,7 @@ async def golden_dataset_eval(
     if graph:
         for i, question in enumerate(questions):
             try:
-                import asyncio
-                config = {"configurable": {"thread_id": f"golden-eval-{i}"}}
+                config = {"configurable": {"thread_id": f"{thread_prefix}-{i}"}}
                 result = await graph.ainvoke(
                     {"messages": [{"role": "user", "content": question}], "question": question},
                     config=config,
@@ -322,8 +380,16 @@ async def golden_dataset_eval(
         answers=answers,
         contexts=contexts,
         ground_truths=ground_truths if all(ground_truths) else None,
-    ) if graph is not None else {"_error": "A graph is required for RAGAS evaluation"}
+    ) if graph is not None and evaluation_framework in {"ragas", "both"} else {}
     ragas_error = ragas_result.pop("_error", None)
+    deepeval_result = {}
+    deepeval_error = None
+    if graph is not None and evaluation_framework in {"deepeval", "both"}:
+        try:
+            deepeval_result = await run_deepeval_evaluation(questions, answers, contexts)
+        except Exception as exc:
+            logger.exception("[DeepEval] Evaluation failed")
+            deepeval_error = str(exc)
 
     # Aggregate retrieval metrics
     retrieval_agg = {}
@@ -339,6 +405,8 @@ async def golden_dataset_eval(
     return {
         "ragas": ragas_result,
         "ragas_error": ragas_error,
+        "deepeval": deepeval_result,
+        "deepeval_error": deepeval_error,
         "retrieval": retrieval_agg,
         "num_questions": len(questions),
         "k": k,

@@ -2,19 +2,25 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { listDocuments, uploadDocument, deleteDocument, type Document } from "@/lib/api";
+import { useAuth } from "@/components/AuthProvider";
 
 export function useDocuments() {
+  const { selectedProjectId } = useAuth();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastAction, setLastAction] = useState<string | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const latestProjectId = useRef(selectedProjectId);
+  latestProjectId.current = selectedProjectId;
 
   const refresh = useCallback(async () => {
+    const requestProjectId = selectedProjectId;
     setIsLoading(true);
     try {
       const docs = await listDocuments();
+      if (latestProjectId.current !== requestProjectId) return;
       setDocuments(docs);
       setError(null);
       const hasPending = docs.some((d) => d.status === "pending" || d.status === "processing");
@@ -23,11 +29,12 @@ export function useDocuments() {
         intervalRef.current = null;
       }
     } catch (err) {
+      if (latestProjectId.current !== requestProjectId) return;
       setError(err instanceof Error ? err.message : "Failed to load documents");
     } finally {
-      setIsLoading(false);
+      if (latestProjectId.current === requestProjectId) setIsLoading(false);
     }
-  }, []);
+  }, [selectedProjectId]);
 
   const startPolling = useCallback(() => {
     if (intervalRef.current) return;
@@ -39,10 +46,10 @@ export function useDocuments() {
       setUploading(true);
       setLastAction(`Uploading ${file.name}...`);
       try {
-        await uploadDocument(file);
+        const result = await uploadDocument(file);
         await refresh();
         startPolling();
-        setLastAction(`Uploaded ${file.name}`);
+        setLastAction(result.message || `Accepted ${file.name}; indexing runs in the background`);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Upload failed");
         setLastAction(`Failed to upload ${file.name}`);
@@ -55,7 +62,7 @@ export function useDocuments() {
   );
 
   const remove = useCallback(
-    async (id: number, filename?: string) => {
+    async (id: string, filename?: string) => {
       const docToDelete = documents.find((d) => d.id === id);
       const name = filename || docToDelete?.filename || `ID ${id}`;
 
@@ -71,7 +78,7 @@ export function useDocuments() {
       } catch (err) {
         // Restore document if delete failed
         if (docToDelete) {
-          setDocuments((prev) => [...prev, docToDelete].sort((a, b) => a.id - b.id));
+          setDocuments((prev) => [...prev, docToDelete].sort((a, b) => a.filename.localeCompare(b.filename)));
         }
         setError(err instanceof Error ? err.message : "Delete failed");
         setLastAction(`Failed to delete ${name}`);
@@ -83,9 +90,13 @@ export function useDocuments() {
   );
 
   useEffect(() => {
+    setDocuments([]);
     refresh();
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = null;
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      intervalRef.current = null;
     };
   }, [refresh]);
 

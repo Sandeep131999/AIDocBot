@@ -5,7 +5,7 @@ Middleware (in order of execution, outermost first):
   1. RequestIDMiddleware    — inject X-Request-ID into every request/response
   2. AuditLogMiddleware     — structured log every request with timing
   3. PIIScrubMiddleware     — scrub PII from request logs (not response body)
-  4. RateLimitMiddleware    — per-IP + per-user rate limits via slowapi/Redis
+    4. RateLimitMiddleware    — per-IP + per-user in-process rate limits
   5. SecurityHeadersMiddleware — OWASP security headers on every response
 
 Usage in main.py:
@@ -22,8 +22,6 @@ from typing import Callable
 from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import JSONResponse
-
 from src.config import Config
 
 logger = logging.getLogger(__name__)
@@ -73,7 +71,26 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
         client_ip = request.client.host if request.client else "unknown"
         request_id = getattr(request.state, "request_id", "-")
 
-        response = await call_next(request)
+        try:
+            response = await call_next(request)
+        except Exception as exc:
+            elapsed_ms = (time.perf_counter() - start) * 1000
+            logger.exception(
+                "[REQUEST_ERROR] %s %s latency=%.1fms ip=%s rid=%s error=%s",
+                request.method,
+                request.url.path,
+                elapsed_ms,
+                client_ip,
+                request_id,
+                str(exc),
+            )
+            try:
+                from src.observability.observability import record_chat_metrics
+                if request.url.path == "/api/chat":
+                    record_chat_metrics(latency_ms=elapsed_ms, success=False)
+            except Exception:
+                logger.exception("failed to record request error metric")
+            raise
         elapsed_ms = (time.perf_counter() - start) * 1000
 
         logger.info(
@@ -91,7 +108,7 @@ class AuditLogMiddleware(BaseHTTPMiddleware):
                     success=response.status_code < 400,
                 )
         except Exception:
-            pass
+            logger.exception("failed to record request metric")
 
         return response
 
@@ -134,17 +151,13 @@ class PIIScrubMiddleware(BaseHTTPMiddleware):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _build_limiter():
-    """Build slowapi limiter — Redis backend if available, else in-memory."""
+    """Build a process-local slowapi limiter."""
     try:
         from slowapi import Limiter
         from slowapi.util import get_remote_address
 
-        if Config.REDIS_ENABLED:
-            storage_uri = Config.REDIS_URL
-            logger.info(f"[RateLimit] Using Redis storage: {storage_uri}")
-        else:
-            storage_uri = "memory://"
-            logger.info("[RateLimit] Using in-memory storage")
+        storage_uri = "memory://"
+        logger.info("[RateLimit] Using in-memory storage")
 
         return Limiter(
             key_func=get_remote_address,

@@ -10,16 +10,18 @@ Features:
 """
 from __future__ import annotations
 
-import asyncio
 import logging
-from typing import Annotated, List, Optional
+from typing import Optional
 
 from langchain_core.tools import tool, create_retriever_tool
-from langchain_core.documents import Document
 from pydantic import BaseModel, Field
 
 from src.config import Config
-from src.retrieval.vector_store import get_retriever, retrieve
+from src.retrieval.vector_store import (
+    current_project_scope,
+    get_retriever,
+    retrieve,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +44,11 @@ class FilteredRetrieveInput(BaseModel):
     filename: Optional[str] = Field(default=None, description="Filter by specific filename")
     format: Optional[str] = Field(default=None, description="Filter by file format (pdf, docx, etc.)")
     k: int = Field(default=5, description="Number of documents", ge=1, le=20)
+
+
+class WebSearchInput(BaseModel):
+    query: str = Field(description="A concise web search query")
+    max_results: int = Field(default=5, ge=1, le=10)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -103,12 +110,20 @@ def retrieve_with_filter(
         if format:
             where_filter["format"] = {"$eq": format.lstrip(".")}
 
-        search_kwargs = {"k": k}
-        if where_filter:
-            search_kwargs["filter"] = where_filter
-
-        retriever = vs.as_retriever(search_kwargs=search_kwargs)
-        docs = retriever.invoke(query)
+        filters = {}
+        if filename:
+            filters["filename"] = filename
+        if format:
+            filters["format"] = format.lstrip(".")
+        docs = [
+            document
+            for document, _score in vs.similarity_search_with_relevance_scores(
+                query,
+                k=k,
+                metadata_filter=filters,
+                project_id=current_project_scope(),
+            )
+        ]
 
         if not docs:
             filter_desc = f" (filename={filename}, format={format})" if where_filter else ""
@@ -136,8 +151,13 @@ def list_indexed_documents() -> str:
     try:
         from src.retrieval.vector_store import get_vector_store
         vs = get_vector_store()
-        result = vs._collection.get(include=["metadatas"])
-        metadatas = result.get("metadatas", [])
+        metadatas = [
+            document.metadata
+            for document in vs.list_documents(
+                project_id=current_project_scope(),
+                active_only=True,
+            )
+        ]
 
         if not metadatas:
             return "No documents are currently indexed in the knowledge base."
@@ -163,6 +183,24 @@ def list_indexed_documents() -> str:
     except Exception as e:
         logger.error(f"[Tool:list_docs] Error: {e}")
         return f"Error listing documents: {str(e)}"
+
+
+@tool(args_schema=WebSearchInput)
+def web_search(query: str, max_results: int = 5) -> str:
+    """Search current public web information through DuckDuckGo; no API key is required."""
+    try:
+        from ddgs import DDGS
+
+        results = DDGS().text(query, max_results=max_results)
+        formatted = [
+            f"[{index}] {item.get('title', 'Untitled')}\n"
+            f"{item.get('body', '')}\nSource: {item.get('href', '')}"
+            for index, item in enumerate(results, 1)
+        ]
+        return "\n\n".join(formatted) if formatted else "No web results found."
+    except Exception as exc:
+        logger.warning("[Tool:web_search] DuckDuckGo search failed: %s", exc)
+        return "Web search is temporarily unavailable."
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -193,4 +231,5 @@ def get_all_tools():
         get_retriever_tool(),
         retrieve_with_filter,
         list_indexed_documents,
+        web_search,
     ]

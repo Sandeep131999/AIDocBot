@@ -7,7 +7,7 @@ Patterns implemented:
   • Reflection / self-correction: reflect node after generation
   • Human-in-the-loop: interrupt_before for sensitive operations
   • Multi-provider fallback baked into every node
-  • Checkpointer: memory (default) or Postgres / Redis (production)
+    • Checkpointer: memory or PostgreSQL
   • Streaming: all nodes support astream_events
 
 Graph topology:
@@ -26,7 +26,6 @@ Graph topology:
 
 Install:
   pip install -U langgraph langgraph-checkpoint-postgres "psycopg[binary,pool]" \
-                 langgraph-checkpoint-redis
 
 Startup usage (FastAPI lifespan example):
   checkpointer, cleanup = await create_checkpointer()
@@ -81,7 +80,6 @@ async def create_checkpointer() -> Tuple[Any, Optional[Callable[[], Awaitable[No
     Backends:
       - memory:   in-process (dev/test)
       - postgres: persistent (production) — needs POSTGRES_URL
-      - redis:    fast (staging) — needs Redis Stack (RediSearch + RedisJSON)
     """
     backend = Config.CHECKPOINTER_BACKEND
 
@@ -91,7 +89,7 @@ async def create_checkpointer() -> Tuple[Any, Optional[Callable[[], Awaitable[No
             from psycopg.rows import dict_row
             from psycopg_pool import AsyncConnectionPool
 
-            conninfo = Config.POSTGRES_URL.replace("+asyncpg", "")
+            conninfo = Config.POSTGRES_URL.replace("+asyncpg", "").replace("+psycopg", "")
             pool = AsyncConnectionPool(
                 conninfo=conninfo,
                 max_size=10,
@@ -105,17 +103,6 @@ async def create_checkpointer() -> Tuple[Any, Optional[Callable[[], Awaitable[No
             return saver, pool.close
         except Exception as e:
             logger.warning(f"[Checkpointer] Postgres failed ({e}), falling back to memory")
-
-    if backend == "redis" and Config.REDIS_ENABLED:
-        try:
-            from langgraph.checkpoint.redis.aio import AsyncRedisSaver
-
-            saver = AsyncRedisSaver(redis_url=Config.REDIS_URL)
-            await saver.asetup()  # creates indices (idempotent)
-            logger.info("[Checkpointer] Using Redis async saver")
-            return saver, None
-        except Exception as e:
-            logger.warning(f"[Checkpointer] Redis failed ({e}), falling back to memory")
 
     logger.info("[Checkpointer] Using in-memory saver")
     return MemorySaver(), None

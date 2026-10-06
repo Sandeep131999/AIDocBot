@@ -24,7 +24,6 @@ Prompts exposed:
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -109,17 +108,15 @@ def create_mcp_server():
         """
         from pathlib import Path
         from src.retrieval.document_loader import load_and_split_async
-        from src.retrieval.vector_store import get_vector_store
-
         path = Path(file_path)
         if not path.exists():
             return f"Error: File not found: {file_path}"
 
         try:
             chunks = await load_and_split_async(str(path), strategy=strategy)
-            vs = get_vector_store()
-            vs.add_documents(chunks)
-            return f"Successfully indexed {len(chunks)} chunks from '{path.name}'"
+            from src.retrieval.vector_store import index_documents
+            ids = index_documents(chunks)
+            return f"Successfully indexed {len(ids)} chunks from '{path.name}'"
         except Exception as e:
             logger.error(f"[MCP:index] Error: {e}")
             return f"Indexing error: {str(e)}"
@@ -132,8 +129,7 @@ def create_mcp_server():
         from src.retrieval.vector_store import get_vector_store
         try:
             vs = get_vector_store()
-            result = vs._collection.get(include=["metadatas"])
-            metadatas = result.get("metadatas", [])
+            metadatas = [document.metadata for document in vs.list_documents()]
 
             if not metadatas:
                 return "No documents indexed yet."
@@ -192,6 +188,12 @@ def create_mcp_server():
             logger.error(f"[MCP:ask_agent] Error: {e}")
             return f"Agent error: {str(e)}"
 
+    @mcp.tool(description="Search the public web using DuckDuckGo. No API key is required.")
+    def duckduckgo_search(query: str, max_results: int = 5) -> str:
+        """Return web results with titles, summaries, and source URLs."""
+        from src.routing.tools import web_search
+        return web_search.invoke({"query": query, "max_results": max_results})
+
     # ── Resources ───────────────────────────────────────────────────────────
 
     @mcp.resource("rag://status")
@@ -201,7 +203,7 @@ def create_mcp_server():
         from src.config import Config
         try:
             vs = get_vector_store()
-            doc_count = vs._collection.count()
+            doc_count = vs.count()
         except Exception:
             doc_count = -1
 
@@ -214,7 +216,7 @@ def create_mcp_server():
             f"- Reranker: {'enabled' if Config.RERANKER_ENABLED else 'disabled'}\n"
             f"- HyDE: {'enabled' if Config.HYDE_ENABLED else 'disabled'}\n"
             f"- Guardrails: {'enabled' if Config.GUARDRAIL_ENABLED else 'disabled'}\n"
-            f"- Redis cache: {'enabled' if Config.REDIS_ENABLED else 'disabled'}\n"
+            f"- Vector database: PostgreSQL + pgvector\n"
         )
 
     @mcp.resource("rag://config")

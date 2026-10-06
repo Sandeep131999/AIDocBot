@@ -239,6 +239,8 @@ def _get_splitter(strategy: Optional[str] = None):
 def load_and_split(
     file_path: str,
     strategy: Optional[str] = None,
+    *,
+    metadata_overrides: Optional[Dict[str, Any]] = None,
 ) -> List[Document]:
     """
     Synchronous loader — use load_and_split_async in FastAPI endpoints.
@@ -262,6 +264,8 @@ def load_and_split(
 
     raw_docs = loader_fn(str(path))
     base_meta = _base_metadata(path)
+    if metadata_overrides:
+        base_meta.update(metadata_overrides)
 
     # Enrich all docs with base metadata
     for doc in raw_docs:
@@ -291,13 +295,15 @@ def load_and_split(
 async def load_and_split_async(
     file_path: str,
     strategy: Optional[str] = None,
+    *,
+    metadata_overrides: Optional[Dict[str, Any]] = None,
 ) -> List[Document]:
     """
     Async wrapper for use in FastAPI endpoints.
     Runs the blocking I/O in a thread executor.
     """
     loop = asyncio.get_event_loop()
-    fn = partial(load_and_split, file_path, strategy)
+    fn = partial(load_and_split, file_path, strategy, metadata_overrides=metadata_overrides)
     return await loop.run_in_executor(None, fn)
 
 

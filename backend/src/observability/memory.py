@@ -2,7 +2,7 @@
 src/memory.py — Enterprise Memory Manager
 ──────────────────────────────────────────
 Short-term memory: LangGraph thread state (managed by checkpointer)
-Long-term memory: Redis (fast K/V) + Postgres (persistent, searchable)
+Long-term and session memory: PostgreSQL JSONB
 
 Patterns:
   • Thread-scoped context window (last N messages)
@@ -14,10 +14,9 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+from langchain_core.messages import BaseMessage
 
 from src.config import Config
 
@@ -29,32 +28,41 @@ SUMMARY_TRIGGER = 15
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Redis memory backend
+# PostgreSQL memory backend
 # ─────────────────────────────────────────────────────────────────────────────
 
-_redis_client = None
+_postgres_pool = None
 
 
-async def _get_redis():
-    global _redis_client
-    if _redis_client is None:
-        if not Config.REDIS_ENABLED:
+async def _get_pool():
+    global _postgres_pool
+    if _postgres_pool is None:
+        if not Config.POSTGRES_ENABLED:
             return None
         try:
-            import redis.asyncio as aioredis
-            _redis_client = aioredis.from_url(
-                Config.REDIS_URL,
-                password=Config.REDIS_PASSWORD or None,
-                encoding="utf-8",
-                decode_responses=True,
-                max_connections=Config.REDIS_POOL_SIZE,
-            )
-            await _redis_client.ping()
-            logger.info("[Memory] Redis connected")
+            import asyncpg
+
+            dsn = Config.POSTGRES_URL.replace("+asyncpg", "").replace("+psycopg", "")
+            _postgres_pool = await asyncpg.create_pool(dsn, min_size=1, max_size=5)
+            async with _postgres_pool.acquire() as connection:
+                await connection.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS rag_memory (
+                        kind TEXT NOT NULL,
+                        owner_id TEXT NOT NULL,
+                        entry_key TEXT NOT NULL,
+                        value JSONB NOT NULL,
+                        expires_at TIMESTAMPTZ,
+                        updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                        PRIMARY KEY (kind, owner_id, entry_key)
+                    )
+                    """
+                )
+            logger.info("[Memory] PostgreSQL memory store connected")
         except Exception as e:
-            logger.warning(f"[Memory] Redis unavailable: {e}")
-            _redis_client = None
-    return _redis_client
+            logger.warning("[Memory] PostgreSQL memory store unavailable: %s", e)
+            _postgres_pool = None
+    return _postgres_pool
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -109,21 +117,30 @@ async def summarize_conversation(messages: List[BaseMessage]) -> str:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Long-term: Redis K/V memory store
+# Long-term: PostgreSQL JSONB memory store
 # ─────────────────────────────────────────────────────────────────────────────
 
 async def save_user_memory(user_id: str, key: str, value: Any, ttl: int = 0) -> bool:
-    """Persist a fact about a user to Redis long-term memory."""
-    redis = await _get_redis()
-    if redis is None:
+    """Persist a fact about a user in PostgreSQL."""
+    pool = await _get_pool()
+    if pool is None:
         return False
     try:
-        redis_key = f"memory:{user_id}:{key}"
-        payload = json.dumps({"value": value, "updated_at": datetime.now(timezone.utc).isoformat()})
-        if ttl > 0:
-            await redis.setex(redis_key, ttl, payload)
-        else:
-            await redis.set(redis_key, payload)
+        payload = json.dumps(value, default=str)
+        async with pool.acquire() as connection:
+            await connection.execute(
+                """
+                INSERT INTO rag_memory (kind, owner_id, entry_key, value, expires_at, updated_at)
+                VALUES ('user', $1, $2, $3::jsonb,
+                        CASE WHEN $4 > 0 THEN now() + $4 * interval '1 second' END, now())
+                ON CONFLICT (kind, owner_id, entry_key) DO UPDATE SET
+                    value = EXCLUDED.value, expires_at = EXCLUDED.expires_at, updated_at = now()
+                """,
+                user_id,
+                key,
+                payload,
+                ttl,
+            )
         return True
     except Exception as e:
         logger.warning(f"[Memory] save_user_memory error: {e}")
@@ -131,16 +148,19 @@ async def save_user_memory(user_id: str, key: str, value: Any, ttl: int = 0) -> 
 
 
 async def get_user_memory(user_id: str, key: str) -> Optional[Any]:
-    """Retrieve a user memory fact from Redis."""
-    redis = await _get_redis()
-    if redis is None:
+    """Retrieve a user memory fact from PostgreSQL."""
+    pool = await _get_pool()
+    if pool is None:
         return None
     try:
-        redis_key = f"memory:{user_id}:{key}"
-        raw = await redis.get(redis_key)
-        if raw:
-            return json.loads(raw).get("value")
-        return None
+        async with pool.acquire() as connection:
+            row = await connection.fetchrow(
+                """SELECT value FROM rag_memory WHERE kind = 'user' AND owner_id = $1
+                   AND entry_key = $2 AND (expires_at IS NULL OR expires_at > now())""",
+                user_id,
+                key,
+            )
+        return json.loads(row["value"]) if row else None
     except Exception as e:
         logger.warning(f"[Memory] get_user_memory error: {e}")
         return None
@@ -148,19 +168,17 @@ async def get_user_memory(user_id: str, key: str) -> Optional[Any]:
 
 async def get_all_user_memories(user_id: str) -> Dict[str, Any]:
     """Retrieve all memory entries for a user."""
-    redis = await _get_redis()
-    if redis is None:
+    pool = await _get_pool()
+    if pool is None:
         return {}
     try:
-        pattern = f"memory:{user_id}:*"
-        keys = await redis.keys(pattern)
-        result = {}
-        for k in keys:
-            raw = await redis.get(k)
-            if raw:
-                fact_key = k.split(":", 2)[-1]
-                result[fact_key] = json.loads(raw).get("value")
-        return result
+        async with pool.acquire() as connection:
+            rows = await connection.fetch(
+                """SELECT entry_key, value FROM rag_memory WHERE kind = 'user' AND owner_id = $1
+                   AND (expires_at IS NULL OR expires_at > now())""",
+                user_id,
+            )
+        return {row["entry_key"]: json.loads(row["value"]) for row in rows}
     except Exception as e:
         logger.warning(f"[Memory] get_all_user_memories error: {e}")
         return {}
@@ -172,13 +190,24 @@ async def get_all_user_memories(user_id: str) -> Dict[str, Any]:
 
 async def save_session_context(session_id: str, context: Dict[str, Any]) -> bool:
     """Save session-level context (e.g. user preferences, last topic)."""
-    redis = await _get_redis()
-    if redis is None:
+    pool = await _get_pool()
+    if pool is None:
         return False
     try:
-        key = f"session:{session_id}"
         payload = json.dumps(context, default=str)
-        await redis.setex(key, Config.REDIS_CACHE_TTL, payload)
+        async with pool.acquire() as connection:
+            await connection.execute(
+                """
+                INSERT INTO rag_memory (kind, owner_id, entry_key, value, expires_at, updated_at)
+                VALUES ('session', $1, 'context', $2::jsonb,
+                        now() + $3 * interval '1 second', now())
+                ON CONFLICT (kind, owner_id, entry_key) DO UPDATE SET
+                    value = EXCLUDED.value, expires_at = EXCLUDED.expires_at, updated_at = now()
+                """,
+                session_id,
+                payload,
+                Config.CACHE_TTL,
+            )
         return True
     except Exception as e:
         logger.warning(f"[Memory] save_session_context error: {e}")
@@ -187,13 +216,17 @@ async def save_session_context(session_id: str, context: Dict[str, Any]) -> bool
 
 async def get_session_context(session_id: str) -> Optional[Dict[str, Any]]:
     """Retrieve session context."""
-    redis = await _get_redis()
-    if redis is None:
+    pool = await _get_pool()
+    if pool is None:
         return None
     try:
-        key = f"session:{session_id}"
-        raw = await redis.get(key)
-        return json.loads(raw) if raw else None
+        async with pool.acquire() as connection:
+            row = await connection.fetchrow(
+                """SELECT value FROM rag_memory WHERE kind = 'session' AND owner_id = $1
+                   AND entry_key = 'context' AND (expires_at IS NULL OR expires_at > now())""",
+                session_id,
+            )
+        return json.loads(row["value"]) if row else None
     except Exception as e:
         logger.warning(f"[Memory] get_session_context error: {e}")
         return None
@@ -228,3 +261,11 @@ async def build_memory_context(
             parts.append("Known user preferences:\n" + "\n".join(fact_lines))
 
     return "\n\n".join(parts)
+
+
+async def close_memory_pool() -> None:
+    """Close the optional PostgreSQL memory pool on application shutdown."""
+    global _postgres_pool
+    if _postgres_pool is not None:
+        await _postgres_pool.close()
+        _postgres_pool = None

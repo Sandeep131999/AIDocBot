@@ -13,7 +13,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /build
 
-# System build deps (needed for chromadb, psycopg2, cryptography, etc.)
+# System build deps (needed for psycopg, cryptography, etc.)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
@@ -68,8 +68,8 @@ WORKDIR /app
 COPY --chown=appuser:appgroup . .
 
 # Create writable directories (volumes will overlay these in compose)
-RUN mkdir -p /app/chroma_db /app/uploads /app/logs && \
-    chown -R appuser:appgroup /app/chroma_db /app/uploads /app/logs
+RUN mkdir -p /app/uploads /app/logs /app/model_cache && \
+    chown -R appuser:appgroup /app/uploads /app/logs /app/model_cache
 
 # Switch to non-root
 USER appuser

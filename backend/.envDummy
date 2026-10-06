@@ -22,21 +22,15 @@ CHUNK_STRATEGY=recursive
 CHUNK_SEMANTIC_THRESHOLD=0.85
 
 # ── Embedding ────────────────────────────────────────────────────────────────
-# Cloud: HuggingFace Inference API
-HUGGINGFACE_EMBEDDING_MODEL=BAAI/bge-base-en-v1.5
-HUGGINGFACEHUB_API_TOKEN=
-
-# Local: Ollama (set USE_OLLAMA_EMBEDDINGS=true to use)
-USE_OLLAMA_EMBEDDINGS=false
-OLLAMA_EMBEDDING_MODEL=nomic-embed-text
+# Free local model; first startup downloads it, then it is cached by Hugging Face.
+HUGGINGFACE_EMBEDDING_MODEL=BAAI/bge-small-en-v1.5
+EMBEDDING_DIMENSION=384
+EMBEDDING_DEVICE=cpu
 EMBEDDING_BATCH_SIZE=32
 EMBEDDING_CACHE_TTL=3600
 
 # ── Vector Store ─────────────────────────────────────────────────────────────
-VECTOR_DB_PATH=./chroma_db
 VECTOR_COLLECTION=enterprise_docs
-VECTOR_SIMILARITY_METRIC=cosine
-# cosine | l2 | ip
 
 # ── Retrieval ─────────────────────────────────────────────────────────────────
 TOP_K=5
@@ -97,6 +91,12 @@ ADMIN_API_KEY=
 CORS_ORIGINS=*
 # In production: https://yourfrontend.com,https://yourapp.com
 CORS_ALLOW_CREDENTIALS=false
+# Microsoft Entra app registration (leave blank until configured).
+MICROSOFT_CLIENT_ID= 
+MICROSOFT_CLIENT_SECRET= 
+# Use "common", "organizations", "consumers", or a specific tenant ID.
+MICROSOFT_TENANT_ID=common
+MICROSOFT_REDIRECT_URI=http://localhost:8000/auth/microsoft/callback
 
 # ── Rate Limiting ─────────────────────────────────────────────────────────────
 RATE_LIMIT_ENABLED=true
@@ -104,25 +104,19 @@ RATE_LIMIT_CHAT=30/minute
 RATE_LIMIT_UPLOAD=10/minute
 RATE_LIMIT_EVAL=5/minute
 
-# ── Redis ─────────────────────────────────────────────────────────────────────
-REDIS_ENABLED=false
-# Set to true when Redis is available (enables semantic cache, rate limiting, session memory)
-REDIS_URL=redis://localhost:6379/0
-REDIS_PASSWORD=
-REDIS_CACHE_TTL=3600
-REDIS_SEMANTIC_CACHE_TTL=7200
-REDIS_POOL_SIZE=10
+# ── In-process exact-query cache ──────────────────────────────────────────────
+CACHE_TTL=3600
 
 # ── PostgreSQL ────────────────────────────────────────────────────────────────
-POSTGRES_ENABLED=false
-# Set to true when Postgres is available (enables persistent checkpointing)
-POSTGRES_URL=postgresql+asyncpg://raguser:ragpassword@localhost:5432/ragdb
+POSTGRES_ENABLED=true
+# PostgreSQL server must have the pgvector extension installed.
+POSTGRES_URL=postgresql+psycopg://raguser:ragpassword@localhost:5432/ragdb
 POSTGRES_POOL_SIZE=10
 POSTGRES_MAX_OVERFLOW=20
 POSTGRES_ECHO=false
 
-# Checkpointer: memory (dev) | postgres (prod) | redis (staging)
-CHECKPOINTER_BACKEND=memory
+# Checkpointer: memory | postgres
+CHECKPOINTER_BACKEND=postgres
 
 # ── LangSmith (Observability) ─────────────────────────────────────────────────
 LANGSMITH_ENABLED=false
@@ -166,7 +160,7 @@ SUPPORTED_EXTENSIONS=.pdf,.docx,.txt,.md,.csv,.json,.html,.pptx,.xlsx
 
 # ── Prompts (versioned — override at runtime without redeploy) ────────────────
 
-GENERATE_QUERY_SYSTEM_PROMPT=You are a helpful enterprise assistant with access to a knowledge base. Use the retrieve_documents tool to search for relevant information before answering. Always cite your sources. If you cannot find relevant information, say so clearly.
+GENERATE_QUERY_SYSTEM_PROMPT=You are a helpful enterprise assistant. Use retrieve_documents for uploaded knowledge-base content and web_search for current public information. Cite sources and distinguish uploaded documents from public web results. If you cannot find relevant information, say so clearly.
 
 GRADING_PROMPT=Question: {question}\n\nRetrieved document:\n{context}\n\nIs this document relevant to answering the question? Return JSON: relevant (bool), confidence (0-1), reason (str).
 
